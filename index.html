@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
@@ -6,56 +6,115 @@
     <title>Book Appointment - Hairolozy</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; }
-        header { background-color: #1a1a1a; color: white; padding: 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-        header h1 { font-size: 26px; margin-bottom: 5px; letter-spacing: 1px; }
-        header p { font-size: 14px; color: #ccc; }
-        main { padding: 15px; }
-        .booking-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        h2 { font-size: 18px; margin-bottom: 15px; color: #2c3e50; border-bottom: 2px solid #f0f0f0; padding-bottom: 8px; }
-        input, select { width: 100%; padding: 14px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; background-color: #fafafa; }
-        input:focus, select:focus { outline: none; border-color: #d35400; background-color: #fff; }
-        button { width: 100%; background-color: #d35400; color: white; padding: 16px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; text-transform: uppercase; margin-top: 10px;}
-        button:active { background-color: #e67e22; }
+        body { font-family: sans-serif; background-color: #f4f7f6; color: #333; line-height: 1.6; }
+        header { background-color: #1a1a1a; color: white; padding: 25px; text-align: center; }
+        main { padding: 20px; max-width: 500px; margin: auto; }
+        .booking-card { background: white; border-radius: 15px; padding: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        h2 { margin-bottom: 20px; font-size: 20px; color: #d35400; text-align: center; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; }
+        input, select { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
+        button { width: 100%; background-color: #d35400; color: white; padding: 15px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:disabled { background-color: #ccc; }
     </style>
 </head>
 <body>
     <header>
         <h1>Hairolozy</h1>
-        <p>Book Your Salon Appointment</p>
+        <p>Expert Hair & Makeup Services</p>
     </header>
-
     <main>
-        <section class="booking-card">
-            <h2>Select Your Service & Slot</h2>
-            <input type="text" id="b-name" placeholder="Aapka Naam">
-            <input type="tel" id="b-phone" placeholder="Phone Number">
+        <div class="booking-card">
+            <h2>Book Your Slot</h2>
             
+            <label>Aapka Naam</label>
+            <input type="text" id="b-name" placeholder="Naam likhein">
+
+            <label>Phone Number</label>
+            <input type="tel" id="b-phone" placeholder="Mobile number">
+
+            <label>Service</label>
             <select id="b-service">
-                <option value="">Service select karein</option>
+                <option value="">Service chunein</option>
                 <option value="Haircut">Haircut</option>
-                <option value="Chemical Work">Chemical Work (Color/Highlights)</option>
-                <option value="Hair Treatment">Hair Treatment (Spa/Keratin)</option>
-                <option value="Consultation">Just a Consultation</option>
+                <option value="Hair Color">Hair Color</option>
+                <option value="Smoothing/Keratin">Smoothing/Keratin</option>
+                <option value="Makeup">Makeup</option>
             </select>
 
+            <label>Date</label>
             <input type="date" id="b-date">
-            
+
+            <label>Time</label>
             <select id="b-time">
-                <option value="">Time select karein</option>
-                <option value="11:00 AM">11:00 AM</option>
-                <option value="01:00 PM">01:00 PM</option>
-                <option value="03:00 PM">03:00 PM</option>
-                <option value="05:00 PM">05:00 PM</option>
+                <option value="">Time chunein</option>
+                <option value="10:00 AM">10:00 AM</option>
+                <option value="12:00 PM">12:00 PM</option>
+                <option value="02:00 PM">02:00 PM</option>
+                <option value="04:00 PM">04:00 PM</option>
+                <option value="06:00 PM">06:00 PM</option>
             </select>
-            
+
             <button id="book-btn">Confirm Booking</button>
-        </section>
+        </div>
     </main>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     
     <script>
+        // Aapka Firebase Config
         const firebaseConfig = {
-          apiKey: "AIzaSyABGjbHjlLdUIHrbUxh
+          apiKey: "AIzaSyABGjbHjlLdUIHrbUxhD_Jp2ZScrMegX5A",
+          authDomain: "hairolozy-12bec.firebaseapp.com",
+          projectId: "hairolozy-12bec",
+          storageBucket: "hairolozy-12bec.firebasestorage.app",
+          messagingSenderId: "386170490787",
+          appId: "1:386170490787:web:58b592d8a44d0e3de65416"
+        };
+
+        // Firebase Initialize
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+
+        // Booking Logic
+        document.getElementById('book-btn').addEventListener('click', function() {
+            const name = document.getElementById('b-name').value;
+            const phone = document.getElementById('b-phone').value;
+            const service = document.getElementById('b-service').value;
+            const date = document.getElementById('b-date').value;
+            const time = document.getElementById('b-time').value;
+
+            if(!name || !phone || !service || !date || !time) {
+                alert("Please! Sari details bharna zaroori hai.");
+                return;
+            }
+
+            const btn = document.getElementById('book-btn');
+            btn.innerText = "Processing...";
+            btn.disabled = true;
+
+            // 'clients' collection mein data save karna
+            db.collection("clients").add({
+                clientName: name,
+                clientPhone: phone,
+                serviceName: service,
+                bookingDate: date,
+                bookingTime: time,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+                alert("Zabardast! Aapki booking confirm ho gayi hai.");
+                window.location.reload(); 
+            })
+            .catch((error) => {
+                console.error("Error: ", error);
+                alert("Arey! Kuch error aaya hai. Dubara try karein.");
+                btn.innerText = "Confirm Booking";
+                btn.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>
