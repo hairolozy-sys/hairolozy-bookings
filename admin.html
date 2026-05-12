@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hairolozy Admin - Bookings List</title>
+    <style>
+        body { font-family: sans-serif; background: #f0f2f5; padding: 15px; }
+        h2 { text-align: center; color: #d35400; }
+        .card { background: white; border-radius: 10px; padding: 15px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-left: 5px solid #d35400; }
+        .name { font-weight: bold; font-size: 18px; color: #333; }
+        .detail { font-size: 14px; color: #666; margin-top: 5px; }
+        .time-tag { background: #fff3e0; color: #e67e22; padding: 2px 8px; border-radius: 4px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h2>Hairolozy Bookings</h2>
+    <div id="booking-list">Loading bookings...</div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+    <script>
+        const firebaseConfig = {
+          apiKey: "AIzaSyABGjbHjlLdUIHrbUxhD_Jp2ZScrMegX5A",
+          authDomain: "hairolozy-12bec.firebaseapp.com",
+          projectId: "hairolozy-12bec",
+          storageBucket: "hairolozy-12bec.firebasestorage.app",
+          messagingSenderId: "386170490787",
+          appId: "1:386170490787:web:58b592d8a44d0e3de65416"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Real-time listener: Jaise hi koi booking aayegi, ye list apne aap update ho jayegi
+        db.collection("clients").orderBy("timestamp", "desc").onSnapshot((querySnapshot) => {
+            const listDiv = document.getElementById("booking-list");
+            listDiv.innerHTML = ""; // Purani list clear karein
+
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                const card = `
+                    <div class="card">
+                        <div class="name">${data.clientName}</div>
+                        <div class="detail">📞 ${data.clientPhone}</div>
+                        <div class="detail">💇 Service: <b>${data.serviceName}</b></div>
+                        <div class="detail">📅 Date: ${data.bookingDate} | <span class="time-tag">${data.bookingTime}</span></div>
+                    </div>
+                `;
+                listDiv.innerHTML += card;
+            });
+            
+            if (querySnapshot.empty) {
+                listDiv.innerHTML = "<p style='text-align:center;'>Abhi koi booking nahi hai.</p>";
+            }
+        });
+    </script>
+</body>
+</html>
