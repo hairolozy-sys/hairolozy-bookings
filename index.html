@@ -20,13 +20,13 @@
         input, select { width: 100%; background: #2a2a2a; color: #fff; border: 1px solid #444; padding: 14px; border-radius: 8px; box-sizing: border-box; font-size: 15px; outline: none; transition: 0.3s; }
         input:focus, select:focus { border-color: #D4AF37; box-shadow: 0 0 8px rgba(212, 175, 55, 0.3); }
         
-        /* Date & Time Icon Colors */
         ::-webkit-calendar-picker-indicator { filter: invert(1) sepia(1) saturate(5) hue-rotate(10deg); cursor: pointer; }
 
         .book-btn { background: linear-gradient(135deg, #D4AF37, #b5952f); color: #121212; width: 100%; padding: 16px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.3s; margin-top: 10px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); }
         .book-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5); }
 
-        .success-msg { display: none; text-align: center; color: #2ecc71; font-size: 18px; font-weight: bold; margin-top: 20px; padding: 15px; border: 1px solid #2ecc71; border-radius: 8px; background: rgba(46, 204, 113, 0.1); }
+        .success-msg { display: none; text-align: center; color: #fff; font-size: 18px; font-weight: bold; margin-top: 20px; padding: 25px 15px; border: 1px solid #333; border-radius: 8px; background: #252525; }
+        .booking-id-badge { background: rgba(212, 175, 55, 0.1); color: #D4AF37; border: 1px dashed #D4AF37; padding: 8px 15px; border-radius: 20px; display: inline-block; margin: 15px 0; font-size: 20px; letter-spacing: 1px; }
     </style>
 </head>
 <body>
@@ -63,7 +63,6 @@
 
             <div class="form-group">
                 <label>Select Date</label>
-                <!-- THURSDAY BLOCKING LOGIC IS CONNECTED TO THIS INPUT -->
                 <input type="date" id="client-date" onchange="checkThursday()" required>
             </div>
 
@@ -75,9 +74,8 @@
             <button class="book-btn" onclick="submitBooking()">Confirm Appointment</button>
         </div>
 
-        <!-- Success Message after booking -->
         <div id="successMsg" class="success-msg">
-            🎉 Booking Confirmed!<br><span style="font-size:14px; color:#aaa; font-weight:normal; display:block; margin-top:5px;">We will see you at the salon.</span>
+            <!-- Content will be injected here via JavaScript -->
         </div>
     </div>
 
@@ -86,7 +84,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <script>
-        // 1. Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyABGjbHjlLdUIHrbUxhD_Jp2ZScrMegX5A",
             authDomain: "hairolozy-12bec.firebaseapp.com",
@@ -98,44 +95,41 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // 2. Set Minimum Date to Today (So they can't book past dates)
         let today = new Date().toISOString().split('T')[0];
         document.getElementById("client-date").setAttribute('min', today);
 
-        // 3. 🚨 THURSDAY (WEEKLY OFF) BLOCKING LOGIC 🚨
         function checkThursday() {
             let dateInput = document.getElementById("client-date");
             let selectedDate = new Date(dateInput.value);
-            
-            // getDay() returns 4 for Thursday
             if(selectedDate.getDay() === 4) {
                 alert("❌ Sorry! Every Thursday our salon is closed (Weekly Off). Please select another date.");
-                dateInput.value = ""; // Clear the selected date
+                dateInput.value = "";
             }
         }
 
-        // 4. Save Booking to Firebase
         function submitBooking() {
             const name = document.getElementById('client-name').value;
             const phone = document.getElementById('client-phone').value;
             const service = document.getElementById('client-service').value;
-            const date = document.getElementById('client-date').value; // Format is YYYY-MM-DD
+            const date = document.getElementById('client-date').value;
             let time = document.getElementById('client-time').value;
 
             if(!name || !phone || !service || !date || !time) {
                 return alert("Please fill all the details to book your appointment.");
             }
 
-            // Convert 24hr time to 12hr AM/PM format for better look on Admin Dashboard
             let timeParts = time.split(':');
             let hours = parseInt(timeParts[0]);
             let ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12;
-            hours = hours ? hours : 12; 
+            hours = hours % 12 || 12; 
             let formattedTime = hours + ':' + timeParts[1] + ' ' + ampm;
 
-            // Save to Firebase (Same 'clients' collection as Admin)
+            // Naya: Random Booking ID Generate karna (Jaise: HLZ-4892)
+            const randomNum = Math.floor(1000 + Math.random() * 9000);
+            const bookingID = "HLZ-" + randomNum;
+
             db.collection("clients").add({
+                bookingID: bookingID,
                 clientName: name,
                 clientPhone: phone,
                 serviceName: service,
@@ -145,9 +139,29 @@
                 history: '',
                 billAmount: ''
             }).then(() => {
-                // Hide Form and Show Success Message
                 document.getElementById('bookingForm').style.display = 'none';
-                document.getElementById('successMsg').style.display = 'block';
+                
+                const successDiv = document.getElementById('successMsg');
+                successDiv.style.display = 'block';
+
+                // YAHAN APNA WHATSAPP NUMBER DAALEIN (Bina + ke)
+                const salonWhatsAppNumber = "918860504808"; // Example: "919876543210"
+
+                // WhatsApp par aane wala message
+                const msg = `🔔 *New Appointment Booking!*\n\n*Booking ID:* ${bookingID}\n*Name:* ${name}\n*Phone:* ${phone}\n*Service:* ${service}\n*Date:* ${date}\n*Time:* ${formattedTime}\n\nPlease confirm my appointment! ✨`;
+                
+                const encodedMsg = encodeURIComponent(msg);
+                
+                successDiv.innerHTML = `
+                    🎉 Booking Confirmed!<br>
+                    <div class="booking-id-badge">${bookingID}</div><br>
+                    <span style="font-size:14px; color:#aaa; font-weight:normal;">Take a screenshot of your ID.</span>
+                    <br><br>
+                    <a href="https://wa.me/${salonWhatsAppNumber}?text=${encodedMsg}" target="_blank" 
+                       style="background:#25d366; color:white; padding:15px 25px; border-radius:30px; text-decoration:none; font-size:15px; display:inline-block; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);">
+                       📲 Send to WhatsApp
+                    </a>
+                `;
             }).catch((error) => {
                 alert("Error: " + error.message);
             });
