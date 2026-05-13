@@ -1,35 +1,108 @@
-// Ye function check karega ki kaunsa slot dikhana hai aur kaunsa nahi
-function filterTimeSlots(selectedDate) {
-    const now = new Date();
-    const today = new Date().toISOString().split('T')[0]; // Aaj ki date
-    const currentHour = now.getHours(); // Abhi kitne baje hain
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hairolozy Admin Pro</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f4f4; padding: 15px; margin: 0; }
+        .header { background: #d35400; color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .add-client-form { background: white; padding: 15px; margin-bottom: 20px; border-radius: 10px; border: 2px solid #d35400; }
+        .card { background: white; padding: 15px; margin-bottom: 15px; border-radius: 10px; border-left: 6px solid #d35400; box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: relative; }
+        .time-badge { background: #d35400; color: white; padding: 4px 10px; border-radius: 5px; font-size: 13px; font-weight: bold; position: absolute; top: 15px; right: 15px; }
+        .formula-box { background: #fff3e0; padding: 10px; margin-top: 10px; border-radius: 5px; border: 1px dashed #d35400; }
+        input, select { width: 100%; padding: 10px; margin: 5px 0; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; }
+        .save-btn { background: #d35400; color: white; width: 100%; padding: 12px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 5px; }
+        .add-btn { background: #27ae60; color: white; width: 100%; padding: 12px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
+        .del-btn { background: #e74c3c; color: white; border: none; padding: 8px; border-radius: 5px; width: 100%; margin-top: 10px; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="header"><h2>Hairolozy Admin</h2></div>
+    <div style="padding: 15px;">
+        <div class="add-client-form">
+            <h3 style="margin-top:0; color:#d35400;">+ Add Walk-in</h3>
+            <input type="text" id="new-name" placeholder="Name">
+            <input type="text" id="new-formula" placeholder="Formula">
+            <button class="add-btn" onclick="addDirectClient()">Save Walk-in</button>
+        </div>
+        <div id="list">Loading bookings...</div>
+    </div>
 
-    // Database se check karein ki is date par kaunse slots booked hain
-    db.collectionGroup("Bookings").where("bookingDate", "==", selectedDate).get().then((querySnapshot) => {
-        let bookedSlots = [];
-        querySnapshot.forEach((doc) => {
-            bookedSlots.push(doc.data().bookingTime);
-        });
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyABGjbHjlLdUIHrbUxhD_Jp2ZScrMegX5A",
+            authDomain: "hairolozy-12bec.firebaseapp.com",
+            projectId: "hairolozy-12bec",
+            storageBucket: "hairolozy-12bec.appspot.com",
+            messagingSenderId: "386170490787",
+            appId: "1:386170490787:web:58b592d8a44d0e3de65416"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-        const allSlots = ["10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM", "06:00 PM", "07:00 PM"];
-        
-        let slotHtml = "";
-        allSlots.forEach(slot => {
-            // Slot ke ghante nikalna (e.g., "10:00 AM" -> 10)
-            let hour = parseInt(slot.split(':')[0]);
-            if (slot.includes("PM") && hour !== 12) hour += 12;
+        function startSync() {
+            const listDiv = document.getElementById("list");
+            const folders = ["Bookings", "bookings", "clientname", "clients"];
+            folders.forEach(folder => {
+                const ref = (folder === "clients") ? db.collection(folder) : db.collectionGroup(folder);
+                ref.onSnapshot((snap) => {
+                    snap.forEach(doc => renderCard(doc));
+                });
+            });
+        }
 
-            const isPast = (selectedDate === today && hour <= currentHour);
-            const isBooked = bookedSlots.includes(slot);
+        function renderCard(doc) {
+            const data = doc.data();
+            if (!data.clientName && !data.name) return;
+            const id = doc.id;
+            const path = doc.ref.path;
+            if (document.getElementById('card-' + id)) return;
 
-            if (isPast || isBooked) {
-                // Agar time nikal gaya ya booked hai toh button disable kar do
-                slotHtml += `<button disabled style="background: #ccc; color: #666;">${slot} (N/A)</button>`;
-            } else {
-                // Agar available hai toh click karne do
-                slotHtml += `<button onclick="selectTime('${slot}')" class="slot-btn">${slot}</button>`;
-            }
-        });
-        document.getElementById('slot-container').innerHTML = slotHtml;
-    });
-}
+            const listDiv = document.getElementById("list");
+            if (listDiv.innerHTML.includes("Loading")) listDiv.innerHTML = "";
+
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.id = 'card-' + id;
+            card.innerHTML = `
+                <div class="time-badge">🕒 ${data.bookingTime || data.time || 'N/A'}</div>
+                <b>👤 ${data.clientName || data.name}</b><br>
+                📞 ${data.clientPhone || 'N/A'}<br>
+                📅 Date: ${data.bookingDate || data.date || ''}
+                <div class="formula-box">
+                    <strong>History:</strong> ${data.history || "No record."}
+                    <input type="text" id="formula-${id}" placeholder="Update formula...">
+                    <button class="save-btn" onclick="updateFormula('${path}', '${id}')">Update</button>
+                </div>
+                <button class="del-btn" onclick="deleteEntry('${path}')">Delete</button>
+            `;
+            listDiv.appendChild(card);
+        }
+
+        function addDirectClient() {
+            const name = document.getElementById('new-name').value;
+            const formula = document.getElementById('new-formula').value;
+            if(!name || !formula) return alert("Details bhariye!");
+            db.collection("clients").add({
+                clientName: name, history: formula, 
+                bookingDate: new Date().toLocaleDateString(), bookingTime: "Walk-in"
+            }).then(() => alert("Saved!"));
+        }
+
+        function updateFormula(fullPath, id) {
+            const f = document.getElementById('formula-' + id).value;
+            if(!f) return alert("Write something!");
+            db.doc(fullPath).update({ history: f }).then(() => alert("Updated!"));
+        }
+
+        function deleteEntry(fullPath) {
+            if(confirm("Delete?")) db.doc(fullPath).delete();
+        }
+
+        startSync();
+    </script>
+</body>
+</html>
