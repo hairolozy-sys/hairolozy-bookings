@@ -1,306 +1,251 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hairolozy Premium Admin</title>
+    <title>Admin Dashboard | Hairolozy</title>
     <style>
-        /* LUXURY DARK THEME BASED ON YOUR IMAGE */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #121212; color: #e0e0e0; padding: 15px; margin: 0; }
+        /* LUXURY DARK ADMIN THEME */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #121212; color: #e0e0e0; margin: 0; padding: 20px; }
+        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 20px; }
+        .header h1 { color: #D4AF37; margin: 0; font-size: 28px; letter-spacing: 2px; text-transform: uppercase; }
         
-        /* Header */
-        .header { background: #1a1a1a; color: #D4AF37; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.5); border-bottom: 2px solid #D4AF37; }
-        h2 { margin: 0; font-size: 24px; letter-spacing: 2px; font-weight: 600; text-transform: uppercase; }
-
-        /* Dashboard Overview */
-        .dashboard { display: flex; gap: 15px; margin-top: 15px; }
-        .dash-box { background: #1e1e1e; color: #fff; flex: 1; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #333; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .dash-box h3 { margin: 0; font-size: 13px; font-weight: normal; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
-        .dash-box p { margin: 10px 0 0; font-size: 28px; font-weight: bold; color: #D4AF37; }
-        .dash-box.green p { color: #2ecc71; }
-
-        /* Search Bar */
-        .search-container { margin: 20px 0; position: sticky; top: 75px; z-index: 99; }
-        .search-bar { width: 100%; padding: 15px 20px; border-radius: 30px; background: #1e1e1e; border: 1px solid #444; color: #fff; font-size: 15px; outline: none; transition: 0.3s; }
-        .search-bar:focus { border-color: #D4AF37; box-shadow: 0 0 8px rgba(212, 175, 55, 0.3); }
-        .search-bar::placeholder { color: #777; }
-
-        /* Client Cards */
-        .card { background: #1e1e1e; margin-bottom: 15px; border-radius: 12px; border-left: 5px solid #D4AF37; box-shadow: 0 4px 10px rgba(0,0,0,0.3); overflow: hidden; transition: 0.3s; border-right: 1px solid #333; border-top: 1px solid #333; border-bottom: 1px solid #333; }
-        .card.done { border-left: 5px solid #27ae60; opacity: 0.8; }
-
-        .card-header { padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-        .client-info { display: flex; flex-direction: column; gap: 5px; }
-        .client-name { font-size: 18px; font-weight: bold; color: #fff; }
-        .client-details { font-size: 13px; color: #aaa; }
-
-        .time-badge { background: rgba(212, 175, 55, 0.1); color: #D4AF37; border: 1px solid #D4AF37; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; }
-        .done .time-badge { background: rgba(39, 174, 96, 0.1); color: #2ecc71; border-color: #2ecc71; text-decoration: line-through; }
-        .bill-badge { font-size: 14px; color: #2ecc71; font-weight: bold; margin-top: 5px; }
-
-        /* Card Body & Inputs */
-        .card-body { padding: 0 15px 15px 15px; display: none; border-top: 1px solid #333; margin-top: 5px; padding-top: 15px; }
-        .formula-box { background: #252525; padding: 15px; border-radius: 8px; border: 1px dashed #555; margin-bottom: 15px; font-size: 14px; color: #ddd; line-height: 1.6; }
-        .formula-box strong { color: #D4AF37; }
+        .admin-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
         
-        .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
-        .matrix-grid input, .matrix-grid select { background: #2a2a2a; color: #fff; width: 100%; padding: 12px; margin: 0; border-radius: 6px; border: 1px solid #444; font-size: 13px; box-sizing: border-box; outline: none; }
-        .matrix-grid input:focus, .matrix-grid select:focus { border-color: #D4AF37; }
-        .full-width { grid-column: span 2; }
-        .bill-input { grid-column: span 2; border: 1px solid #2ecc71 !important; color: #2ecc71 !important; font-weight: bold; font-size: 16px !important; }
-        .brand-select { border: 1px solid #D4AF37 !important; color: #D4AF37 !important; font-weight: bold; }
-
-        /* Buttons */
-        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
-        .save-btn { background: #d35400; color: white; flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .done-btn { background: #27ae60; color: white; flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .del-btn { background: transparent; color: #e74c3c; width: 100%; padding: 10px; border: 1px solid #e74c3c; border-radius: 8px; margin-top: 12px; font-size: 13px; cursor: pointer; transition: 0.2s; }
-        .upload-btn { background: #2980b9; color: white; width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 8px; }
+        /* ADD RECORD PANEL */
+        .form-panel { background: #1e1e1e; padding: 25px; border-radius: 12px; border: 1px solid #333; border-top: 4px solid #D4AF37; width: 100%; max-width: 400px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .form-panel h2 { color: #fff; margin-top: 0; font-size: 18px; text-align: center; }
         
-        .save-btn:hover { background: #e67e22; } .done-btn:hover { background: #2ecc71; } .del-btn:hover { background: #e74c3c; color: white; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; color: #D4AF37; font-size: 12px; font-weight: bold; text-transform: uppercase; }
+        input, textarea, select { width: 100%; background: #2a2a2a; color: #fff; border: 1px solid #444; padding: 10px; border-radius: 6px; box-sizing: border-box; outline: none; }
+        input:focus, textarea:focus { border-color: #D4AF37; }
 
-        /* Floating Button & Modal */
-        .fab { position: fixed; bottom: 30px; right: 30px; background: #D4AF37; color: #121212; width: 65px; height: 65px; border-radius: 50%; text-align: center; line-height: 60px; font-size: 35px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); cursor: pointer; z-index: 101; border: none; font-weight: bold; transition: 0.3s; }
-        .fab:hover { transform: scale(1.05); }
+        /* SMART PILL BUTTONS (MULTIPLE SELECT) */
+        .pill-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 5px; }
+        .service-pill { background: #2a2a2a; border: 1px solid #444; padding: 8px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; color: #ccc; transition: 0.3s; user-select: none; }
+        .service-pill:hover { border-color: #D4AF37; }
+        .service-pill.active { background: rgba(212, 175, 55, 0.2); border-color: #D4AF37; color: #D4AF37; font-weight: bold; }
+        .service-pill.active::after { content: ' ✔'; }
 
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 102; justify-content: center; align-items: center; }
-        .modal-content { background: #1e1e1e; padding: 25px; border-radius: 15px; width: 90%; max-width: 400px; animation: slideUp 0.3s ease; border: 1px solid #333; }
-        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .close-btn { float: right; cursor: pointer; font-size: 26px; font-weight: bold; color: #888; margin-top: -15px; }
-        .modal-content input { background: #2a2a2a; color: #fff; width: 100%; padding: 14px; margin: 8px 0; border-radius: 8px; border: 1px solid #444; box-sizing: border-box; font-size: 14px; outline: none; }
-        .modal-content input:focus { border-color: #D4AF37; }
-        .add-btn { background: #D4AF37; color: #121212; width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 15px; }
+        /* COLOR MATRIX COMPACT GRID */
+        .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+        .btn-save { background: linear-gradient(135deg, #D4AF37, #b5952f); color: #121212; width: 100%; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 15px; text-transform: uppercase; }
+        .btn-save:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(212, 175, 55, 0.4); }
+
+        /* DASHBOARD / RECORD TABLE */
+        .dashboard-panel { background: #1e1e1e; padding: 25px; border-radius: 12px; border: 1px solid #333; flex-grow: 1; max-width: 800px; overflow-x: auto; }
+        .dashboard-panel h2 { color: #fff; margin-top: 0; font-size: 18px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #333; }
+        th { background: #2a2a2a; color: #D4AF37; font-weight: bold; text-transform: uppercase; font-size: 12px; }
+        tr:hover { background: #252525; }
+        .status-done { color: #25d366; font-weight: bold; }
+        .status-pending { color: #ff9800; font-weight: bold; }
+        
+        .btn-action { background: #333; color: #fff; border: 1px solid #555; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; }
+        .btn-action:hover { background: #D4AF37; color: #000; border-color: #D4AF37; }
     </style>
 </head>
 <body>
-    <div class="header"><h2>Hairolozy</h2></div>
-    
-    <div style="padding: 15px;">
-        <div class="dashboard">
-            <div class="dash-box">
-                <h3>Today's Clients</h3>
-                <p id="dash-clients">0</p>
-            </div>
-            <div class="dash-box green">
-                <h3>Today's Revenue</h3>
-                <p id="dash-revenue">₹0</p>
-            </div>
-        </div>
 
-        <div class="search-container">
-            <input type="text" id="searchInput" class="search-bar" placeholder="🔍 Search Client or Phone..." onkeyup="filterList()">
-        </div>
-        <div id="list">Loading Luxury Experience...</div>
+    <div class="header">
+        <h1>Hairolozy Admin App</h1>
+        <p>Master Colorist Dashboard</p>
     </div>
 
-    <button class="fab" onclick="openModal()">+</button>
+    <div class="admin-container">
+        
+        <!-- LEFT PANEL: ADD RECORD & MATRIX -->
+        <div class="form-panel">
+            <h2>➕ Add / Update Client Record</h2>
+            
+            <div class="form-group">
+                <label>Client Name & Phone</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="c-name" placeholder="Name" required>
+                    <input type="tel" id="c-phone" placeholder="Phone">
+                </div>
+            </div>
 
-    <div id="walkinModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h3 style="margin-top:0; color:#D4AF37; text-align:center;">New Walk-in</h3>
-            <input type="text" id="new-name" placeholder="Client Name">
-            <input type="tel" id="new-phone" placeholder="Phone Number">
-            <input type="text" id="new-service" placeholder="Service (e.g. Color Correction)">
-            <input type="text" id="new-formula" placeholder="Quick Notes...">
-            <button class="add-btn" onclick="addDirectClient()">Save Client</button>
+            <!-- SMART PILLS FOR MULTIPLE SERVICES -->
+            <div class="form-group">
+                <label>Services Done (Select Multiple)</label>
+                <div class="pill-grid">
+                    <div class="service-pill" onclick="toggleAdminService('Haircut', this)">Haircut</div>
+                    <div class="service-pill" onclick="toggleAdminService('Root Touch-up', this)">Root Touch-up</div>
+                    <div class="service-pill" onclick="toggleAdminService('Global Color', this)">Global Color</div>
+                    <div class="service-pill" onclick="toggleAdminService('Balayage', this)">Balayage</div>
+                    <div class="service-pill" onclick="toggleAdminService('Highlights', this)">Highlights</div>
+                    <div class="service-pill" onclick="toggleAdminService('Correction', this)">Correction</div>
+                    <div class="service-pill" onclick="toggleAdminService('Vivid Shades', this)">Vivid Shades</div>
+                    <div class="service-pill" onclick="toggleAdminService('Glossing', this)">Glossing</div>
+                    <div class="service-pill" onclick="toggleAdminService('Nanoplastia', this)">Nanoplastia</div>
+                    <div class="service-pill" onclick="toggleAdminService('Keratin/Botox', this)">Keratin/Botox</div>
+                    <div class="service-pill" onclick="toggleAdminService('Smoothening', this)">Smoothening</div>
+                    <div class="service-pill" onclick="toggleAdminService('Bond Treat', this)">Bond Treat</div>
+                    <div class="service-pill" onclick="toggleAdminService('Olaplex', this)">Olaplex Special</div>
+                    <div class="service-pill" onclick="toggleAdminService('Deep Spa', this)">Deep Spa</div>
+                </div>
+                <input type="hidden" id="c-services">
+            </div>
+
+            <!-- COLOR MATRIX -->
+            <div class="form-group">
+                <label>Color Matrix & Formulation</label>
+                <div class="matrix-grid">
+                    <input type="text" id="m-base" placeholder="Base Color">
+                    <input type="text" id="m-target" placeholder="Target Color">
+                    <input type="text" id="m-dev" placeholder="Developer (%)">
+                    <input type="text" id="m-time" placeholder="Timing (Mins)">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Bill Amount (₹)</label>
+                <input type="number" id="c-bill" placeholder="e.g. 4500">
+            </div>
+
+            <button class="btn-save" onclick="saveRecord()">Save Record</button>
         </div>
+
+        <!-- RIGHT PANEL: DASHBOARD & CLIENT LIST -->
+        <div class="dashboard-panel">
+            <h2>📋 Recent Bookings & Records</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Client</th>
+                        <th>Services</th>
+                        <th>Bill</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="clientTableBody">
+                    <!-- Data will load here automatically -->
+                    <tr><td colspan="6" style="text-align: center;">Loading data from database...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
     </div>
 
+    <!-- Firebase Scripts -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyABGjbHjlLdUIHrbUxhD_Jp2ZScrMegX5A",
-            authDomain: "hairolozy-12bec.firebaseapp.com",
-            projectId: "hairolozy-12bec",
-            storageBucket: "hairolozy-12bec.appspot.com",
-            messagingSenderId: "386170490787",
-            appId: "1:386170490787:web:58b592d8a44d0e3de65416"
+        // FIREBASE SETUP
+        const firebaseConfig = { 
+            apiKey: "AIzaSyABGjbHjlLdUIHrbUxhD_Jp2ZScrMegX5A", 
+            authDomain: "hairolozy-12bec.firebaseapp.com", 
+            projectId: "hairolozy-12bec", 
+            storageBucket: "hairolozy-12bec.appspot.com", 
+            messagingSenderId: "386170490787", 
+            appId: "1:386170490787:web:58b592d8a44d0e3de65416" 
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        let allBookings = {};
 
-        function openModal() { document.getElementById('walkinModal').style.display = 'flex'; }
-        function closeModal() { document.getElementById('walkinModal').style.display = 'none'; }
-        window.onclick = function(event) { if (event.target == document.getElementById('walkinModal')) closeModal(); }
+        // 1. MULTIPLE SERVICE SELECTION LOGIC
+        let adminSelectedArray = [];
 
-        function toggleCard(id) {
-            let body = document.getElementById('body-' + id);
-            body.style.display = (body.style.display === 'block') ? 'none' : 'block';
-        }
-
-        function filterList() {
-            let input = document.getElementById('searchInput').value.toLowerCase();
-            let cards = document.getElementsByClassName('card');
-            for (let i = 0; i < cards.length; i++) {
-                let text = cards[i].innerText.toLowerCase();
-                cards[i].style.display = text.includes(input) ? "" : "none";
+        function toggleAdminService(serviceName, element) {
+            const index = adminSelectedArray.indexOf(serviceName);
+            if (index > -1) {
+                adminSelectedArray.splice(index, 1);
+                element.classList.remove('active');
+            } else {
+                adminSelectedArray.push(serviceName);
+                element.classList.add('active');
             }
+            document.getElementById('c-services').value = adminSelectedArray.join(', ');
         }
 
-        function updateDashboard() {
-            let rev = 0; let clientsCount = 0;
-            const now = new Date();
-            const format1 = now.toLocaleDateString(); 
-            const format2 = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`; 
+        // 2. SAVE OR ADD RECORD TO FIREBASE
+        function saveRecord() {
+            const name = document.getElementById('c-name').value;
+            const phone = document.getElementById('c-phone').value;
+            const services = document.getElementById('c-services').value;
+            
+            // Color Matrix Data
+            const base = document.getElementById('m-base').value;
+            const target = document.getElementById('m-target').value;
+            const dev = document.getElementById('m-dev').value;
+            const time = document.getElementById('m-time').value;
+            
+            const bill = document.getElementById('c-bill').value;
+            const today = new Date().toISOString().split('T')[0];
 
-            for (let id in allBookings) {
-                let b = allBookings[id];
-                if (b.date === format1 || b.date === format2) {
-                    clientsCount++;
-                    if (b.status === 'done' && b.bill) rev += parseFloat(b.bill);
-                }
+            if(!name || !services) return alert("Name and at least 1 Service is required!");
+
+            // Format Matrix Note
+            let matrixNote = "";
+            if(base || target) {
+                matrixNote = `Base: ${base}, Target: ${target}, Dev: ${dev}, Time: ${time}m`;
             }
-            document.getElementById('dash-clients').innerText = clientsCount;
-            document.getElementById('dash-revenue').innerText = "₹" + rev;
+
+            db.collection("clients").add({
+                bookingID: "WALK-IN",
+                clientName: name,
+                clientPhone: phone,
+                serviceName: services,
+                history: matrixNote,
+                bookingDate: today,
+                billAmount: bill,
+                status: 'done'
+            }).then(() => {
+                alert("✅ Record Saved Successfully!");
+                location.reload(); // Page refresh to clear form
+            }).catch(err => alert("Error: " + err.message));
         }
 
-        function startSync() {
-            const folders = ["Bookings", "bookings", "clientname", "clients"];
-            folders.forEach(folder => {
-                const ref = (folder === "clients") ? db.collection(folder) : db.collectionGroup(folder);
-                ref.onSnapshot((snap) => {
-                    snap.forEach(doc => {
-                        const data = doc.data();
-                        if (!data.clientName && !data.name) return;
-                        allBookings[doc.id] = { date: data.bookingDate || data.date || '', status: data.status || 'pending', bill: data.billAmount || 0 };
-                        renderCard(doc);
-                    });
-                    updateDashboard();
+        // 3. LOAD DATA FROM FIREBASE TO TABLE
+        function loadClients() {
+            db.collection("clients").orderBy("bookingDate", "desc").limit(20).onSnapshot((querySnapshot) => {
+                const tableBody = document.getElementById('clientTableBody');
+                tableBody.innerHTML = ''; 
+
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const docId = doc.id;
+                    
+                    let statusColor = data.status === 'done' ? 'status-done' : 'status-pending';
+                    let statusText = data.status === 'done' ? 'Completed' : 'Pending';
+
+                    let row = `<tr>
+                        <td>${data.bookingDate}</td>
+                        <td><b>${data.clientName}</b><br><span style="font-size:10px; color:#aaa;">${data.clientPhone || '-'}</span></td>
+                        <td><span style="color:#D4AF37;">${data.serviceName}</span><br><span style="font-size:10px; color:#888;">${data.history || ''}</span></td>
+                        <td>₹${data.billAmount || '0'}</td>
+                        <td class="${statusColor}">${statusText}</td>
+                        <td>
+                            ${data.status === 'pending' ? `<button class="btn-action" onclick="markDone('${docId}')">Mark Done</button>` : '✔️'}
+                        </td>
+                    </tr>`;
+                    
+                    tableBody.innerHTML += row;
                 });
             });
         }
 
-        function renderCard(doc) {
-            const data = doc.data();
-            if (!data.clientName && !data.name) return;
-            const id = doc.id;
-            const path = doc.ref.path;
-            
-            let existingCard = document.getElementById('card-' + id);
-            if (existingCard) { existingCard.remove(); }
-
-            const listDiv = document.getElementById("list");
-            if (listDiv.innerHTML.includes("Loading")) listDiv.innerHTML = "";
-
-            const statusClass = data.status === 'done' ? 'done' : '';
-            const statusText = data.status === 'done' ? 'Completed' : (data.bookingTime || data.time || 'Walk-in');
-            const billDisplay = data.billAmount ? `<div class="bill-badge">💰 Bill: ₹${data.billAmount}</div>` : '';
-            const photoDisplay = data.photoUrl ? `<img src="${data.photoUrl}" style="max-width: 100%; border-radius: 8px; margin-bottom: 15px; border: 1px solid #444;">` : '';
-
-            const card = document.createElement('div');
-            card.className = `card ${statusClass}`;
-            card.id = 'card-' + id;
-            
-            card.innerHTML = `
-                <div class="card-header" onclick="toggleCard('${id}')">
-                    <div class="client-info">
-                        <span class="client-name">👤 ${data.clientName || data.name}</span>
-                        <span class="client-details">✂️ ${data.serviceName || 'N/A'} | 📞 ${data.clientPhone || 'N/A'}</span>
-                        ${billDisplay}
-                    </div>
-                    <div class="time-badge">🕒 ${statusText}</div>
-                </div>
-                
-                <div class="card-body" id="body-${id}">
-                    ${photoDisplay}
-                    <div class="formula-box">
-                        <strong>Last Formulation:</strong><br> ${data.history || "No record."}
-                    </div>
-                    
-                    <div class="matrix-grid">
-                        <select id="brand-${id}" class="full-width brand-select">
-                            <option value="" style="color:#aaa;">🎨 Select Color Brand</option>
-                            <option value="L'Oréal">L'Oréal</option>
-                            <option value="Redken">Redken</option>
-                            <option value="Schwarzkopf">Schwarzkopf</option>
-                            <option value="Keune">Keune</option>
-                            <option value="Alfaparf">Alfaparf</option>
-                            <option value="Wella">Wella</option>
-                            <option value="Matrix">Matrix</option>
-                            <option value="Other">Other (Note below)</option>
-                        </select>
-                        <input type="text" id="base-${id}" placeholder="Base Color / Roots">
-                        <input type="text" id="target-${id}" placeholder="Target Tone">
-                        <select id="vol-${id}">
-                            <option value="" style="color:#aaa;">Developer Volume</option>
-                            <option value="10V">10 Vol (3%)</option>
-                            <option value="20V">20 Vol (6%)</option>
-                            <option value="30V">30 Vol (9%)</option>
-                            <option value="40V">40 Vol (12%)</option>
-                        </select>
-                        <input type="text" id="time-${id}" placeholder="Processing Time">
-                        <input type="text" id="ph-${id}" class="full-width" placeholder="Bond Builder / Notes">
-                        <input type="number" id="bill-${id}" class="bill-input" placeholder="Total Bill (₹)" value="${data.billAmount || ''}">
-                    </div>
-
-                    <div style="background: #252525; padding: 12px; border-radius: 8px; margin-top: 10px; border: 1px dashed #444;">
-                        <input type="file" id="img-${id}" accept="image/*" style="font-size: 13px; width: 100%; border: none; padding: 0;">
-                        <button class="upload-btn" onclick="uploadPhoto('${path}', '${id}')">📸 Upload Result Photo</button>
-                    </div>
-
-                    <div class="btn-group">
-                        <button class="save-btn" onclick="updateFormula('${path}', '${id}')">💾 Save Matrix</button>
-                        <button class="done-btn" onclick="markDone('${path}', '${id}')">✔️ Mark Done</button>
-                    </div>
-                    <button class="del-btn" onclick="deleteEntry('${path}')">🗑️ Delete Record</button>
-                </div>
-            `;
-            listDiv.insertBefore(card, listDiv.firstChild);
-        }
-
-        function addDirectClient() {
-            const name = document.getElementById('new-name').value;
-            const phone = document.getElementById('new-phone').value;
-            const service = document.getElementById('new-service').value;
-            const formula = document.getElementById('new-formula').value;
-            if(!name) return alert("Name zaroori hai!");
-            
-            // Checking Thursday (Day 4) for Walk-in Alert
-            if(new Date().getDay() === 4) {
-                if(!confirm("Aaj Thursday (Weekly Off) hai! Phir bhi entry karni hai?")) return;
+        // 4. MARK BOOKING AS DONE
+        function markDone(docId) {
+            let bill = prompt("Enter Final Bill Amount (₹) before closing:");
+            if(bill !== null) {
+                db.collection("clients").doc(docId).update({
+                    status: 'done',
+                    billAmount: bill
+                });
             }
-
-            const todayFormatted = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate()).padStart(2, '0')}`;
-            db.collection("clients").add({ clientName: name, clientPhone: phone, serviceName: service, history: formula, bookingDate: todayFormatted, bookingTime: "Walk-in", status: 'pending' }).then(() => { closeModal(); document.getElementById('new-name').value = ""; document.getElementById('new-formula').value = ""; });
         }
 
-        function getMatrixData(id) {
-            const brand = document.getElementById('brand-' + id).value; const base = document.getElementById('base-' + id).value; const target = document.getElementById('target-' + id).value; const vol = document.getElementById('vol-' + id).value; const time = document.getElementById('time-' + id).value; const ph = document.getElementById('ph-' + id).value;
-            return `<b>Brand:</b> <span style="color:#D4AF37">${brand || '-'}</span> <br><b>Base:</b> ${base || '-'} | <b>Target:</b> ${target || '-'} <br><b>Dev:</b> ${vol || '-'} | <b>Time:</b> ${time || '-'} <br><b>Treatments:</b> ${ph || '-'}`;
-        }
-
-        function updateFormula(fullPath, id) { db.doc(fullPath).update({ history: getMatrixData(id) }).then(() => alert("Formulation Matrix Saved!")); }
-        function markDone(fullPath, id) {
-            const bill = document.getElementById('bill-' + id).value;
-            if(!bill && !confirm("Aapne Bill Amount nahi dala hai. Bina bill ke 'Done' karein?")) return;
-            db.doc(fullPath).update({ status: 'done', billAmount: bill || "0", history: getMatrixData(id) });
-        }
-
-        function uploadPhoto(fullPath, id) {
-            const fileInput = document.getElementById('img-' + id);
-            const file = fileInput.files[0];
-            if (!file) return alert("Pehle 'Choose File' par click karke photo select karein!");
-            const btn = fileInput.nextElementSibling;
-            btn.innerText = "⏳ Uploading... Please wait"; btn.disabled = true;
-
-            const formData = new FormData(); formData.append('image', file);
-            const apiKey = '784a2cd72d9a44a6df0073527b1eee04'; 
-
-            fetch('https://api.imgbb.com/1/upload?key=' + apiKey, { method: 'POST', body: formData })
-            .then(res => res.json())
-            .then(result => {
-                if(result.success) {
-                    db.doc(fullPath).update({ photoUrl: result.data.url }).then(() => { alert("Photo Upload Ho Gayi!"); btn.innerText = "📸 Upload Result Photo"; btn.disabled = false; });
-                } else { alert("Upload Failed."); btn.innerText = "📸 Upload Result Photo"; btn.disabled = false; }
-            }).catch(err => { alert("Upload Failed."); btn.innerText = "📸 Upload Result Photo"; btn.disabled = false; });
-        }
-        function deleteEntry(fullPath) { if(confirm("Are you sure?")) db.doc(fullPath).delete(); }
-
-        startSync();
+        // Load clients when page opens
+        window.onload = loadClients;
     </script>
 </body>
 </html>
