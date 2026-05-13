@@ -33,7 +33,7 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        db.collection("bookings").onSnapshot((querySnapshot) => {
+        db.collectionGroup("bookings").onSnapshot((querySnapshot) => {
             const listDiv = document.getElementById("list");
             listDiv.innerHTML = "";
             
@@ -76,7 +76,7 @@
             
             const finalHistory = brand + " - " + formula;
             
-            db.collection("bookings").doc(id).update({ history: finalHistory })
+            db.collectionGroup("bookings").doc(id).update({ history: finalHistory })
             .then(() => alert("Brand aur Formula save ho gaya!"));
         }
 
