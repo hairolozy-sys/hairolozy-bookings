@@ -1,142 +1,35 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hairolozy Admin Pro</title>
-    <style>
-        body { font-family: sans-serif; background: #f4f4f4; padding: 15px; margin: 0; }
-        .header { background: #d35400; color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        .add-client-form { background: white; padding: 15px; margin-bottom: 20px; border-radius: 10px; border: 2px solid #d35400; }
-        .card { background: white; padding: 15px; margin-bottom: 15px; border-radius: 10px; border-left: 6px solid #d35400; box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: relative; }
-        .time-badge { background: #d35400; color: white; padding: 4px 10px; border-radius: 5px; font-size: 13px; font-weight: bold; position: absolute; top: 15px; right: 15px; }
-        .formula-box { background: #fff3e0; padding: 10px; margin-top: 10px; border-radius: 5px; border: 1px dashed #d35400; }
-        select, input { width: 100%; padding: 10px; margin: 5px 0; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; font-size: 14px; }
-        .save-btn { background: #d35400; color: white; width: 100%; padding: 12px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 5px; }
-        .add-btn { background: #27ae60; color: white; width: 100%; padding: 12px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
-        .del-btn { background: #e74c3c; color: white; border: none; padding: 8px; border-radius: 5px; width: 100%; margin-top: 10px; font-size: 12px; }
-        .other-brand { display: none; }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <h2 style="margin:0;">Hairolozy Master Admin</h2>
-    </div>
+// Ye function check karega ki kaunsa slot dikhana hai aur kaunsa nahi
+function filterTimeSlots(selectedDate) {
+    const now = new Date();
+    const today = new Date().toISOString().split('T')[0]; // Aaj ki date
+    const currentHour = now.getHours(); // Abhi kitne baje hain
 
-    <div style="padding: 15px;">
-        <div class="add-client-form">
-            <h3 style="margin-top:0; color:#d35400;">+ Add Walk-in Client</h3>
-            <input type="text" id="new-name" placeholder="Client Name">
-            <input type="tel" id="new-phone" placeholder="Phone Number">
-            <input type="text" id="new-service" placeholder="Service (e.g. Color)">
-            <select id="new-brand" onchange="toggleNewOther()">
-                <option value="Loreal">Loreal</option>
-                <option value="Redken">Redken</option>
-                <option value="Schwarzkopf">Schwarzkopf</option>
-                <option value="Keune">Keune</option>
-                <option value="Alfaparf">Alfaparf</option>
-                <option value="Other">Other</option>
-            </select>
-            <input type="text" id="new-other-brand" class="other-brand" placeholder="Brand Name">
-            <input type="text" id="new-formula" placeholder="Formula Details">
-            <button class="add-btn" onclick="addDirectClient()">Save Walk-in</button>
-        </div>
+    // Database se check karein ki is date par kaunse slots booked hain
+    db.collectionGroup("Bookings").where("bookingDate", "==", selectedDate).get().then((querySnapshot) => {
+        let bookedSlots = [];
+        querySnapshot.forEach((doc) => {
+            bookedSlots.push(doc.data().bookingTime);
+        });
 
-        <h3 style="color: #333;">Bookings List</h3>
-        <div id="list">Checking database...</div>
-    </div>
+        const allSlots = ["10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM", "06:00 PM", "07:00 PM"];
+        
+        let slotHtml = "";
+        allSlots.forEach(slot => {
+            // Slot ke ghante nikalna (e.g., "10:00 AM" -> 10)
+            let hour = parseInt(slot.split(':')[0]);
+            if (slot.includes("PM") && hour !== 12) hour += 12;
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+            const isPast = (selectedDate === today && hour <= currentHour);
+            const isBooked = bookedSlots.includes(slot);
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyABGjbHjlLdUIHrbUxhD_Jp2ZScrMegX5A",
-            authDomain: "hairolozy-12bec.firebaseapp.com",
-            projectId: "hairolozy-12bec",
-            storageBucket: "hairolozy-12bec.appspot.com",
-            messagingSenderId: "386170490787",
-            appId: "1:386170490787:web:58b592d8a44d0e3de65416"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        function startSync() {
-            const listDiv = document.getElementById("list");
-            const folders = ["Bookings", "bookings", "clientname", "clients"];
-            folders.forEach(folder => {
-                const ref = (folder === "clients") ? db.collection(folder) : db.collectionGroup(folder);
-                ref.onSnapshot((snap) => {
-                    snap.forEach(doc => renderCard(doc));
-                });
-            });
-        }
-
-        function renderCard(doc) {
-            const data = doc.data();
-            if (!data.clientName && !data.name) return;
-            const id = doc.id;
-            const path = doc.ref.path;
-            if (document.getElementById('card-' + id)) return;
-
-            const listDiv = document.getElementById("list");
-            if (listDiv.innerHTML.includes("Checking")) listDiv.innerHTML = "";
-
-            const time = data.bookingTime || data.time || "No Time";
-            const date = data.bookingDate || data.date || "No Date";
-
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.id = 'card-' + id;
-            card.innerHTML = `
-                <div class="time-badge">🕒 ${time}</div>
-                <b>👤 ${data.clientName || data.name}</b><br>
-                📞 ${data.clientPhone || 'N/A'}<br>
-                ✂️ ${data.serviceName || 'N/A'}<br>
-                📅 Date: ${date}
-                <div class="formula-box">
-                    <strong>History:</strong> ${data.history || "No record."}
-                    <input type="text" id="formula-${id}" placeholder="Update formula...">
-                    <button class="save-btn" onclick="updateFormula('${path}', '${id}')">Update Record</button>
-                </div>
-                <button class="del-btn" onclick="deleteEntry('${path}')">Delete</button>
-            `;
-            listDiv.appendChild(card);
-        }
-
-        function addDirectClient() {
-            const name = document.getElementById('new-name').value;
-            const phone = document.getElementById('new-phone').value;
-            const service = document.getElementById('new-service').value;
-            let brand = document.getElementById('new-brand').value;
-            const formula = document.getElementById('new-formula').value;
-            if(!name || !formula) return alert("Fill Name and Formula!");
-            if(brand === "Other") brand = document.getElementById('new-other-brand').value || "Other";
-
-            db.collection("clients").add({
-                clientName: name, clientPhone: phone, serviceName: service,
-                history: brand + ": " + formula, bookingDate: new Date().toLocaleDateString(),
-                bookingTime: "Walk-in"
-            }).then(() => alert("Saved!"));
-        }
-
-        function toggleNewOther() {
-            const select = document.getElementById('new-brand');
-            const input = document.getElementById('new-other-brand');
-            input.style.display = (select.value === "Other") ? "block" : "none";
-        }
-
-        function updateFormula(fullPath, id) {
-            const f = document.getElementById('formula-' + id).value;
-            if(!f) return alert("Write something!");
-            db.doc(fullPath).update({ history: f }).then(() => alert("Updated!"));
-        }
-
-        function deleteEntry(fullPath) {
-            if(confirm("Delete?")) db.doc(fullPath).delete();
-        }
-
-        startSync();
-    </script>
-</body>
-</html>
+            if (isPast || isBooked) {
+                // Agar time nikal gaya ya booked hai toh button disable kar do
+                slotHtml += `<button disabled style="background: #ccc; color: #666;">${slot} (N/A)</button>`;
+            } else {
+                // Agar available hai toh click karne do
+                slotHtml += `<button onclick="selectTime('${slot}')" class="slot-btn">${slot}</button>`;
+            }
+        });
+        document.getElementById('slot-container').innerHTML = slotHtml;
+    });
+}
