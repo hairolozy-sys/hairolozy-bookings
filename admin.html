@@ -39,6 +39,7 @@
         .matrix-grid input, .matrix-grid select { width: 100%; padding: 10px; margin: 0; border-radius: 6px; border: 1px solid #ccc; font-size: 13px; box-sizing: border-box; }
         .full-width { grid-column: span 2; }
         .bill-input { grid-column: span 2; border: 2px solid #27ae60 !important; font-weight: bold; color: #27ae60; }
+        .brand-select { border: 2px solid #d35400 !important; color: #d35400; font-weight: bold; }
 
         .btn-group { display: flex; gap: 10px; margin-top: 10px; }
         .save-btn { background: #d35400; color: white; flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
@@ -199,6 +200,19 @@
                     </div>
                     
                     <div class="matrix-grid">
+                        <!-- NEW: Color Brand Selector -->
+                        <select id="brand-${id}" class="full-width brand-select">
+                            <option value="">🎨 Select Color Brand</option>
+                            <option value="L'Oréal">L'Oréal</option>
+                            <option value="Redken">Redken</option>
+                            <option value="Schwarzkopf">Schwarzkopf</option>
+                            <option value="Keune">Keune</option>
+                            <option value="Alfaparf">Alfaparf</option>
+                            <option value="Wella">Wella</option>
+                            <option value="Matrix">Matrix</option>
+                            <option value="Other">Other (Note below)</option>
+                        </select>
+
                         <input type="text" id="base-${id}" placeholder="Base Color / Roots">
                         <input type="text" id="target-${id}" placeholder="Target Tone">
                         <select id="vol-${id}">
@@ -219,8 +233,8 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="save-btn" onclick="updateFormula('${path}', '${id}')">💾 Save Matrix Only</button>
-                        <button class="done-btn" onclick="markDone('${path}', '${id}')">✔️ Mark Done & Save All</button>
+                        <button class="save-btn" onclick="updateFormula('${path}', '${id}')">💾 Save Matrix</button>
+                        <button class="done-btn" onclick="markDone('${path}', '${id}')">✔️ Mark Done</button>
                     </div>
                     <button class="del-btn" onclick="deleteEntry('${path}')">🗑️ Delete Record</button>
                 </div>
@@ -238,9 +252,16 @@
             db.collection("clients").add({ clientName: name, clientPhone: phone, serviceName: service, history: formula, bookingDate: todayFormatted, bookingTime: "Walk-in", status: 'pending' }).then(() => { closeModal(); document.getElementById('new-name').value = ""; document.getElementById('new-formula').value = ""; });
         }
 
+        // Updated getMatrixData to include Brand
         function getMatrixData(id) {
-            const base = document.getElementById('base-' + id).value; const target = document.getElementById('target-' + id).value; const vol = document.getElementById('vol-' + id).value; const time = document.getElementById('time-' + id).value; const ph = document.getElementById('ph-' + id).value;
-            return `<b>Base:</b> ${base || '-'} | <b>Target:</b> ${target || '-'} <br><b>Dev:</b> ${vol || '-'} | <b>Time:</b> ${time || '-'} <br><b>Treatments:</b> ${ph || '-'}`;
+            const brand = document.getElementById('brand-' + id).value;
+            const base = document.getElementById('base-' + id).value; 
+            const target = document.getElementById('target-' + id).value; 
+            const vol = document.getElementById('vol-' + id).value; 
+            const time = document.getElementById('time-' + id).value; 
+            const ph = document.getElementById('ph-' + id).value;
+            
+            return `<b>Brand:</b> ${brand || '-'} <br><b>Base:</b> ${base || '-'} | <b>Target:</b> ${target || '-'} <br><b>Dev:</b> ${vol || '-'} | <b>Time:</b> ${time || '-'} <br><b>Treatments:</b> ${ph || '-'}`;
         }
 
         function updateFormula(fullPath, id) { db.doc(fullPath).update({ history: getMatrixData(id) }).then(() => alert("Formulation Matrix Saved!")); }
@@ -251,7 +272,6 @@
             db.doc(fullPath).update({ status: 'done', billAmount: bill || "0", history: getMatrixData(id) });
         }
 
-        // 100% FREE IMGBB API UPLOAD SYSTEM
         function uploadPhoto(fullPath, id) {
             const fileInput = document.getElementById('img-' + id);
             const file = fileInput.files[0];
@@ -264,7 +284,6 @@
             const formData = new FormData();
             formData.append('image', file);
 
-            // AAPKI API KEY YAHAN ADD KAR DI GAYI HAI:
             const apiKey = '784a2cd72d9a44a6df0073527b1eee04'; 
 
             fetch('https://api.imgbb.com/1/upload?key=' + apiKey, {
