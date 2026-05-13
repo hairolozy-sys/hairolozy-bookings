@@ -1,66 +1,112 @@
 <!DOCTYPE html>
-<html>
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hairolozy Admin</title>
+    <title>Hairolozy Admin Pro</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; background: #f0f2f5; color: #333; }
-        .card { background: white; padding: 15px; margin-bottom: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-top: 4px solid #d35400; }
-        h2 { text-align: center; color: #2c3e50; }
-        .info { margin: 5px 0; font-size: 14px; }
-        .loading { text-align: center; font-style: italic; color: #888; }
+        body { font-family: sans-serif; background: #f0f2f5; padding: 15px; margin: 0; }
+        .header { background: #2c3e50; color: white; padding: 15px; text-align: center; border-bottom: 4px solid #d35400; border-radius: 0 0 15px 15px; }
+        .search-box { margin: 15px 0; }
+        #searchInput { width: 100%; padding: 12px; border-radius: 25px; border: 1px solid #ccc; box-sizing: border-box; outline: none; }
+        .card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-left: 6px solid #d35400; }
+        .name { font-weight: bold; font-size: 1.1em; color: #2c3e50; margin-bottom: 5px; }
+        .detail { margin: 3px 0; color: #555; font-size: 0.9em; }
+        .formula-section { background: #fff3e0; padding: 10px; border-radius: 8px; margin-top: 10px; border: 1px dashed #e67e22; }
+        .history-text { color: #d35400; font-style: italic; font-size: 0.9em; margin-bottom: 8px; }
+        input[type="text"].formula-input { width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ddd; box-sizing: border-box; }
+        .btn-save { background: #d35400; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; margin-top: 8px; width: 100%; font-weight: bold; }
+        .btn-delete { background: #e74c3c; color: white; border: none; padding: 8px; border-radius: 5px; cursor: pointer; margin-top: 10px; width: 100%; font-size: 0.8em; opacity: 0.8; }
     </style>
 </head>
 <body>
-    <h2>Hairolozy Bookings</h2>
-    <div id="booking-list" class="loading">Database se connect ho raha hai...</div>
 
-    <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<div class="header">
+    <h2 style="margin:0;">Hairolozy Admin Pro</h2>
+</div>
 
-    <script>
-        // Fix Config
-        const firebaseConfig = {
-            apiKey: "AIzaSyABGjbHjlLdUIHrbUxhD_Jp2ZScrMegX5A",
-            authDomain: "hairolozy-12bec.firebaseapp.com",
-            projectId: "hairolozy-12bec",
-            storageBucket: "hairolozy-12bec.appspot.com",
-            messagingSenderId: "386170490787",
-            appId: "1:386170490787:web:58b592d8a44d0e3de65416"
-        };
+<div class="search-box">
+    <input type="text" id="searchInput" placeholder="Client ka naam ya number dhoondhein..." onkeyup="filterCards()">
+</div>
 
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        const db = firebase.firestore();
+<div id="booking-list">Loading...</div>
 
-        // Direct Data Pull
-        db.collection("bookings").onSnapshot((querySnapshot) => {
-            const listDiv = document.getElementById("booking-list");
-            listDiv.classList.remove("loading");
-            
-            if (querySnapshot.empty) {
-                listDiv.innerHTML = "Koi booking nahi mili. Ek baar booking app se naya test karke dekhein.";
-                return;
-            }
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
-            let html = "";
-            querySnapshot.forEach((doc) => {
-                const data = doc.data();
-                html += `
-                    <div class="card">
-                        <strong>👤 ${data.clientName || 'No Name'}</strong>
-                        <div class="info">📞 ${data.clientPhone || 'No Phone'}</div>
-                        <div class="info">✂️ ${data.serviceName || 'No Service'}</div>
-                        <div class="info">📅 ${data.bookingDate || ''} | ${data.bookingTime || ''}</div>
-                    </div>`;
-            });
-            listDiv.innerHTML = html;
-        }, (error) => {
-            document.getElementById("booking-list").innerHTML = "Error: " + error.message;
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyABGjbHjlLdUIHrbUxhD_Jp2ZScrMegX5A",
+        authDomain: "hairolozy-12bec.firebaseapp.com",
+        projectId: "hairolozy-12bec",
+        storageBucket: "hairolozy-12bec.appspot.com",
+        messagingSenderId: "386170490787",
+        appId: "1:386170490787:web:58b592d8a44d0e3de65416"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // Data Load karna
+    db.collection("bookings").onSnapshot((querySnapshot) => {
+        const listDiv = document.getElementById("booking-list");
+        listDiv.innerHTML = "";
+
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            const id = doc.id;
+            const history = data.history || "Pehle ka koi record nahi hai.";
+
+            const card = `
+                <div class="card" data-search="${data.clientName.toLowerCase()} ${data.clientPhone}">
+                    <div class="name">👤 ${data.clientName || 'No Name'}</div>
+                    <div class="detail">📞 ${data.clientPhone || 'No Phone'}</div>
+                    <div class="detail">✂️ Service: <b>${data.serviceName || 'No Service'}</b></div>
+                    <div class="detail">📅 ${data.bookingDate} | ${data.bookingTime}</div>
+                    
+                    <div class="formula-section">
+                        <strong>Last Formulation/Notes:</strong>
+                        <div class="history-text" id="hist-${id}">${history}</div>
+                        <input type="text" id="input-${id}" class="formula-input" placeholder="Naya formula likhein...">
+                        <button class="btn-save" onclick="saveHistory('${id}')">Save Formula</button>
+                    </div>
+
+                    <button class="btn-delete" onclick="deleteBooking('${id}')">Delete This Booking</button>
+                </div>
+            `;
+            listDiv.innerHTML += card;
         });
-    </script>
+    });
+
+    // History Save function
+    function saveHistory(docId) {
+        const val = document.getElementById('input-' + docId).value;
+        if (!val.trim()) return alert("Kuch toh likhiye!");
+        
+        db.collection("bookings").doc(docId).update({
+            history: val
+        }).then(() => {
+            alert("History update ho gayi!");
+            document.getElementById('input-' + docId).value = "";
+        });
+    }
+
+    // Delete function
+    function deleteBooking(docId) {
+        if(confirm("Kya aap sach mein ise delete karna chahte hain?")) {
+            db.collection("bookings").doc(docId).delete();
+        }
+    }
+
+    // Search function
+    function filterCards() {
+        const term = document.getElementById('searchInput').value.toLowerCase();
+        const cards = document.getElementsByClassName('card');
+        for (let card of cards) {
+            const content = card.getAttribute('data-search');
+            card.style.display = content.includes(term) ? "" : "none";
+        }
+    }
+</script>
 </body>
 </html>
