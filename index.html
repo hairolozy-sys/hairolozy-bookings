@@ -16,9 +16,13 @@
 
         /* SERVICE CARDS GRID - 18 SERVICES */
         .service-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 25px; }
-        .service-card { background: #252525; border: 1px solid #444; padding: 15px 10px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .service-card { background: #252525; border: 1px solid #444; padding: 15px 10px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
         .service-card:hover { border-color: #D4AF37; background: #2a2a2a; }
+        
+        /* Multiple Selection Styling */
         .service-card.selected { border-color: #D4AF37; background: rgba(212, 175, 55, 0.15); box-shadow: 0 0 15px rgba(212, 175, 55, 0.2); }
+        .service-card.selected::after { content: '✔️'; position: absolute; top: 5px; right: 8px; font-size: 12px; }
+
         .service-card span { font-size: 22px; margin-bottom: 5px; }
         .service-card p { margin: 0; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; color: #fff; }
 
@@ -44,12 +48,14 @@
     <div class="container">
         <div class="header">
             <h1>Hairolozy</h1>
-            <p>Luxury Hair Experience by Arman</p>
+            <p>Luxury Hair Experience</p>
         </div>
 
         <div id="bookingForm">
-            <label style="text-align: center; display: block; margin-bottom: 15px;">Choose Your Service</label>
+            <label style="text-align: center; display: block; margin-bottom: 5px;">Choose Services</label>
+            <p style="text-align: center; font-size: 11px; color: #aaa; margin-top: 0; margin-bottom: 15px;">(You can select multiple options)</p>
             
+            <!-- MASTER MENU: 18 SERVICES -->
             <div class="service-grid" id="serviceGrid">
                 <div class="service-card" onclick="selectService('Precision Haircut', this)"><span>✂️</span><p>Haircut</p></div>
                 <div class="service-card" onclick="selectService('Root Touch-up', this)"><span>🖌️</span><p>Root Touch-up</p></div>
@@ -104,6 +110,7 @@
         <div id="successMsg"></div>
     </div>
 
+    <!-- Firebase Integration -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
@@ -122,10 +129,22 @@
         // Set Min Date to Today
         document.getElementById("client-date").setAttribute('min', new Date().toISOString().split('T')[0]);
 
+        // MULTIPLE SERVICE SELECTION LOGIC
+        let selectedServicesArray = [];
+
         function selectService(service, el) {
-            document.getElementById('selected-service').value = service;
-            document.querySelectorAll('.service-card').forEach(c => c.classList.remove('selected'));
-            el.classList.add('selected');
+            const index = selectedServicesArray.indexOf(service);
+            if (index > -1) {
+                // Agar pehle se selected hai, toh usko remove karo (Deselect)
+                selectedServicesArray.splice(index, 1);
+                el.classList.remove('selected');
+            } else {
+                // Agar selected nahi hai, toh usko array mein add karo (Select)
+                selectedServicesArray.push(service);
+                el.classList.add('selected');
+            }
+            // Array ko comma (,) laga kar text mein badal do
+            document.getElementById('selected-service').value = selectedServicesArray.join(', ');
         }
 
         function checkThursday() {
@@ -142,27 +161,34 @@
             const service = document.getElementById('selected-service').value;
             const history = document.getElementById('hair-history').value;
             const date = document.getElementById('client-date').value;
-            const time = document.getElementById('client-time').value;
+            let time = document.getElementById('client-time').value;
 
-            if(!service) return alert("Please select a Service first!");
+            if(selectedServicesArray.length === 0) return alert("Please select at least one Service!");
             if(!name || !phone || !date || !time) return alert("Please fill all details!");
+
+            // Format Time 12 hr
+            let timeParts = time.split(':');
+            let hours = parseInt(timeParts[0]);
+            let ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12 || 12; 
+            let formattedTime = hours + ':' + timeParts[1] + ' ' + ampm;
 
             const bookingID = "HLZ-" + Math.floor(1000 + Math.random() * 9000);
             
             db.collection("clients").add({
                 bookingID, clientName: name, clientPhone: phone, serviceName: service, 
-                history: "History: " + (history || "None"), bookingDate: date, bookingTime: time, status: 'pending'
+                history: "History: " + (history || "None"), bookingDate: date, bookingTime: formattedTime, status: 'pending'
             }).then(() => {
                 document.getElementById('bookingForm').style.display = 'none';
                 
-                // 🛑 YAHAN APNA NUMBER DAALEIN 🛑
+                // 🛑 YAHAN APNA WHATSAPP NUMBER DAALEIN 🛑
                 const salonNumber = "918860504808"; 
 
-                const msg = `🔔 *New Booking Alert!*\n\n*ID:* ${bookingID}\n*Client:* ${name}\n*Service:* ${service}\n*Date:* ${date}\n*Time:* ${time}\n*History:* ${history || 'None'}`;
+                const msg = `🔔 *New Booking Alert!*\n\n*ID:* ${bookingID}\n*Client:* ${name}\n*Services:* ${service}\n*Date:* ${date}\n*Time:* ${formattedTime}\n*History:* ${history || 'None'}`;
                 const waUrl = `https://wa.me/${salonNumber}?text=${encodeURIComponent(msg)}`;
 
                 document.getElementById('successMsg').innerHTML = `
-                    <h2 style="color:#D4AF37;">Booking Sent!</h2>
+                    <h2 style="color:#D4AF37; margin-top:0;">Booking Sent!</h2>
                     <div class="booking-id-badge">${bookingID}</div>
                     <p style="color:#aaa; font-size:14px;">Please click the button below to confirm your slot on WhatsApp.</p>
                     <a href="${waUrl}" target="_blank" style="background:#25d366; color:white; padding:15px 25px; border-radius:30px; text-decoration:none; font-weight:bold; display:inline-block; margin-top:10px;">📲 Confirm on WhatsApp</a>
