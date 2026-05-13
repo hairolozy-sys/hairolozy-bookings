@@ -9,51 +9,87 @@
         .container { width: 100%; max-width: 500px; }
         .header { text-align: center; margin-bottom: 25px; }
         .header h1 { color: #D4AF37; margin: 0; text-transform: uppercase; letter-spacing: 2px; }
+        .header p { color: #aaa; font-size: 14px; margin-top: 5px; }
         
-        /* Service Cards Grid */
+        /* Service Cards Grid - Ab zyada services ke liye optimized hai */
         .service-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .service-card { background: #1e1e1e; border: 2px solid #333; padding: 15px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .service-card { background: #1e1e1e; border: 2px solid #333; padding: 12px 10px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; flex-direction: column; }
         .service-card:hover { border-color: #D4AF37; background: #252525; }
-        .service-card.selected { border-color: #D4AF37; background: #2d2610; }
+        .service-card.selected { border-color: #D4AF37; background: rgba(212, 175, 55, 0.15); box-shadow: 0 0 10px rgba(212, 175, 55, 0.2); }
         .service-card p { margin: 5px 0 0; font-size: 13px; font-weight: bold; }
+        .service-card span { font-size: 20px; } /* Icon size */
 
         .form-group { margin-bottom: 20px; }
         label { display: block; margin-bottom: 8px; color: #D4AF37; font-size: 13px; font-weight: bold; }
-        input, textarea { width: 100%; background: #2a2a2a; color: #fff; border: 1px solid #444; padding: 14px; border-radius: 8px; box-sizing: border-box; }
+        input, textarea { width: 100%; background: #2a2a2a; color: #fff; border: 1px solid #444; padding: 14px; border-radius: 8px; box-sizing: border-box; font-size: 14px; outline: none; }
+        input:focus, textarea:focus { border-color: #D4AF37; }
         
-        .book-btn { background: #D4AF37; color: #121212; width: 100%; padding: 16px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; }
-        #successMsg { display: none; text-align: center; background: #1e1e1e; padding: 20px; border-radius: 10px; border: 1px solid #D4AF37; }
+        ::-webkit-calendar-picker-indicator { filter: invert(1) sepia(1) saturate(5) hue-rotate(10deg); cursor: pointer; }
+
+        .book-btn { background: linear-gradient(135deg, #D4AF37, #b5952f); color: #121212; width: 100%; padding: 16px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; letter-spacing: 1px; margin-top: 10px; }
+        
+        #successMsg { display: none; text-align: center; background: #1e1e1e; padding: 25px 15px; border-radius: 10px; border: 1px solid #333; margin-top: 20px; }
+        .booking-id-badge { background: rgba(212, 175, 55, 0.1); color: #D4AF37; border: 1px dashed #D4AF37; padding: 8px 15px; border-radius: 20px; display: inline-block; margin: 15px 0; font-size: 18px; letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header"><h1>Hairolozy</h1><p>Select Your Premium Service</p></div>
+    <div class="header">
+        <h1>Hairolozy</h1>
+        <p>Select Your Premium Service</p>
+    </div>
 
     <div id="bookingForm">
-        <!-- Visual Service Cards -->
+        <!-- Expanded Visual Service Cards -->
         <div class="service-grid" id="serviceGrid">
-            <div class="service-card" onclick="selectService('Haircut', this)"><p>✂️ Haircut</p></div>
-            <div class="service-card" onclick="selectService('Hair Color', this)"><p>🎨 Hair Color</p></div>
-            <div class="service-card" onclick="selectService('Balayage', this)"><p>✨ Balayage</p></div>
-            <div class="service-card" onclick="selectService('Keratin', this)"><p>💆‍♀️ Keratin</p></div>
+            <div class="service-card" onclick="selectService('Haircut & Styling', this)">
+                <span>✂️</span><p>Haircut & Style</p>
+            </div>
+            <div class="service-card" onclick="selectService('Root Touch-up', this)">
+                <span>🖌️</span><p>Root Touch-up</p>
+            </div>
+            <div class="service-card" onclick="selectService('Global Hair Color', this)">
+                <span>🎨</span><p>Global Color</p>
+            </div>
+            <div class="service-card" onclick="selectService('Highlights / Babylights', this)">
+                <span>✨</span><p>Highlights</p>
+            </div>
+            <div class="service-card" onclick="selectService('Balayage / Ombre', this)">
+                <span>🌟</span><p>Balayage / Ombre</p>
+            </div>
+            <div class="service-card" onclick="selectService('Color Correction', this)">
+                <span>🛠️</span><p>Color Correction</p>
+            </div>
+            <div class="service-card" onclick="selectService('Keratin / Hair Botox', this)">
+                <span>💆‍♀️</span><p>Keratin / Botox</p>
+            </div>
+            <div class="service-card" onclick="selectService('Smoothening / Rebonding', this)">
+                <span>🧴</span><p>Smoothening</p>
+            </div>
+            <div class="service-card" onclick="selectService('Olaplex / Bond Treatment', this)">
+                <span>🧪</span><p>Bond Treatment</p>
+            </div>
+            <div class="service-card" onclick="selectService('Hair Spa / Deep Conditioning', this)">
+                <span>🌿</span><p>Hair Spa</p>
+            </div>
         </div>
         <input type="hidden" id="selected-service">
 
         <div class="form-group">
             <label>Full Name</label>
-            <input type="text" id="client-name" placeholder="Your Name">
+            <input type="text" id="client-name" placeholder="Enter your full name">
         </div>
 
         <div class="form-group">
             <label>Phone Number</label>
-            <input type="tel" id="client-phone" placeholder="Your Number">
+            <input type="tel" id="client-phone" placeholder="Enter your WhatsApp number">
         </div>
 
         <!-- Hair History Box -->
         <div class="form-group">
-            <label>Hair History (Box Dye/Henna/Smoothening?)</label>
-            <textarea id="hair-history" rows="3" placeholder="Tell me about your previous chemical treatments..."></textarea>
+            <label>Hair History (Crucial for Colorists)</label>
+            <textarea id="hair-history" rows="3" placeholder="Any Box Dye, Henna (Mehandi), or Smoothening in the last 2 years?"></textarea>
         </div>
 
         <div class="form-group">
@@ -69,6 +105,7 @@
         <button class="book-btn" onclick="submitBooking()">CONFIRM APPOINTMENT</button>
     </div>
 
+    <!-- Success Message Container -->
     <div id="successMsg"></div>
 </div>
 
@@ -76,9 +113,20 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
 <script>
-    const firebaseConfig = { apiKey: "AIzaSyABGjbHjlLdUIHrbUxhD_Jp2ZScrMegX5A", authDomain: "hairolozy-12bec.firebaseapp.com", projectId: "hairolozy-12bec", storageBucket: "hairolozy-12bec.appspot.com", messagingSenderId: "386170490787", appId: "1:386170490787:web:58b592d8a44d0e3de65416" };
+    const firebaseConfig = { 
+        apiKey: "AIzaSyABGjbHjlLdUIHrbUxhD_Jp2ZScrMegX5A", 
+        authDomain: "hairolozy-12bec.firebaseapp.com", 
+        projectId: "hairolozy-12bec", 
+        storageBucket: "hairolozy-12bec.appspot.com", 
+        messagingSenderId: "386170490787", 
+        appId: "1:386170490787:web:58b592d8a44d0e3de65416" 
+    };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
+
+    // Set Minimum Date to Today
+    let today = new Date().toISOString().split('T')[0];
+    document.getElementById("client-date").setAttribute('min', today);
 
     function selectService(service, el) {
         document.getElementById('selected-service').value = service;
@@ -88,7 +136,10 @@
 
     function checkThursday() {
         let d = new Date(document.getElementById("client-date").value);
-        if(d.getDay() === 4) { alert("Thursday is Weekly Off!"); document.getElementById("client-date").value = ""; }
+        if(d.getDay() === 4) { 
+            alert("❌ Sorry! Every Thursday our salon is closed (Weekly Off). Please select another date."); 
+            document.getElementById("client-date").value = ""; 
+        }
     }
 
     function submitBooking() {
@@ -97,17 +148,50 @@
         const service = document.getElementById('selected-service').value;
         const history = document.getElementById('hair-history').value;
         const date = document.getElementById('client-date').value;
-        const time = document.getElementById('client-time').value;
+        let time = document.getElementById('client-time').value;
 
-        if(!name || !service || !date) return alert("Please fill details!");
+        if(!service) return alert("Please select a Service from the cards above!");
+        if(!name || !phone || !date || !time) return alert("Please fill all the details!");
+
+        // Time format (12-hour AM/PM)
+        let timeParts = time.split(':');
+        let hours = parseInt(timeParts[0]);
+        let ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12; 
+        let formattedTime = hours + ':' + timeParts[1] + ' ' + ampm;
 
         const bookingID = "HLZ-" + Math.floor(1000 + Math.random() * 9000);
+        
         db.collection("clients").add({
-            bookingID, clientName: name, clientPhone: phone, serviceName: service, 
-            history: "History: " + history, bookingDate: date, bookingTime: time, status: 'pending'
+            bookingID: bookingID, 
+            clientName: name, 
+            clientPhone: phone, 
+            serviceName: service, 
+            history: "Hair History: " + (history || "None reported"), 
+            bookingDate: date, 
+            bookingTime: formattedTime, 
+            status: 'pending'
         }).then(() => {
-            document.getElementById('bookingForm').innerHTML = `<h3>Booking Success!</h3><p>Your ID: ${bookingID}</p>
-            <a href="https://wa.me/91XXXXXXXXXX?text=New Booking: ${name}, ${service}, ID: ${bookingID}" style="color:#25d366; font-weight:bold;">📲 WhatsApp Arman</a>`;
+            document.getElementById('bookingForm').style.display = 'none';
+            
+            // YAHAN APNA WHATSAPP NUMBER DAALEIN (Bina + ke)
+            const salonWhatsAppNumber = "918860504808"; 
+
+            const msg = `🔔 *New Appointment Booking!*\n\n*Booking ID:* ${bookingID}\n*Name:* ${name}\n*Phone:* ${phone}\n*Service:* ${service}\n*Date:* ${date}\n*Time:* ${formattedTime}\n*History:* ${history || "None"}\n\nPlease confirm my appointment! ✨`;
+            const encodedMsg = encodeURIComponent(msg);
+
+            document.getElementById('successMsg').innerHTML = `
+                <h3 style="color:#D4AF37; margin-top:0;">Booking Successful!</h3>
+                <p>Your request has been sent.</p>
+                <div class="booking-id-badge">${bookingID}</div><br>
+                <span style="font-size:13px; color:#aaa;">Please send this detail to our WhatsApp to confirm your slot.</span>
+                <br><br>
+                <a href="https://wa.me/${salonWhatsAppNumber}?text=${encodedMsg}" target="_blank" 
+                   style="background:#25d366; color:white; padding:12px 20px; border-radius:30px; text-decoration:none; font-weight:bold; display:inline-block;">
+                   📲 Confirm on WhatsApp
+                </a>
+            `;
+            document.getElementById('successMsg').style.display = 'block';
         });
     }
 </script>
