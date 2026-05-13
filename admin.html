@@ -7,11 +7,8 @@
     <style>
         body { font-family: sans-serif; background: #f4f4f4; padding: 15px; margin: 0; }
         .header { background: #d35400; color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        
-        /* Search Bar Style */
         .search-container { margin: 15px 0; position: sticky; top: 75px; z-index: 99; }
-        .search-bar { width: 100%; padding: 12px; border-radius: 25px; border: 2px solid #d35400; font-size: 16px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); outline: none; }
-        
+        .search-bar { width: 100%; padding: 12px; border-radius: 25px; border: 2px solid #d35400; font-size: 16px; outline: none; }
         .add-client-form { background: white; padding: 15px; margin-bottom: 20px; border-radius: 10px; border: 2px solid #d35400; }
         .card { background: white; padding: 15px; margin-bottom: 15px; border-radius: 10px; border-left: 6px solid #d35400; box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: relative; }
         .time-badge { background: #d35400; color: white; padding: 4px 10px; border-radius: 5px; font-size: 13px; font-weight: bold; position: absolute; top: 15px; right: 15px; }
@@ -26,15 +23,16 @@
     <div class="header"><h2>Hairolozy Admin</h2></div>
     
     <div style="padding: 15px;">
-        <!-- Walk-in Form -->
+        <!-- WALK-IN FORM FIXED (All details back) -->
         <div class="add-client-form">
-            <h3 style="margin-top:0; color:#d35400;">+ Add Walk-in</h3>
-            <input type="text" id="new-name" placeholder="Name">
-            <input type="text" id="new-formula" placeholder="Formula">
+            <h3 style="margin-top:0; color:#d35400;">+ Add Walk-in Client</h3>
+            <input type="text" id="new-name" placeholder="Client Name">
+            <input type="tel" id="new-phone" placeholder="Phone Number">
+            <input type="text" id="new-service" placeholder="Service (e.g. Balayage)">
+            <input type="text" id="new-formula" placeholder="Formula Details">
             <button class="add-btn" onclick="addDirectClient()">Save Walk-in</button>
         </div>
 
-        <!-- SEARCH BAR ADDED HERE -->
         <div class="search-container">
             <input type="text" id="searchInput" class="search-bar" placeholder="🔍 Search Name or Phone..." onkeyup="filterList()">
         </div>
@@ -56,18 +54,12 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Search Logic
         function filterList() {
             let input = document.getElementById('searchInput').value.toLowerCase();
             let cards = document.getElementsByClassName('card');
-
             for (let i = 0; i < cards.length; i++) {
                 let text = cards[i].innerText.toLowerCase();
-                if (text.includes(input)) {
-                    cards[i].style.display = "";
-                } else {
-                    cards[i].style.display = "none";
-                }
+                cards[i].style.display = text.includes(input) ? "" : "none";
             }
         }
 
@@ -98,7 +90,8 @@
             card.innerHTML = `
                 <div class="time-badge">🕒 ${data.bookingTime || data.time || 'N/A'}</div>
                 <b>👤 ${data.clientName || data.name}</b><br>
-                📞 <span class="phone">${data.clientPhone || 'N/A'}</span><br>
+                📞 ${data.clientPhone || data.phone || 'N/A'}<br>
+                ✂️ ${data.serviceName || 'N/A'}<br>
                 📅 Date: ${data.bookingDate || data.date || ''}
                 <div class="formula-box">
                     <strong>History:</strong> ${data.history || "No record."}
@@ -110,15 +103,28 @@
             listDiv.appendChild(card);
         }
 
-        // Baki functions (Add, Update, Delete) wahi rahenge
         function addDirectClient() {
             const name = document.getElementById('new-name').value;
+            const phone = document.getElementById('new-phone').value;
+            const service = document.getElementById('new-service').value;
             const formula = document.getElementById('new-formula').value;
-            if(!name || !formula) return alert("Details bhariye!");
+
+            if(!name || !formula) return alert("Name aur Formula bhariye!");
+
             db.collection("clients").add({
-                clientName: name, history: formula, 
-                bookingDate: new Date().toLocaleDateString(), bookingTime: "Walk-in"
-            }).then(() => { alert("Saved!"); document.getElementById('new-name').value=""; document.getElementById('new-formula').value=""; });
+                clientName: name,
+                clientPhone: phone,
+                serviceName: service,
+                history: formula,
+                bookingDate: new Date().toLocaleDateString(),
+                bookingTime: "Walk-in"
+            }).then(() => {
+                alert("Saved!");
+                document.getElementById('new-name').value = "";
+                document.getElementById('new-phone').value = "";
+                document.getElementById('new-service').value = "";
+                document.getElementById('new-formula').value = "";
+            });
         }
 
         function updateFormula(fullPath, id) {
