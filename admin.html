@@ -15,7 +15,7 @@
 </head>
 <body>
     <h2 style="text-align:center;">Hairolozy Admin Pro</h2>
-    <div id="list">Checking database...</div>
+    <div id="list">Checking all folders...</div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -32,55 +32,56 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // FIX: collectionGroup use kar rahe hain taaki kisi bhi folder se data mil jaye
-        db.collectionGroup("Bookings").onSnapshot((querySnapshot) => {
-            const listDiv = document.getElementById("list");
-            listDiv.innerHTML = "";
-            
-            if (querySnapshot.empty) {
-                listDiv.innerHTML = "Koi booking nahi mili. Database path check karein.";
-                return;
-            }
+        // Dono 'bookings' aur 'Bookings' ko check karne ke liye array
+        const collectionsToCheck = ["bookings", "Bookings"];
 
-            querySnapshot.forEach((doc) => {
-                const data = doc.data();
-                const id = doc.id;
-                const path = doc.ref.path; // Tracking ke liye
-                const history = data.history || "No record.";
+        collectionsToCheck.forEach(colName => {
+            db.collectionGroup(colName).onSnapshot((querySnapshot) => {
+                const listDiv = document.getElementById("list");
+                if (colName === "bookings") listDiv.innerHTML = ""; // Pehle list clear karein
 
-                listDiv.innerHTML += `
-                    <div class="card">
-                        <b>👤 ${data.clientName || 'Unknown'}</b><br>
-                        📞 ${data.clientPhone || 'No Phone'}<br>
-                        ✂️ ${data.serviceName || 'No Service'}<br>
-                        📅 ${data.bookingDate || ''}
-                        
-                        <div class="formula-box">
-                            <strong>Formula:</strong> <span style="color:#d35400;">${history}</span>
-                            <select id="brand-${id}">
-                                <option value="Loreal">Loreal</option>
-                                <option value="Redken">Redken</option>
-                                <option value="Keune">Keune</option>
-                                <option value="Schwarzkopf">Schwarzkopf</option>
-                                <option value="Alfaparf">Alfaparf</option>
-                            </select>
-                            <input type="text" id="input-${id}" placeholder="Formula likhein...">
-                            <button class="save-btn" onclick="saveFormula('${path}', '${id}')">Save</button>
-                        </div>
-                        <button class="del-btn" onclick="deleteEntry('${path}')">Delete</button>
-                    </div>`;
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const id = doc.id;
+                    const path = doc.ref.path;
+                    const history = data.history || "No record.";
+
+                    // Sabhi possible fields check karein (Capital aur Small letters dono)
+                    const name = data.clientName || data.name || data.Name || "No Name";
+                    const phone = data.clientPhone || data.phone || data.Phone || "No Phone";
+                    const service = data.serviceName || data.service || "No Service";
+                    const date = data.bookingDate || data.date || "";
+
+                    listDiv.innerHTML += `
+                        <div class="card">
+                            <b>👤 ${name}</b><br>
+                            📞 ${phone}<br>
+                            ✂️ ${service}<br>
+                            📅 ${date}
+                            
+                            <div class="formula-box">
+                                <strong>Formula:</strong> <span style="color:#d35400;">${history}</span>
+                                <select id="brand-${id}">
+                                    <option value="Loreal">Loreal</option>
+                                    <option value="Redken">Redken</option>
+                                    <option value="Keune">Keune</option>
+                                    <option value="Schwarzkopf">Schwarzkopf</option>
+                                    <option value="Alfaparf">Alfaparf</option>
+                                </select>
+                                <input type="text" id="input-${id}" placeholder="Formula likhein...">
+                                <button class="save-btn" onclick="saveFormula('${path}', '${id}')">Save</button>
+                            </div>
+                            <button class="del-btn" onclick="deleteEntry('${path}')">Delete</button>
+                        </div>`;
+                });
             });
-        }, (error) => {
-            document.getElementById("list").innerHTML = "Error: " + error.message;
         });
 
         function saveFormula(fullPath, id) {
             const brand = document.getElementById('brand-' + id).value;
             const formula = document.getElementById('input-' + id).value;
-            if(!formula) return alert("Write something!");
-            
-            db.doc(fullPath).update({ history: brand + " - " + formula })
-            .then(() => alert("Saved!"));
+            if(!formula) return alert("Kuch likhiye!");
+            db.doc(fullPath).update({ history: brand + " - " + formula }).then(() => alert("Saved!"));
         }
 
         function deleteEntry(fullPath) {
