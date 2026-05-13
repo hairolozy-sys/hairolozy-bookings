@@ -9,7 +9,6 @@
         .header { background: #1a1a1a; color: #d35400; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-bottom: 3px solid #d35400; }
         h2 { margin: 0; font-size: 22px; letter-spacing: 1px; }
 
-        /* Dashboard Styles */
         .dashboard { display: flex; gap: 15px; margin-top: 15px; }
         .dash-box { background: linear-gradient(135deg, #d35400, #e67e22); color: white; flex: 1; padding: 15px; border-radius: 12px; text-align: center; box-shadow: 0 4px 10px rgba(211,84,0,0.2); }
         .dash-box.green { background: linear-gradient(135deg, #27ae60, #2ecc71); box-shadow: 0 4px 10px rgba(39,174,96,0.2); }
@@ -39,8 +38,6 @@
         .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
         .matrix-grid input, .matrix-grid select { width: 100%; padding: 10px; margin: 0; border-radius: 6px; border: 1px solid #ccc; font-size: 13px; box-sizing: border-box; }
         .full-width { grid-column: span 2; }
-        
-        /* Bill Input Style */
         .bill-input { grid-column: span 2; border: 2px solid #27ae60 !important; font-weight: bold; color: #27ae60; }
 
         .btn-group { display: flex; gap: 10px; margin-top: 10px; }
@@ -62,7 +59,6 @@
     <div class="header"><h2>Hairolozy Admin</h2></div>
     
     <div style="padding: 15px;">
-        <!-- NEW: Revenue Dashboard -->
         <div class="dashboard">
             <div class="dash-box">
                 <h3>Today's Clients</h3>
@@ -108,10 +104,8 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Dashboard Variables
-        let todayRevenue = 0;
-        let todayClients = 0;
-        const todayDate = new Date().toLocaleDateString();
+        // Safe Dashboard Data Storage
+        let allBookings = {};
 
         function openModal() { document.getElementById('walkinModal').style.display = 'flex'; }
         function closeModal() { document.getElementById('walkinModal').style.display = 'none'; }
@@ -131,33 +125,52 @@
             }
         }
 
+        // Dashboard Calculation Fix (Works with ALL Date formats)
+        function updateDashboard() {
+            let rev = 0;
+            let clientsCount = 0;
+            
+            const now = new Date();
+            const format1 = now.toLocaleDateString(); // e.g. 5/13/2026
+            const format2 = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`; // e.g. 2026-05-13
+
+            for (let id in allBookings) {
+                let b = allBookings[id];
+                // Check if date matches ANY format
+                if (b.date === format1 || b.date === format2) {
+                    clientsCount++;
+                    if (b.status === 'done' && b.bill) {
+                        rev += parseFloat(b.bill);
+                    }
+                }
+            }
+            
+            document.getElementById('dash-clients').innerText = clientsCount;
+            document.getElementById('dash-revenue').innerText = "₹" + rev;
+        }
+
         function startSync() {
             const folders = ["Bookings", "bookings", "clientname", "clients"];
             folders.forEach(folder => {
                 const ref = (folder === "clients") ? db.collection(folder) : db.collectionGroup(folder);
                 ref.onSnapshot((snap) => {
                     snap.forEach(doc => {
+                        const data = doc.data();
+                        if (!data.clientName && !data.name) return;
+                        
+                        // Save to our dashboard list
+                        allBookings[doc.id] = {
+                            date: data.bookingDate || data.date || '',
+                            status: data.status || 'pending',
+                            bill: data.billAmount || 0
+                        };
+                        
                         renderCard(doc);
-                        calculateDashboard(doc.data());
                     });
+                    // Update Dashboard Live
+                    updateDashboard();
                 });
             });
-        }
-
-        // Calculate Revenue Logic
-        let processedDocs = new Set();
-        function calculateDashboard(data) {
-            let dbDate = data.bookingDate || data.date || '';
-            if (dbDate === todayDate && !processedDocs.has(data.clientPhone + data.clientName)) {
-                processedDocs.add(data.clientPhone + data.clientName);
-                todayClients++;
-                document.getElementById('dash-clients').innerText = todayClients;
-                
-                if (data.status === 'done' && data.billAmount) {
-                    todayRevenue += parseFloat(data.billAmount);
-                    document.getElementById('dash-revenue').innerText = "₹" + todayRevenue;
-                }
-            }
         }
 
         function renderCard(doc) {
@@ -207,14 +220,12 @@
                         </select>
                         <input type="text" id="time-${id}" placeholder="Processing Time">
                         <input type="text" id="ph-${id}" class="full-width" placeholder="Bond Builder / Notes">
-                        
-                        <!-- NEW: Bill Input -->
                         <input type="number" id="bill-${id}" class="bill-input" placeholder="Total Bill Amount (₹) - e.g. 2500" value="${data.billAmount || ''}">
                     </div>
 
                     <div class="btn-group">
-                        <button class="save-btn" onclick="updateFormula('${path}', '${id}')">💾 Save Matrix</button>
-                        <button class="done-btn" onclick="markDone('${path}', '${id}')">✔️ Mark Done</button>
+                        <button class="save-btn" onclick="updateFormula('${path}', '${id}')">💾 Save Matrix Only</button>
+                        <button class="done-btn" onclick="markDone('${path}', '${id}')">✔️ Mark Done & Save All</button>
                     </div>
                     <button class="del-btn" onclick="deleteEntry('${path}')">🗑️ Delete Record</button>
                 </div>
@@ -230,54 +241,54 @@
 
             if(!name) return alert("Name zaroori hai!");
 
+            const todayFormatted = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate()).padStart(2, '0')}`;
+
             db.collection("clients").add({
                 clientName: name, clientPhone: phone, serviceName: service, history: formula,
-                bookingDate: todayDate, bookingTime: "Walk-in", status: 'pending'
+                bookingDate: todayFormatted, bookingTime: "Walk-in", status: 'pending'
             }).then(() => {
                 closeModal();
                 document.getElementById('new-name').value = ""; document.getElementById('new-formula').value = "";
-                // Hard reload to refresh dashboard calculations safely
-                setTimeout(() => location.reload(), 500); 
             });
         }
 
-        function updateFormula(fullPath, id) {
+        // Helper to format Matrix
+        function getMatrixData(id) {
             const base = document.getElementById('base-' + id).value;
             const target = document.getElementById('target-' + id).value;
             const vol = document.getElementById('vol-' + id).value;
             const time = document.getElementById('time-' + id).value;
             const ph = document.getElementById('ph-' + id).value;
-            const bill = document.getElementById('bill-' + id).value;
 
-            const formattedData = `
+            return `
                 <b>Base:</b> ${base || '-'} | <b>Target:</b> ${target || '-'} <br>
                 <b>Dev:</b> ${vol || '-'} | <b>Time:</b> ${time || '-'} <br>
                 <b>Treatments:</b> ${ph || '-'}
             `;
-
-            db.doc(fullPath).update({ 
-                history: formattedData,
-                billAmount: bill || ""
-            }).then(() => alert("Formulation Matrix Saved!"));
         }
 
+        function updateFormula(fullPath, id) {
+            db.doc(fullPath).update({ history: getMatrixData(id) }).then(() => alert("Formulation Matrix Saved!"));
+        }
+
+        // NEW: Mark Done will save BOTH Bill AND Matrix Formula
         function markDone(fullPath, id) {
             const bill = document.getElementById('bill-' + id).value;
+            
             if(!bill) {
                 if(!confirm("Aapne Bill Amount nahi dala hai. Bina bill ke 'Done' karein?")) return;
             }
             
             db.doc(fullPath).update({ 
                 status: 'done',
-                billAmount: bill || "0"
-            }).then(() => {
-                // Hard reload to refresh dashboard calculations safely
-                setTimeout(() => location.reload(), 500);
+                billAmount: bill || "0",
+                history: getMatrixData(id) // Matrix ki details bhi yahi save ho jayengi
             });
+            // Page reload ki zaroorat nahi hai, onSnapshot apne aap Dashboard update kar dega!
         }
 
         function deleteEntry(fullPath) {
-            if(confirm("Are you sure?")) db.doc(fullPath).delete().then(() => location.reload());
+            if(confirm("Are you sure?")) db.doc(fullPath).delete();
         }
 
         startSync();
