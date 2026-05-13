@@ -33,7 +33,7 @@
         const db = firebase.firestore();
 
         // FIX: collectionGroup use kar rahe hain taaki kisi bhi folder se data mil jaye
-        db.collectionGroup("bookings").onSnapshot((querySnapshot) => {
+        db.collectionGroup("Bookings").onSnapshot((querySnapshot) => {
             const listDiv = document.getElementById("list");
             listDiv.innerHTML = "";
             
