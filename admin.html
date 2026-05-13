@@ -1,85 +1,59 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hairolozy Admin Fix</title>
-    <style>
-        body { font-family: sans-serif; background: #f4f4f4; padding: 15px; }
-        .card { background: white; padding: 15px; margin-bottom: 15px; border-radius: 10px; border-left: 6px solid #d35400; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .formula-box { background: #fff3e0; padding: 10px; margin-top: 10px; border-radius: 5px; border: 1px dashed #d35400; }
-        select, input { width: 100%; padding: 10px; margin: 5px 0; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; }
-        .save-btn { background: #d35400; color: white; width: 100%; padding: 10px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
-        .del-btn { background: #e74c3c; color: white; border: none; padding: 8px; border-radius: 5px; width: 100%; margin-top: 10px; font-size: 12px; }
-    </style>
-</head>
-<body>
-    <h2 style="text-align:center;">Hairolozy Bookings</h2>
-    <div id="list">Loading bookings...</div>
+// Purane 'db.collection' wale hisse ki jagah ye daal dein:
+db.collectionGroup("Bookings").onSnapshot((querySnapshot) => {
+    const listDiv = document.getElementById("list");
+    listDiv.innerHTML = ""; // List clear karein
+    
+    if (querySnapshot.empty) {
+        listDiv.innerHTML = "Database mein koi booking nahi mili.";
+        return;
+    }
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const id = doc.id;
+        const path = doc.ref.path; // Ye zaroori hai update karne ke liye
+        const history = data.history || "No record.";
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyABGjbHjlLdUIHrbUxhD_Jp2ZScrMegX5A",
-            authDomain: "hairolozy-12bec.firebaseapp.com",
-            projectId: "hairolozy-12bec",
-            storageBucket: "hairolozy-12bec.appspot.com",
-            messagingSenderId: "386170490787",
-            appId: "1:386170490787:web:58b592d8a44d0e3de65416"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        // Screenshot ke mutabiq exact field names:
+        const name = data.clientName || "No Name";
+        const phone = data.clientPhone || "No Phone";
+        const service = data.serviceName || "No Service";
+        const date = data.bookingDate || "";
+        const time = data.bookingTime || "";
 
-        // Simple path use kar rahe hain jo seedha top-level bookings se data uthayega
-        db.collection("bookings").onSnapshot((querySnapshot) => {
-            const listDiv = document.getElementById("list");
-            listDiv.innerHTML = "";
-            
-            if (querySnapshot.empty) {
-                listDiv.innerHTML = "Abhi koi nayi booking nahi hai. Ek test karke dekhein.";
-                return;
-            }
+        listDiv.innerHTML += `
+            <div class="card">
+                <b>👤 ${name}</b><br>
+                📞 ${phone}<br>
+                ✂️ ${service}<br>
+                📅 ${date} | 🕒 ${time}
+                
+                <div class="formula-box">
+                    <strong>Formula History:</strong><br>
+                    <span style="color:#d35400;">${history}</span>
+                    <select id="brand-${id}">
+                        <option value="Loreal">Loreal</option>
+                        <option value="Redken">Redken</option>
+                        <option value="Schwarzkopf">Schwarzkopf</option>
+                        <option value="Keune">Keune</option>
+                        <option value="Alfaparf">Alfaparf</option>
+                    </select>
+                    <input type="text" id="input-${id}" placeholder="Formula likhein...">
+                    <button class="save-btn" onclick="saveFormula('${path}', '${id}')">Save Formula</button>
+                </div>
+                <button class="del-btn" onclick="deleteEntry('${path}')">Delete Booking</button>
+            </div>`;
+    });
+});
 
-            querySnapshot.forEach((doc) => {
-                const data = doc.data();
-                const id = doc.id;
-                const history = data.history || "No history.";
+// Update aur Delete function ko path-friendly banayein:
+function saveFormula(fullPath, id) {
+    const b = document.getElementById('brand-'+id).value;
+    const f = document.getElementById('input-'+id).value;
+    if(!f) return alert("Kuch likhein!");
+    db.doc(fullPath).update({ history: b + " - " + f }).then(() => alert("Saved!"));
+}
 
-                listDiv.innerHTML += `
-                    <div class="card">
-                        <b>👤 ${data.clientName || 'No Name'}</b><br>
-                        📞 ${data.clientPhone || 'No Phone'}<br>
-                        ✂️ ${data.serviceName || 'No Service'}<br>
-                        📅 ${data.bookingDate || ''}
-                        
-                        <div class="formula-box">
-                            <strong>Formula:</strong> <span style="color:#d35400;">${history}</span>
-                            <select id="brand-${id}">
-                                <option value="Loreal">Loreal</option>
-                                <option value="Redken">Redken</option>
-                                <option value="Schwarzkopf">Schwarzkopf</option>
-                                <option value="Keune">Keune</option>
-                            </select>
-                            <input type="text" id="input-${id}" placeholder="Naya formula...">
-                            <button class="save-btn" onclick="saveFormula('${id}')">Save Formula</button>
-                        </div>
-                        <button class="del-btn" onclick="deleteEntry('${id}')">Delete</button>
-                    </div>`;
-            });
-        });
-
-        function saveFormula(id) {
-            const b = document.getElementById('brand-'+id).value;
-            const f = document.getElementById('input-'+id).value;
-            if(!f) return alert("Kuch likhein!");
-            db.collection("bookings").doc(id).update({ history: b + " - " + f });
-        }
-
-        function deleteEntry(id) {
-            if(confirm("Delete?")) db.collection("bookings").doc(id).delete();
-        }
-    </script>
-</body>
-</html>
+function deleteEntry(fullPath) {
+    if(confirm("Delete karein?")) db.doc(fullPath).delete();
+}
