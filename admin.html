@@ -81,7 +81,7 @@
         const newNote = document.getElementById('input-' + docId).value;
         if (newNote.trim() === "") return alert("Please kuch likhein!");
 
-        db.collection("clients").doc(docId).update({
+        db.collection("bookings").doc(docId).update({
             history: newNote
         }).then(() => {
             alert("History Save Ho Gayi!");
