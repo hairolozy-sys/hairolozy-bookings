@@ -1,82 +1,15 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hairolozy Admin Pro</title>
-    <style>
-        body { font-family: sans-serif; background: #f4f4f4; padding: 15px; }
-        .card { background: white; padding: 15px; margin-bottom: 15px; border-radius: 10px; border-left: 6px solid #d35400; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .formula-box { background: #fff3e0; padding: 10px; margin-top: 10px; border-radius: 5px; border: 1px dashed #d35400; }
-        input { width: 100%; padding: 8px; margin: 10px 0; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; cursor: pointer; font-weight: bold; border-radius: 5px; border: none; }
-        .save-btn { background: #d35400; color: white; }
-        .del-btn { background: #e74c3c; color: white; margin-top: 10px; font-size: 12px; }
-    </style>
-</head>
-<body>
-    <h2 style="text-align:center;">Hairolozy Bookings & History</h2>
-    <div id="list">Loading...</div>
-
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyABGjbHjlLdUIHrbUxhD_Jp2ZScrMegX5A",
-            authDomain: "hairolozy-12bec.firebaseapp.com",
-            projectId: "hairolozy-12bec",
-            storageBucket: "hairolozy-12bec.appspot.com",
-            messagingSenderId: "386170490787",
-            appId: "1:386170490787:web:58b592d8a44d0e3de65416"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        // Data khinchne ka sabse simple tarika
-        db.collection("bookings").onSnapshot((querySnapshot) => {
-            const listDiv = document.getElementById("list");
-            listDiv.innerHTML = "";
-            
-            if (querySnapshot.empty) {
-                listDiv.innerHTML = "Database mein koi booking nahi hai.";
-            }
-
-            querySnapshot.forEach((doc) => {
-                const data = doc.data();
-                const id = doc.id;
-                const history = data.history || "Pehle ka koi record nahi hai.";
-
-                listDiv.innerHTML += `
-                    <div class="card">
-                        <b>👤 ${data.clientName}</b><br>
-                        📞 ${data.clientPhone}<br>
-                        ✂️ ${data.serviceName}<br>
-                        📅 ${data.bookingDate} | ${data.bookingTime}
-                        
-                        <div class="formula-box">
-                            <strong>Formula History:</strong><br>
-                            <span id="text-${id}" style="color:#d35400;">${history}</span>
-                            <input type="text" id="input-${id}" placeholder="Naya formula likhein...">
-                            <button class="save-btn" onclick="saveFormula('${id}')">Save Formula</button>
-                        </div>
-                        <button class="del-btn" onclick="deleteEntry('${id}')">Delete Booking</button>
-                    </div>`;
-            });
-        });
-
-        function saveFormula(id) {
-            const val = document.getElementById('input-' + id).value;
-            if(!val) return alert("Kuch likhiye!");
-            db.collection("bookings").doc(id).update({ history: val })
-            .then(() => alert("Saved!"));
-        }
-
-        function deleteEntry(id) {
-            if(confirm("Delete karein?")) {
-                db.collection("bookings").doc(id).delete();
-            }
-        }
-    </script>
-</body>
-</html>
+<!-- Formula Box ke andar ye wala hissa add karein: -->
+<div class="formula-box">
+    <strong>Select Brand:</strong>
+    <select id="brand-${id}" class="formula-input">
+        <option value="Loreal">Loreal</option>
+        <option value="Redken">Redken</option>
+        <option value="Keune">Keune</option>
+        <option value="Schwarzkopf">Schwarzkopf</option>
+        <option value="Alfaparf">Alfaparf</option>
+        <option value="Other">Other</option>
+    </select>
+    
+    <input type="text" id="input-${id}" class="formula-input" placeholder="Formula/Shade likhein...">
+    <button class="save-btn" onclick="saveFormula('${id}')">Save Formula</button>
+</div>
