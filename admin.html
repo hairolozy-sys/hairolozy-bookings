@@ -3,58 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hairolozy Admin - Bookings List</title>
+    <title>Hairolozy Admin Pro</title>
     <style>
-        body { font-family: sans-serif; background: #f0f2f5; padding: 15px; }
-        h2 { text-align: center; color: #d35400; }
-        .card { background: white; border-radius: 10px; padding: 15px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-left: 5px solid #d35400; }
-        .name { font-weight: bold; font-size: 18px; color: #333; }
-        .detail { font-size: 14px; color: #666; margin-top: 5px; }
-        .time-tag { background: #fff3e0; color: #e67e22; padding: 2px 8px; border-radius: 4px; font-weight: bold; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; padding: 10px; margin: 0; }
+        .header { background: #2c3e50; color: white; padding: 15px; text-align: center; border-bottom: 4px solid #d35400; }
+        .search-box { margin: 15px 0; padding: 10px; }
+        #searchInput { width: 100%; padding: 12px; border-radius: 25px; border: 1px solid #ccc; box-sizing: border-box; }
+        .card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-left: 6px solid #d35400; }
+        .name { font-weight: bold; font-size: 1.2em; color: #2c3e50; }
+        .detail { margin: 5px 0; color: #555; font-size: 0.95em; }
+        .formula-section { background: #fff3e0; padding: 10px; border-radius: 8px; margin-top: 10px; border: 1px dashed #e67e22; }
+        .btn { background: #d35400; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; margin-top: 10px; width: 100%; font-weight: bold; }
+        input[type="text"] { width: 100%; padding: 8px; margin-top: 5px; border-radius: 4px; border: 1px solid #ddd; box-sizing: border-box; }
     </style>
 </head>
 <body>
-    <h2>Hairolozy Bookings</h2>
-    <div id="booking-list">Loading bookings...</div>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<div class="header">
+    <h1>Hairolozy Admin Pro</h1>
+</div>
 
-    <script>
-        const firebaseConfig = {
-          apiKey: "AIzaSyABGjbHjlLdUIHrbUxhD_Jp2ZScrMegX5A",
-          authDomain: "hairolozy-12bec.firebaseapp.com",
-          projectId: "hairolozy-12bec",
-          storageBucket: "hairolozy-12bec.firebasestorage.app",
-          messagingSenderId: "386170490787",
-          appId: "1:386170490787:web:58b592d8a44d0e3de65416"
-        };
+<div class="search-box">
+    <input type="text" id="searchInput" placeholder="Client ka naam ya number search karein..." onkeyup="filterBookings()">
+</div>
 
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+<div id="booking-list">Loading...</div>
 
-        // Real-time listener: Jaise hi koi booking aayegi, ye list apne aap update ho jayegi
-        db.collection("clients").orderBy("timestamp", "desc").onSnapshot((querySnapshot) => {
-            const listDiv = document.getElementById("booking-list");
-            listDiv.innerHTML = ""; // Purani list clear karein
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
-            querySnapshot.forEach((doc) => {
-                const data = doc.data();
-                const card = `
-                    <div class="card">
-                        <div class="name">${data.clientName}</div>
-                        <div class="detail">📞 ${data.clientPhone}</div>
-                        <div class="detail">💇 Service: <b>${data.serviceName}</b></div>
-                        <div class="detail">📅 Date: ${data.bookingDate} | <span class="time-tag">${data.bookingTime}</span></div>
+<script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyABGjbHjlLdUIHrbUxhD_Jp2ZScrMegX5A",
+      authDomain: "hairolozy-12bec.firebaseapp.com",
+      projectId: "hairolozy-12bec",
+      storageBucket: "hairolozy-12bec.firebasestorage.app",
+      messagingSenderId: "386170490787",
+      appId: "1:386170490787:web:58b592d8a44d0e3de65416"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // Live listener for bookings
+    db.collection("clients").orderBy("timestamp", "desc").onSnapshot((querySnapshot) => {
+        const listDiv = document.getElementById("booking-list");
+        listDiv.innerHTML = "";
+
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            const id = doc.id;
+            const history = data.history || "Pehle ka koi record nahi hai.";
+
+            const card = `
+                <div class="card" data-name="${data.clientName.toLowerCase()}" data-phone="${data.clientPhone}">
+                    <div class="name">${data.clientName}</div>
+                    <div class="detail">📞 ${data.clientPhone}</div>
+                    <div class="detail">💇 Service: <b>${data.serviceName}</b></div>
+                    <div class="detail">📅 Date: ${data.bookingDate} | ${data.bookingTime}</div>
+                    
+                    <div class="formula-section">
+                        <strong>Last Formulation/Notes:</strong>
+                        <div id="hist-${id}" style="margin-top:5px; font-style: italic; color: #d35400;">${history}</div>
                     </div>
-                `;
-                listDiv.innerHTML += card;
-            });
-            
-            if (querySnapshot.empty) {
-                listDiv.innerHTML = "<p style='text-align:center;'>Abhi koi booking nahi hai.</p>";
-            }
+
+                    <input type="text" id="input-${id}" placeholder="Naya formula ya note likhein...">
+                    <button class="btn" onclick="saveHistory('${id}')">Save Formula</button>
+                </div>
+            `;
+            listDiv.innerHTML += card;
         });
-    </script>
+    });
+
+    // Save history to Firebase
+    function saveHistory(docId) {
+        const newNote = document.getElementById('input-' + docId).value;
+        if (newNote.trim() === "") return alert("Please kuch likhein!");
+
+        db.collection("clients").doc(docId).update({
+            history: newNote
+        }).then(() => {
+            alert("History Save Ho Gayi!");
+            document.getElementById('input-' + docId).value = "";
+        });
+    }
+
+    // Search filter function
+    function filterBookings() {
+        const input = document.getElementById('searchInput').value.toLowerCase();
+        const cards = document.getElementsByClassName('card');
+
+        for (let i = 0; i < cards.length; i++) {
+            const name = cards[i].getAttribute('data-name');
+            const phone = cards[i].getAttribute('data-phone');
+            if (name.includes(input) || phone.includes(input)) {
+                cards[i].style.display = "";
+            } else {
+                cards[i].style.display = "none";
+            }
+        }
+    }
+</script>
 </body>
 </html>
