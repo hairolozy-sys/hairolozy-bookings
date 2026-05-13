@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hairolozy Admin Final</title>
+    <title>Hairolozy Admin Fixed</title>
     <style>
         body { font-family: sans-serif; background: #f4f4f4; padding: 15px; }
         .card { background: white; padding: 15px; margin-bottom: 15px; border-radius: 10px; border-left: 6px solid #d35400; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
@@ -15,7 +15,7 @@
 </head>
 <body>
     <h2 style="text-align:center;">Hairolozy Bookings</h2>
-    <div id="list">Checking database...</div>
+    <div id="list">Checking data...</div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -32,50 +32,43 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Bina Index ke data nikalne ka seedha tarika
+        // Seedhe 'clients' collection ko scan karein (Screenshot 1000364274 ke mutabiq)
         db.collection("clients").onSnapshot((snapshot) => {
             const listDiv = document.getElementById("list");
-            if (snapshot.empty) { listDiv.innerHTML = "No clients found."; return; }
-            
-            listDiv.innerHTML = ""; // Purani list clear karein
+            listDiv.innerHTML = ""; 
 
-            snapshot.forEach((clientDoc) => {
-                // Screenshot 1000364261 ke mutabiq har client ke andar 'Bookings' sub-collection hai
-                db.collection("clients").doc(clientDoc.id).collection("Bookings").onSnapshot((bookingSnap) => {
-                    bookingSnap.forEach((doc) => {
-                        const data = doc.data();
-                        const id = doc.id;
-                        const path = doc.ref.path;
-                        const history = data.history || "No record.";
+            if (snapshot.empty) {
+                listDiv.innerHTML = "No bookings found.";
+                return;
+            }
 
-                        // Agar card pehle se list mein hai toh use update karein, naya na banayein
-                        let card = document.getElementById('card-' + id);
-                        if (!card) {
-                            card = document.createElement('div');
-                            card.className = 'card';
-                            card.id = 'card-' + id;
-                            listDiv.appendChild(card);
-                        }
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                const id = doc.id;
+                const path = doc.ref.path;
+                const history = data.history || "No record.";
 
-                        card.innerHTML = `
-                            <b>👤 ${data.clientName || 'No Name'}</b><br>
-                            📞 ${data.clientPhone || 'No Phone'}<br>
-                            ✂️ ${data.serviceName || 'No Service'}<br>
+                // Details sirf tab dikhayein agar clientName maujood ho
+                if (data.clientName) {
+                    listDiv.innerHTML += `
+                        <div class="card">
+                            <b>👤 ${data.clientName}</b><br>
+                            📞 ${data.clientPhone || 'N/A'}<br>
+                            ✂️ ${data.serviceName || 'N/A'}<br>
                             📅 ${data.bookingDate || ''} | 🕒 ${data.bookingTime || ''}
                             <div class="formula-box">
-                                <strong>History:</strong> <span style="color:#d35400;">${history}</span>
+                                <strong>Formula:</strong> <span style="color:#d35400;">${history}</span>
                                 <select id="brand-${id}">
                                     <option value="Loreal">Loreal</option>
                                     <option value="Redken">Redken</option>
                                     <option value="Schwarzkopf">Schwarzkopf</option>
                                 </select>
-                                <input type="text" id="input-${id}" placeholder="Formula likhein...">
+                                <input type="text" id="input-${id}" placeholder="Formula...">
                                 <button class="save-btn" onclick="saveFormula('${path}', '${id}')">Save</button>
                             </div>
                             <button class="del-btn" onclick="deleteEntry('${path}')">Delete</button>
-                        `;
-                    });
-                });
+                        </div>`;
+                }
             });
         });
 
