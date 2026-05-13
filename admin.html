@@ -5,246 +5,154 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | Hairolozy</title>
     <style>
-        /* LUXURY DARK ADMIN THEME */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #121212; color: #e0e0e0; margin: 0; padding: 20px; }
-        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 20px; }
-        .header h1 { color: #D4AF37; margin: 0; font-size: 28px; letter-spacing: 2px; text-transform: uppercase; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #121212; color: #e0e0e0; margin: 0; padding: 15px; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .header h1 { color: #D4AF37; margin: 0; font-size: 24px; letter-spacing: 2px; text-transform: uppercase; }
         
-        .admin-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
-        
-        /* ADD RECORD PANEL */
-        .form-panel { background: #1e1e1e; padding: 25px; border-radius: 12px; border: 1px solid #333; border-top: 4px solid #D4AF37; width: 100%; max-width: 400px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-        .form-panel h2 { color: #fff; margin-top: 0; font-size: 18px; text-align: center; }
-        
+        /* FORM PANEL */
+        .form-panel { background: #1e1e1e; padding: 20px; border-radius: 12px; border: 1px solid #333; border-top: 4px solid #D4AF37; margin-bottom: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; color: #D4AF37; font-size: 12px; font-weight: bold; text-transform: uppercase; }
-        input, textarea, select { width: 100%; background: #2a2a2a; color: #fff; border: 1px solid #444; padding: 10px; border-radius: 6px; box-sizing: border-box; outline: none; }
-        input:focus, textarea:focus { border-color: #D4AF37; }
+        input, textarea { width: 100%; background: #2a2a2a; color: #fff; border: 1px solid #444; padding: 12px; border-radius: 8px; box-sizing: border-box; outline: none; }
 
-        /* SMART PILL BUTTONS (MULTIPLE SELECT) */
+        /* PILL BUTTONS */
         .pill-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 5px; }
-        .service-pill { background: #2a2a2a; border: 1px solid #444; padding: 8px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; color: #ccc; transition: 0.3s; user-select: none; }
-        .service-pill:hover { border-color: #D4AF37; }
+        .service-pill { background: #2a2a2a; border: 1px solid #444; padding: 8px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; color: #ccc; }
         .service-pill.active { background: rgba(212, 175, 55, 0.2); border-color: #D4AF37; color: #D4AF37; font-weight: bold; }
-        .service-pill.active::after { content: ' ✔'; }
 
-        /* COLOR MATRIX COMPACT GRID */
         .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .btn-save { background: linear-gradient(135deg, #D4AF37, #b5952f); color: #121212; width: 100%; padding: 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 15px; text-transform: uppercase; }
 
-        .btn-save { background: linear-gradient(135deg, #D4AF37, #b5952f); color: #121212; width: 100%; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 15px; text-transform: uppercase; }
-        .btn-save:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(212, 175, 55, 0.4); }
+        /* RECENT BOOKINGS - OLD CARD STYLE */
+        .section-title { color: #fff; font-size: 18px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .client-card { background: #1e1e1e; border: 1px solid #333; border-radius: 12px; padding: 15px; margin-bottom: 15px; position: relative; transition: 0.3s; }
+        .client-card.pending { border-left: 4px solid #ff9800; }
+        .client-card.done { border-left: 4px solid #25d366; }
 
-        /* DASHBOARD / RECORD TABLE */
-        .dashboard-panel { background: #1e1e1e; padding: 25px; border-radius: 12px; border: 1px solid #333; flex-grow: 1; max-width: 800px; overflow-x: auto; }
-        .dashboard-panel h2 { color: #fff; margin-top: 0; font-size: 18px; }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .client-info h3 { margin: 0; color: #D4AF37; font-size: 18px; }
+        .client-info p { margin: 2px 0; color: #aaa; font-size: 12px; }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #333; }
-        th { background: #2a2a2a; color: #D4AF37; font-weight: bold; text-transform: uppercase; font-size: 12px; }
-        tr:hover { background: #252525; }
-        .status-done { color: #25d366; font-weight: bold; }
-        .status-pending { color: #ff9800; font-weight: bold; }
+        .service-list { color: #fff; font-weight: bold; font-size: 14px; margin: 10px 0; }
+        .matrix-info { background: #252525; padding: 8px; border-radius: 6px; font-size: 11px; color: #bbb; line-height: 1.4; white-space: pre-line; }
         
-        .btn-action { background: #333; color: #fff; border: 1px solid #555; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; }
-        .btn-action:hover { background: #D4AF37; color: #000; border-color: #D4AF37; }
+        .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; border-top: 1px solid #333; padding-top: 10px; }
+        .price-tag { font-size: 16px; font-weight: bold; color: #25d366; }
+        .btn-done { background: #333; color: #fff; border: 1px solid #555; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 12px; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>Hairolozy Admin App</h1>
-        <p>Master Colorist Dashboard</p>
-    </div>
+    <div class="header"><h1>Hairolozy Admin</h1></div>
 
-    <div class="admin-container">
-        
-        <!-- LEFT PANEL: ADD RECORD & MATRIX -->
-        <div class="form-panel">
-            <h2>➕ Add / Update Client Record</h2>
-            
-            <div class="form-group">
-                <label>Client Name & Phone</label>
-                <div style="display: flex; gap: 10px;">
-                    <input type="text" id="c-name" placeholder="Name" required>
-                    <input type="tel" id="c-phone" placeholder="Phone">
-                </div>
+    <div class="form-panel">
+        <div class="form-group">
+            <label>Client Details</label>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="c-name" placeholder="Name">
+                <input type="tel" id="c-phone" placeholder="Phone">
             </div>
-
-            <!-- SMART PILLS FOR MULTIPLE SERVICES -->
-            <div class="form-group">
-                <label>Services Done (Select Multiple)</label>
-                <div class="pill-grid">
-                    <div class="service-pill" onclick="toggleAdminService('Haircut', this)">Haircut</div>
-                    <div class="service-pill" onclick="toggleAdminService('Root Touch-up', this)">Root Touch-up</div>
-                    <div class="service-pill" onclick="toggleAdminService('Global Color', this)">Global Color</div>
-                    <div class="service-pill" onclick="toggleAdminService('Balayage', this)">Balayage</div>
-                    <div class="service-pill" onclick="toggleAdminService('Highlights', this)">Highlights</div>
-                    <div class="service-pill" onclick="toggleAdminService('Correction', this)">Correction</div>
-                    <div class="service-pill" onclick="toggleAdminService('Vivid Shades', this)">Vivid Shades</div>
-                    <div class="service-pill" onclick="toggleAdminService('Glossing', this)">Glossing</div>
-                    <div class="service-pill" onclick="toggleAdminService('Nanoplastia', this)">Nanoplastia</div>
-                    <div class="service-pill" onclick="toggleAdminService('Keratin/Botox', this)">Keratin/Botox</div>
-                    <div class="service-pill" onclick="toggleAdminService('Smoothening', this)">Smoothening</div>
-                    <div class="service-pill" onclick="toggleAdminService('Bond Treat', this)">Bond Treat</div>
-                    <div class="service-pill" onclick="toggleAdminService('Olaplex', this)">Olaplex Special</div>
-                    <div class="service-pill" onclick="toggleAdminService('Deep Spa', this)">Deep Spa</div>
-                </div>
-                <input type="hidden" id="c-services">
-            </div>
-
-            <!-- COLOR MATRIX -->
-            <div class="form-group">
-                <label>Color Matrix & Formulation</label>
-                <div class="matrix-grid">
-                    <input type="text" id="m-base" placeholder="Base Color">
-                    <input type="text" id="m-target" placeholder="Target Color">
-                    <input type="text" id="m-dev" placeholder="Developer (%)">
-                    <input type="text" id="m-time" placeholder="Timing (Mins)">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>Bill Amount (₹)</label>
-                <input type="number" id="c-bill" placeholder="e.g. 4500">
-            </div>
-
-            <button class="btn-save" onclick="saveRecord()">Save Record</button>
         </div>
 
-        <!-- RIGHT PANEL: DASHBOARD & CLIENT LIST -->
-        <div class="dashboard-panel">
-            <h2>📋 Recent Bookings & Records</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Client</th>
-                        <th>Services</th>
-                        <th>Bill</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="clientTableBody">
-                    <!-- Data will load here automatically -->
-                    <tr><td colspan="6" style="text-align: center;">Loading data from database...</td></tr>
-                </tbody>
-            </table>
+        <div class="form-group">
+            <label>Services (Multiple)</label>
+            <div class="pill-grid">
+                <div class="service-pill" onclick="toggleAdminService('Haircut', this)">Haircut</div>
+                <div class="service-pill" onclick="toggleAdminService('Root Touch-up', this)">Root Touch-up</div>
+                <div class="service-pill" onclick="toggleAdminService('Global Color', this)">Global Color</div>
+                <div class="service-pill" onclick="toggleAdminService('Balayage', this)">Balayage</div>
+                <div class="service-pill" onclick="toggleAdminService('Highlights', this)">Highlights</div>
+                <div class="service-pill" onclick="toggleAdminService('Correction', this)">Correction</div>
+                <div class="service-pill" onclick="toggleAdminService('Vivid Shades', this)">Vivid Shades</div>
+                <div class="service-pill" onclick="toggleAdminService('Nanoplastia', this)">Nanoplastia</div>
+                <div class="service-pill" onclick="toggleAdminService('Keratin/Botox', this)">Keratin/Botox</div>
+                <div class="service-pill" onclick="toggleAdminService('Smoothening', this)">Smoothening</div>
+                <div class="service-pill" onclick="toggleAdminService('Bond Treat', this)">Bond Treat</div>
+                <div class="service-pill" onclick="toggleAdminService('Deep Spa', this)">Deep Spa</div>
+            </div>
+            <input type="hidden" id="c-services">
         </div>
 
+        <div class="form-group">
+            <label>Color Matrix</label>
+            <div class="matrix-grid">
+                <input type="text" id="m-base" placeholder="Base">
+                <input type="text" id="m-target" placeholder="Target">
+                <input type="text" id="m-dev" placeholder="Dev %">
+                <input type="text" id="m-time" placeholder="Time">
+            </div>
+        </div>
+
+        <input type="number" id="c-bill" placeholder="Bill Amount (₹)" style="margin-top:10px;">
+        <button class="btn-save" onclick="saveRecord()">SAVE RECORD</button>
     </div>
 
-    <!-- Firebase Scripts -->
+    <div class="section-title">📋 Recent Bookings</div>
+    <div id="clientCardsContainer">
+        <!-- Cards load here -->
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <script>
-        // FIREBASE SETUP
-        const firebaseConfig = { 
-            apiKey: "AIzaSyABGjbHjlLdUIHrbUxhD_Jp2ZScrMegX5A", 
-            authDomain: "hairolozy-12bec.firebaseapp.com", 
-            projectId: "hairolozy-12bec", 
-            storageBucket: "hairolozy-12bec.appspot.com", 
-            messagingSenderId: "386170490787", 
-            appId: "1:386170490787:web:58b592d8a44d0e3de65416" 
-        };
+        const firebaseConfig = { apiKey: "AIzaSyABGjbHjlLdUIHrbUxhD_Jp2ZScrMegX5A", authDomain: "hairolozy-12bec.firebaseapp.com", projectId: "hairolozy-12bec", storageBucket: "hairolozy-12bec.appspot.com", messagingSenderId: "386170490787", appId: "1:386170490787:web:58b592d8a44d0e3de65416" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // 1. MULTIPLE SERVICE SELECTION LOGIC
         let adminSelectedArray = [];
-
-        function toggleAdminService(serviceName, element) {
-            const index = adminSelectedArray.indexOf(serviceName);
-            if (index > -1) {
-                adminSelectedArray.splice(index, 1);
-                element.classList.remove('active');
-            } else {
-                adminSelectedArray.push(serviceName);
-                element.classList.add('active');
-            }
+        function toggleAdminService(name, el) {
+            const i = adminSelectedArray.indexOf(name);
+            i > -1 ? (adminSelectedArray.splice(i, 1), el.classList.remove('active')) : (adminSelectedArray.push(name), el.classList.add('active'));
             document.getElementById('c-services').value = adminSelectedArray.join(', ');
         }
 
-        // 2. SAVE OR ADD RECORD TO FIREBASE
         function saveRecord() {
             const name = document.getElementById('c-name').value;
-            const phone = document.getElementById('c-phone').value;
             const services = document.getElementById('c-services').value;
+            const history = `Base: ${document.getElementById('m-base').value} | Target: ${document.getElementById('m-target').value}\nDev: ${document.getElementById('m-dev').value} | Time: ${document.getElementById('m-time').value}`;
             
-            // Color Matrix Data
-            const base = document.getElementById('m-base').value;
-            const target = document.getElementById('m-target').value;
-            const dev = document.getElementById('m-dev').value;
-            const time = document.getElementById('m-time').value;
-            
-            const bill = document.getElementById('c-bill').value;
-            const today = new Date().toISOString().split('T')[0];
-
-            if(!name || !services) return alert("Name and at least 1 Service is required!");
-
-            // Format Matrix Note
-            let matrixNote = "";
-            if(base || target) {
-                matrixNote = `Base: ${base}, Target: ${target}, Dev: ${dev}, Time: ${time}m`;
-            }
+            if(!name || !services) return alert("Fill Name & Services!");
 
             db.collection("clients").add({
-                bookingID: "WALK-IN",
-                clientName: name,
-                clientPhone: phone,
-                serviceName: services,
-                history: matrixNote,
-                bookingDate: today,
-                billAmount: bill,
-                status: 'done'
-            }).then(() => {
-                alert("✅ Record Saved Successfully!");
-                location.reload(); // Page refresh to clear form
-            }).catch(err => alert("Error: " + err.message));
+                clientName: name, clientPhone: document.getElementById('c-phone').value,
+                serviceName: services, history: history, billAmount: document.getElementById('c-bill').value,
+                status: 'done', bookingDate: new Date().toISOString().split('T')[0]
+            }).then(() => location.reload());
         }
 
-        // 3. LOAD DATA FROM FIREBASE TO TABLE
         function loadClients() {
-            db.collection("clients").orderBy("bookingDate", "desc").limit(20).onSnapshot((querySnapshot) => {
-                const tableBody = document.getElementById('clientTableBody');
-                tableBody.innerHTML = ''; 
-
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    const docId = doc.id;
-                    
-                    let statusColor = data.status === 'done' ? 'status-done' : 'status-pending';
-                    let statusText = data.status === 'done' ? 'Completed' : 'Pending';
-
-                    let row = `<tr>
-                        <td>${data.bookingDate}</td>
-                        <td><b>${data.clientName}</b><br><span style="font-size:10px; color:#aaa;">${data.clientPhone || '-'}</span></td>
-                        <td><span style="color:#D4AF37;">${data.serviceName}</span><br><span style="font-size:10px; color:#888;">${data.history || ''}</span></td>
-                        <td>₹${data.billAmount || '0'}</td>
-                        <td class="${statusColor}">${statusText}</td>
-                        <td>
-                            ${data.status === 'pending' ? `<button class="btn-action" onclick="markDone('${docId}')">Mark Done</button>` : '✔️'}
-                        </td>
-                    </tr>`;
-                    
-                    tableBody.innerHTML += row;
+            db.collection("clients").orderBy("bookingDate", "desc").limit(15).onSnapshot(snap => {
+                const container = document.getElementById('clientCardsContainer');
+                container.innerHTML = '';
+                snap.forEach(doc => {
+                    const d = doc.data();
+                    const statusClass = d.status === 'done' ? 'done' : 'pending';
+                    container.innerHTML += `
+                        <div class="client-card ${statusClass}">
+                            <div class="card-header">
+                                <div class="client-info">
+                                    <h3>${d.clientName}</h3>
+                                    <p>📞 ${d.clientPhone || 'No Phone'}</p>
+                                    <p>📅 ${d.bookingDate}</p>
+                                </div>
+                                <span style="font-size:10px; color:${d.status==='done'?'#25d366':'#ff9800'}">${d.status.toUpperCase()}</span>
+                            </div>
+                            <div class="service-list">✨ ${d.serviceName}</div>
+                            ${d.history ? `<div class="matrix-info">${d.history}</div>` : ''}
+                            <div class="card-footer">
+                                <div class="price-tag">₹${d.billAmount || '0'}</div>
+                                ${d.status === 'pending' ? `<button class="btn-done" onclick="markDone('${doc.id}')">Mark Done</button>` : '<span>✅</span>'}
+                            </div>
+                        </div>`;
                 });
             });
         }
 
-        // 4. MARK BOOKING AS DONE
-        function markDone(docId) {
-            let bill = prompt("Enter Final Bill Amount (₹) before closing:");
-            if(bill !== null) {
-                db.collection("clients").doc(docId).update({
-                    status: 'done',
-                    billAmount: bill
-                });
-            }
+        function markDone(id) {
+            let bill = prompt("Enter Final Bill:");
+            if(bill) db.collection("clients").doc(id).update({ status: 'done', billAmount: bill });
         }
-
-        // Load clients when page opens
         window.onload = loadClients;
     </script>
 </body>
