@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hairolozy Admin Pro</title>
+    <title>Hairolozy Admin Fixed</title>
     <style>
         body { font-family: sans-serif; background: #f4f4f4; padding: 15px; }
         .card { background: white; padding: 15px; margin-bottom: 15px; border-radius: 10px; border-left: 6px solid #d35400; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
@@ -15,7 +15,7 @@
 </head>
 <body>
     <h2 style="text-align:center;">Hairolozy Bookings</h2>
-    <div id="list">Loading...</div>
+    <div id="list">Checking database...</div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -32,71 +32,63 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Ye function 'Bookings' aur 'bookings' dono ko check karega
-        function syncCollection(colName) {
-            db.collectionGroup(colName).onSnapshot((querySnapshot) => {
-                const listDiv = document.getElementById("list");
-                if (colName === "Bookings") listDiv.innerHTML = ""; 
+        // Step 1: Pehle 'clients' folder ko scan karein
+        db.collection("clients").onSnapshot((snapshot) => {
+            const listDiv = document.getElementById("list");
+            listDiv.innerHTML = ""; 
 
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    const id = doc.id;
-                    const path = doc.ref.path;
-                    
-                    // Sabhi possible fields check karein (Flexible naming)
-                    const name = data.clientName || data.name || data.Name || "Unknown Name";
-                    const phone = data.clientPhone || data.phone || data.Phone || "No Phone";
-                    const service = data.serviceName || data.service || "General Service";
-                    const date = data.bookingDate || data.date || "";
-                    const history = data.history || "Pehle ka koi record nahi hai.";
+            if (snapshot.empty) {
+                listDiv.innerHTML = "Koi client nahi mila.";
+            }
 
-                    const cardHtml = `
-                        <div class="card" id="card-${id}">
-                            <b>👤 ${name}</b><br>
-                            📞 ${phone}<br>
-                            ✂️ ${service}<br>
-                            📅 ${date}
-                            <div class="formula-box">
-                                <strong>Formula History:</strong><br>
-                                <span style="color:#d35400;">${history}</span>
-                                <select id="brand-${id}">
-                                    <option value="Loreal">Loreal</option>
-                                    <option value="Redken">Redken</option>
-                                    <option value="Schwarzkopf">Schwarzkopf</option>
-                                    <option value="Keune">Keune</option>
-                                    <option value="Alfaparf">Alfaparf</option>
-                                </select>
-                                <input type="text" id="input-${id}" placeholder="Formula likhein...">
-                                <button class="save-btn" onclick="saveFormula('${path}', '${id}')">Save Formula</button>
-                            </div>
-                            <button class="del-btn" onclick="deleteEntry('${path}')">Delete Booking</button>
-                        </div>`;
-                    
-                    // Duplicate cards hatane ke liye check
-                    if (!document.getElementById('card-' + id)) {
-                        listDiv.innerHTML += cardHtml;
-                    }
+            snapshot.forEach((clientDoc) => {
+                // Step 2: Har client ke andar ke 'Bookings' sub-folder ko scan karein
+                db.collection("clients").doc(clientDoc.id).collection("Bookings").onSnapshot((bookingSnap) => {
+                    bookingSnap.forEach((doc) => {
+                        const data = doc.data();
+                        const id = doc.id;
+                        const path = doc.ref.path;
+                        const history = data.history || "No record.";
+
+                        // UI update karein
+                        const cardId = 'card-' + id;
+                        if (!document.getElementById(cardId)) {
+                            const card = document.createElement('div');
+                            card.className = 'card';
+                            card.id = cardId;
+                            card.innerHTML = `
+                                <b>👤 ${data.clientName || 'No Name'}</b><br>
+                                📞 ${data.clientPhone || 'No Phone'}<br>
+                                ✂️ ${data.serviceName || 'No Service'}<br>
+                                📅 ${data.bookingDate || ''}
+                                <div class="formula-box">
+                                    <strong>Formula:</strong> <span style="color:#d35400;">${history}</span>
+                                    <select id="brand-${id}">
+                                        <option value="Loreal">Loreal</option>
+                                        <option value="Redken">Redken</option>
+                                        <option value="Schwarzkopf">Schwarzkopf</option>
+                                    </select>
+                                    <input type="text" id="input-${id}" placeholder="Formula likhein...">
+                                    <button class="save-btn" onclick="saveFormula('${path}', '${id}')">Save</button>
+                                </div>
+                                <button class="del-btn" onclick="deleteEntry('${path}')">Delete</button>
+                            `;
+                            listDiv.appendChild(card);
+                        }
+                    });
                 });
             });
-        }
-
-        syncCollection("Bookings");
-        syncCollection("bookings");
+        });
 
         function saveFormula(fullPath, id) {
             const b = document.getElementById('brand-'+id).value;
             const f = document.getElementById('input-'+id).value;
-            if(!f) return alert("Formula likhna zaroori hai!");
+            if(!f) return alert("Write something!");
             db.doc(fullPath).update({ history: b + " - " + f }).then(() => alert("Saved!"));
         }
 
         function deleteEntry(fullPath) {
-            if(confirm("Kya aap ise delete karna chahte hain?")) {
-                db.doc(fullPath).delete().then(() => {
-                    alert("Deleted!");
-                    location.reload();
-                });
-            }
+            if(confirm("Delete?")) db.doc(fullPath).delete().then(() => location.reload());
         }
     </script>
 </body>
