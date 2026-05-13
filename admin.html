@@ -15,7 +15,7 @@
 </head>
 <body>
     <h2 style="text-align:center;">Hairolozy Bookings</h2>
-    <div id="list">Loading bookings...</div>
+    <div id="list">Loading...</div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -32,56 +32,71 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Ye line aapke database ke 'Bookings' folder ko scan karegi
-        db.collectionGroup("Bookings").onSnapshot((querySnapshot) => {
-            const listDiv = document.getElementById("list");
-            listDiv.innerHTML = "";
-            
-            if (querySnapshot.empty) {
-                listDiv.innerHTML = "Koi booking nahi mili.";
-                return;
-            }
+        // Ye function 'Bookings' aur 'bookings' dono ko check karega
+        function syncCollection(colName) {
+            db.collectionGroup(colName).onSnapshot((querySnapshot) => {
+                const listDiv = document.getElementById("list");
+                if (colName === "Bookings") listDiv.innerHTML = ""; 
 
-            querySnapshot.forEach((doc) => {
-                const data = doc.data();
-                const id = doc.id;
-                const path = doc.ref.path;
-                const history = data.history || "No record.";
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const id = doc.id;
+                    const path = doc.ref.path;
+                    
+                    // Sabhi possible fields check karein (Flexible naming)
+                    const name = data.clientName || data.name || data.Name || "Unknown Name";
+                    const phone = data.clientPhone || data.phone || data.Phone || "No Phone";
+                    const service = data.serviceName || data.service || "General Service";
+                    const date = data.bookingDate || data.date || "";
+                    const history = data.history || "Pehle ka koi record nahi hai.";
 
-                listDiv.innerHTML += `
-                    <div class="card">
-                        <b>👤 ${data.clientName || 'No Name'}</b><br>
-                        📞 ${data.clientPhone || 'No Phone'}<br>
-                        ✂️ ${data.serviceName || 'No Service'}<br>
-                        📅 ${data.bookingDate || ''} | 🕒 ${data.bookingTime || ''}
-                        
-                        <div class="formula-box">
-                            <strong>Formula History:</strong><br>
-                            <span style="color:#d35400;">${history}</span>
-                            <select id="brand-${id}">
-                                <option value="Loreal">Loreal</option>
-                                <option value="Redken">Redken</option>
-                                <option value="Schwarzkopf">Schwarzkopf</option>
-                                <option value="Keune">Keune</option>
-                                <option value="Alfaparf">Alfaparf</option>
-                            </select>
-                            <input type="text" id="input-${id}" placeholder="Naya formula...">
-                            <button class="save-btn" onclick="saveFormula('${path}', '${id}')">Save Formula</button>
-                        </div>
-                        <button class="del-btn" onclick="deleteEntry('${path}')">Delete Booking</button>
-                    </div>`;
+                    const cardHtml = `
+                        <div class="card" id="card-${id}">
+                            <b>👤 ${name}</b><br>
+                            📞 ${phone}<br>
+                            ✂️ ${service}<br>
+                            📅 ${date}
+                            <div class="formula-box">
+                                <strong>Formula History:</strong><br>
+                                <span style="color:#d35400;">${history}</span>
+                                <select id="brand-${id}">
+                                    <option value="Loreal">Loreal</option>
+                                    <option value="Redken">Redken</option>
+                                    <option value="Schwarzkopf">Schwarzkopf</option>
+                                    <option value="Keune">Keune</option>
+                                    <option value="Alfaparf">Alfaparf</option>
+                                </select>
+                                <input type="text" id="input-${id}" placeholder="Formula likhein...">
+                                <button class="save-btn" onclick="saveFormula('${path}', '${id}')">Save Formula</button>
+                            </div>
+                            <button class="del-btn" onclick="deleteEntry('${path}')">Delete Booking</button>
+                        </div>`;
+                    
+                    // Duplicate cards hatane ke liye check
+                    if (!document.getElementById('card-' + id)) {
+                        listDiv.innerHTML += cardHtml;
+                    }
+                });
             });
-        });
+        }
+
+        syncCollection("Bookings");
+        syncCollection("bookings");
 
         function saveFormula(fullPath, id) {
             const b = document.getElementById('brand-'+id).value;
             const f = document.getElementById('input-'+id).value;
-            if(!f) return alert("Kuch likhein!");
+            if(!f) return alert("Formula likhna zaroori hai!");
             db.doc(fullPath).update({ history: b + " - " + f }).then(() => alert("Saved!"));
         }
 
         function deleteEntry(fullPath) {
-            if(confirm("Delete karein?")) db.doc(fullPath).delete();
+            if(confirm("Kya aap ise delete karna chahte hain?")) {
+                db.doc(fullPath).delete().then(() => {
+                    alert("Deleted!");
+                    location.reload();
+                });
+            }
         }
     </script>
 </body>
