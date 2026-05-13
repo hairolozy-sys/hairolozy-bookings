@@ -47,7 +47,7 @@
     const db = firebase.firestore();
 
     // Live listener for bookings
-    db.collection("clients").orderBy("timestamp", "desc").onSnapshot((querySnapshot) => {
+    db.collection("bookings").orderBy("timestamp", "desc").onSnapshot((querySnapshot) => {
         const listDiv = document.getElementById("booking-list");
         listDiv.innerHTML = "";
 
