@@ -5,60 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hairolozy Premium Admin</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f6f9; padding: 15px; margin: 0; }
-        .header { background: #1a1a1a; color: #d35400; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-bottom: 3px solid #d35400; }
-        h2 { margin: 0; font-size: 22px; letter-spacing: 1px; }
+        /* LUXURY DARK THEME BASED ON YOUR IMAGE */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #121212; color: #e0e0e0; padding: 15px; margin: 0; }
+        
+        /* Header */
+        .header { background: #1a1a1a; color: #D4AF37; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.5); border-bottom: 2px solid #D4AF37; }
+        h2 { margin: 0; font-size: 24px; letter-spacing: 2px; font-weight: 600; text-transform: uppercase; }
 
+        /* Dashboard Overview */
         .dashboard { display: flex; gap: 15px; margin-top: 15px; }
-        .dash-box { background: linear-gradient(135deg, #d35400, #e67e22); color: white; flex: 1; padding: 15px; border-radius: 12px; text-align: center; box-shadow: 0 4px 10px rgba(211,84,0,0.2); }
-        .dash-box.green { background: linear-gradient(135deg, #27ae60, #2ecc71); box-shadow: 0 4px 10px rgba(39,174,96,0.2); }
-        .dash-box h3 { margin: 0; font-size: 14px; font-weight: normal; opacity: 0.9; }
-        .dash-box p { margin: 5px 0 0; font-size: 24px; font-weight: bold; }
+        .dash-box { background: #1e1e1e; color: #fff; flex: 1; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #333; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .dash-box h3 { margin: 0; font-size: 13px; font-weight: normal; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
+        .dash-box p { margin: 10px 0 0; font-size: 28px; font-weight: bold; color: #D4AF37; }
+        .dash-box.green p { color: #2ecc71; }
 
-        .search-container { margin: 15px 0; position: sticky; top: 75px; z-index: 99; }
-        .search-bar { width: 100%; padding: 14px 20px; border-radius: 30px; border: 1px solid #ddd; font-size: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); outline: none; }
-        .search-bar:focus { border-color: #d35400; }
+        /* Search Bar */
+        .search-container { margin: 20px 0; position: sticky; top: 75px; z-index: 99; }
+        .search-bar { width: 100%; padding: 15px 20px; border-radius: 30px; background: #1e1e1e; border: 1px solid #444; color: #fff; font-size: 15px; outline: none; transition: 0.3s; }
+        .search-bar:focus { border-color: #D4AF37; box-shadow: 0 0 8px rgba(212, 175, 55, 0.3); }
+        .search-bar::placeholder { color: #777; }
 
-        .card { background: white; margin-bottom: 15px; border-radius: 12px; border-left: 6px solid #f39c12; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow: hidden; transition: 0.3s; }
-        .card.done { border-left: 6px solid #27ae60; opacity: 0.85; }
+        /* Client Cards */
+        .card { background: #1e1e1e; margin-bottom: 15px; border-radius: 12px; border-left: 5px solid #D4AF37; box-shadow: 0 4px 10px rgba(0,0,0,0.3); overflow: hidden; transition: 0.3s; border-right: 1px solid #333; border-top: 1px solid #333; border-bottom: 1px solid #333; }
+        .card.done { border-left: 5px solid #27ae60; opacity: 0.8; }
 
         .card-header { padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-        .client-info { display: flex; flex-direction: column; gap: 4px; }
-        .client-name { font-size: 17px; font-weight: bold; color: #2c3e50; }
-        .client-details { font-size: 13px; color: #7f8c8d; }
+        .client-info { display: flex; flex-direction: column; gap: 5px; }
+        .client-name { font-size: 18px; font-weight: bold; color: #fff; }
+        .client-details { font-size: 13px; color: #aaa; }
 
-        .time-badge { background: #f39c12; color: white; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; }
-        .done .time-badge { background: #27ae60; text-decoration: line-through; }
-        .bill-badge { font-size: 14px; color: #27ae60; font-weight: bold; margin-top: 5px; }
+        .time-badge { background: rgba(212, 175, 55, 0.1); color: #D4AF37; border: 1px solid #D4AF37; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .done .time-badge { background: rgba(39, 174, 96, 0.1); color: #2ecc71; border-color: #2ecc71; text-decoration: line-through; }
+        .bill-badge { font-size: 14px; color: #2ecc71; font-weight: bold; margin-top: 5px; }
 
-        .card-body { padding: 0 15px 15px 15px; display: none; border-top: 1px solid #eee; margin-top: 5px; padding-top: 15px; }
-
-        .formula-box { background: #fdf8e3; padding: 12px; border-radius: 8px; border: 1px dashed #f39c12; margin-bottom: 15px; font-size: 14px; color: #d35400; line-height: 1.5; }
+        /* Card Body & Inputs */
+        .card-body { padding: 0 15px 15px 15px; display: none; border-top: 1px solid #333; margin-top: 5px; padding-top: 15px; }
+        .formula-box { background: #252525; padding: 15px; border-radius: 8px; border: 1px dashed #555; margin-bottom: 15px; font-size: 14px; color: #ddd; line-height: 1.6; }
+        .formula-box strong { color: #D4AF37; }
         
-        .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-        .matrix-grid input, .matrix-grid select { width: 100%; padding: 10px; margin: 0; border-radius: 6px; border: 1px solid #ccc; font-size: 13px; box-sizing: border-box; }
+        .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
+        .matrix-grid input, .matrix-grid select { background: #2a2a2a; color: #fff; width: 100%; padding: 12px; margin: 0; border-radius: 6px; border: 1px solid #444; font-size: 13px; box-sizing: border-box; outline: none; }
+        .matrix-grid input:focus, .matrix-grid select:focus { border-color: #D4AF37; }
         .full-width { grid-column: span 2; }
-        .bill-input { grid-column: span 2; border: 2px solid #27ae60 !important; font-weight: bold; color: #27ae60; }
-        .brand-select { border: 2px solid #d35400 !important; color: #d35400; font-weight: bold; }
+        .bill-input { grid-column: span 2; border: 1px solid #2ecc71 !important; color: #2ecc71 !important; font-weight: bold; font-size: 16px !important; }
+        .brand-select { border: 1px solid #D4AF37 !important; color: #D4AF37 !important; font-weight: bold; }
 
-        .btn-group { display: flex; gap: 10px; margin-top: 10px; }
-        .save-btn { background: #d35400; color: white; flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        .done-btn { background: #27ae60; color: white; flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        .del-btn { background: #e74c3c; color: white; width: 100%; padding: 10px; border: none; border-radius: 8px; margin-top: 10px; font-size: 13px; cursor: pointer; }
-        .upload-btn { background: #2980b9; color: white; width: 100%; padding: 10px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 5px; }
-
-        .fab { position: fixed; bottom: 30px; right: 30px; background: #d35400; color: white; width: 60px; height: 60px; border-radius: 50%; text-align: center; line-height: 55px; font-size: 35px; box-shadow: 0 4px 10px rgba(211,84,0,0.4); cursor: pointer; z-index: 101; border: none; }
+        /* Buttons */
+        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
+        .save-btn { background: #d35400; color: white; flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .done-btn { background: #27ae60; color: white; flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .del-btn { background: transparent; color: #e74c3c; width: 100%; padding: 10px; border: 1px solid #e74c3c; border-radius: 8px; margin-top: 12px; font-size: 13px; cursor: pointer; transition: 0.2s; }
+        .upload-btn { background: #2980b9; color: white; width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 8px; }
         
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 102; justify-content: center; align-items: center; }
-        .modal-content { background: white; padding: 20px; border-radius: 15px; width: 90%; max-width: 400px; animation: slideUp 0.3s ease; }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .close-btn { float: right; cursor: pointer; font-size: 24px; font-weight: bold; color: #777; margin-top: -10px; }
-        .modal-content input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; font-size: 14px; }
-        .add-btn { background: #2c3e50; color: white; width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .save-btn:hover { background: #e67e22; } .done-btn:hover { background: #2ecc71; } .del-btn:hover { background: #e74c3c; color: white; }
+
+        /* Floating Button & Modal */
+        .fab { position: fixed; bottom: 30px; right: 30px; background: #D4AF37; color: #121212; width: 65px; height: 65px; border-radius: 50%; text-align: center; line-height: 60px; font-size: 35px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); cursor: pointer; z-index: 101; border: none; font-weight: bold; transition: 0.3s; }
+        .fab:hover { transform: scale(1.05); }
+
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 102; justify-content: center; align-items: center; }
+        .modal-content { background: #1e1e1e; padding: 25px; border-radius: 15px; width: 90%; max-width: 400px; animation: slideUp 0.3s ease; border: 1px solid #333; }
+        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .close-btn { float: right; cursor: pointer; font-size: 26px; font-weight: bold; color: #888; margin-top: -15px; }
+        .modal-content input { background: #2a2a2a; color: #fff; width: 100%; padding: 14px; margin: 8px 0; border-radius: 8px; border: 1px solid #444; box-sizing: border-box; font-size: 14px; outline: none; }
+        .modal-content input:focus { border-color: #D4AF37; }
+        .add-btn { background: #D4AF37; color: #121212; width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 15px; }
     </style>
 </head>
 <body>
-    <div class="header"><h2>Hairolozy Admin</h2></div>
+    <div class="header"><h2>Hairolozy</h2></div>
     
     <div style="padding: 15px;">
         <div class="dashboard">
@@ -75,7 +90,7 @@
         <div class="search-container">
             <input type="text" id="searchInput" class="search-bar" placeholder="🔍 Search Client or Phone..." onkeyup="filterList()">
         </div>
-        <div id="list">Loading schedule...</div>
+        <div id="list">Loading Luxury Experience...</div>
     </div>
 
     <button class="fab" onclick="openModal()">+</button>
@@ -83,7 +98,7 @@
     <div id="walkinModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h3 style="margin-top:0; color:#d35400;">New Walk-in</h3>
+            <h3 style="margin-top:0; color:#D4AF37; text-align:center;">New Walk-in</h3>
             <input type="text" id="new-name" placeholder="Client Name">
             <input type="tel" id="new-phone" placeholder="Phone Number">
             <input type="text" id="new-service" placeholder="Service (e.g. Color Correction)">
@@ -106,7 +121,6 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-
         let allBookings = {};
 
         function openModal() { document.getElementById('walkinModal').style.display = 'flex'; }
@@ -175,8 +189,7 @@
             const statusClass = data.status === 'done' ? 'done' : '';
             const statusText = data.status === 'done' ? 'Completed' : (data.bookingTime || data.time || 'Walk-in');
             const billDisplay = data.billAmount ? `<div class="bill-badge">💰 Bill: ₹${data.billAmount}</div>` : '';
-            
-            const photoDisplay = data.photoUrl ? `<img src="${data.photoUrl}" style="max-width: 100%; border-radius: 8px; margin-bottom: 10px; border: 2px solid #ddd;">` : '';
+            const photoDisplay = data.photoUrl ? `<img src="${data.photoUrl}" style="max-width: 100%; border-radius: 8px; margin-bottom: 15px; border: 1px solid #444;">` : '';
 
             const card = document.createElement('div');
             card.className = `card ${statusClass}`;
@@ -194,15 +207,13 @@
                 
                 <div class="card-body" id="body-${id}">
                     ${photoDisplay}
-
                     <div class="formula-box">
                         <strong>Last Formulation:</strong><br> ${data.history || "No record."}
                     </div>
                     
                     <div class="matrix-grid">
-                        <!-- NEW: Color Brand Selector -->
                         <select id="brand-${id}" class="full-width brand-select">
-                            <option value="">🎨 Select Color Brand</option>
+                            <option value="" style="color:#aaa;">🎨 Select Color Brand</option>
                             <option value="L'Oréal">L'Oréal</option>
                             <option value="Redken">Redken</option>
                             <option value="Schwarzkopf">Schwarzkopf</option>
@@ -212,11 +223,10 @@
                             <option value="Matrix">Matrix</option>
                             <option value="Other">Other (Note below)</option>
                         </select>
-
                         <input type="text" id="base-${id}" placeholder="Base Color / Roots">
                         <input type="text" id="target-${id}" placeholder="Target Tone">
                         <select id="vol-${id}">
-                            <option value="">Developer Volume</option>
+                            <option value="" style="color:#aaa;">Developer Volume</option>
                             <option value="10V">10 Vol (3%)</option>
                             <option value="20V">20 Vol (6%)</option>
                             <option value="30V">30 Vol (9%)</option>
@@ -224,11 +234,11 @@
                         </select>
                         <input type="text" id="time-${id}" placeholder="Processing Time">
                         <input type="text" id="ph-${id}" class="full-width" placeholder="Bond Builder / Notes">
-                        <input type="number" id="bill-${id}" class="bill-input" placeholder="Total Bill Amount (₹)" value="${data.billAmount || ''}">
+                        <input type="number" id="bill-${id}" class="bill-input" placeholder="Total Bill (₹)" value="${data.billAmount || ''}">
                     </div>
 
-                    <div style="background: #e8f4f8; padding: 10px; border-radius: 8px; margin-top: 10px;">
-                        <input type="file" id="img-${id}" accept="image/*" style="font-size: 13px; width: 100%;">
+                    <div style="background: #252525; padding: 12px; border-radius: 8px; margin-top: 10px; border: 1px dashed #444;">
+                        <input type="file" id="img-${id}" accept="image/*" style="font-size: 13px; width: 100%; border: none; padding: 0;">
                         <button class="upload-btn" onclick="uploadPhoto('${path}', '${id}')">📸 Upload Result Photo</button>
                     </div>
 
@@ -248,24 +258,22 @@
             const service = document.getElementById('new-service').value;
             const formula = document.getElementById('new-formula').value;
             if(!name) return alert("Name zaroori hai!");
+            
+            // Checking Thursday (Day 4) for Walk-in Alert
+            if(new Date().getDay() === 4) {
+                if(!confirm("Aaj Thursday (Weekly Off) hai! Phir bhi entry karni hai?")) return;
+            }
+
             const todayFormatted = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate()).padStart(2, '0')}`;
             db.collection("clients").add({ clientName: name, clientPhone: phone, serviceName: service, history: formula, bookingDate: todayFormatted, bookingTime: "Walk-in", status: 'pending' }).then(() => { closeModal(); document.getElementById('new-name').value = ""; document.getElementById('new-formula').value = ""; });
         }
 
-        // Updated getMatrixData to include Brand
         function getMatrixData(id) {
-            const brand = document.getElementById('brand-' + id).value;
-            const base = document.getElementById('base-' + id).value; 
-            const target = document.getElementById('target-' + id).value; 
-            const vol = document.getElementById('vol-' + id).value; 
-            const time = document.getElementById('time-' + id).value; 
-            const ph = document.getElementById('ph-' + id).value;
-            
-            return `<b>Brand:</b> ${brand || '-'} <br><b>Base:</b> ${base || '-'} | <b>Target:</b> ${target || '-'} <br><b>Dev:</b> ${vol || '-'} | <b>Time:</b> ${time || '-'} <br><b>Treatments:</b> ${ph || '-'}`;
+            const brand = document.getElementById('brand-' + id).value; const base = document.getElementById('base-' + id).value; const target = document.getElementById('target-' + id).value; const vol = document.getElementById('vol-' + id).value; const time = document.getElementById('time-' + id).value; const ph = document.getElementById('ph-' + id).value;
+            return `<b>Brand:</b> <span style="color:#D4AF37">${brand || '-'}</span> <br><b>Base:</b> ${base || '-'} | <b>Target:</b> ${target || '-'} <br><b>Dev:</b> ${vol || '-'} | <b>Time:</b> ${time || '-'} <br><b>Treatments:</b> ${ph || '-'}`;
         }
 
         function updateFormula(fullPath, id) { db.doc(fullPath).update({ history: getMatrixData(id) }).then(() => alert("Formulation Matrix Saved!")); }
-
         function markDone(fullPath, id) {
             const bill = document.getElementById('bill-' + id).value;
             if(!bill && !confirm("Aapne Bill Amount nahi dala hai. Bina bill ke 'Done' karein?")) return;
@@ -276,42 +284,20 @@
             const fileInput = document.getElementById('img-' + id);
             const file = fileInput.files[0];
             if (!file) return alert("Pehle 'Choose File' par click karke photo select karein!");
-
             const btn = fileInput.nextElementSibling;
-            btn.innerText = "⏳ Uploading... Please wait";
-            btn.disabled = true;
+            btn.innerText = "⏳ Uploading... Please wait"; btn.disabled = true;
 
-            const formData = new FormData();
-            formData.append('image', file);
-
+            const formData = new FormData(); formData.append('image', file);
             const apiKey = '784a2cd72d9a44a6df0073527b1eee04'; 
 
-            fetch('https://api.imgbb.com/1/upload?key=' + apiKey, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
+            fetch('https://api.imgbb.com/1/upload?key=' + apiKey, { method: 'POST', body: formData })
+            .then(res => res.json())
             .then(result => {
                 if(result.success) {
-                    const imageUrl = result.data.url;
-                    db.doc(fullPath).update({ photoUrl: imageUrl }).then(() => {
-                        alert("Photo Upload Ho Gayi!");
-                        btn.innerText = "📸 Upload Result Photo";
-                        btn.disabled = false;
-                    });
-                } else {
-                    alert("Upload Failed. API Key check karein.");
-                    btn.innerText = "📸 Upload Result Photo";
-                    btn.disabled = false;
-                }
-            })
-            .catch(error => {
-                alert("Upload Failed: " + error.message);
-                btn.innerText = "📸 Upload Result Photo";
-                btn.disabled = false;
-            });
+                    db.doc(fullPath).update({ photoUrl: result.data.url }).then(() => { alert("Photo Upload Ho Gayi!"); btn.innerText = "📸 Upload Result Photo"; btn.disabled = false; });
+                } else { alert("Upload Failed."); btn.innerText = "📸 Upload Result Photo"; btn.disabled = false; }
+            }).catch(err => { alert("Upload Failed."); btn.innerText = "📸 Upload Result Photo"; btn.disabled = false; });
         }
-
         function deleteEntry(fullPath) { if(confirm("Are you sure?")) db.doc(fullPath).delete(); }
 
         startSync();
