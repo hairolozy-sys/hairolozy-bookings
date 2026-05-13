@@ -3,169 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Appointment | Hairolozy Luxury Salon</title>
+    <title>Book Appointment | Hairolozy</title>
     <style>
-        /* LUXURY DARK THEME */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #121212; color: #e0e0e0; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: #fff; margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 500px; }
+        .header { text-align: center; margin-bottom: 25px; }
+        .header h1 { color: #D4AF37; margin: 0; text-transform: uppercase; letter-spacing: 2px; }
         
-        .booking-container { background: #1e1e1e; width: 100%; max-width: 450px; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid #333; border-top: 3px solid #D4AF37; }
-        
-        .header { text-align: center; margin-bottom: 30px; }
-        .header h1 { color: #D4AF37; margin: 0; font-size: 28px; letter-spacing: 2px; text-transform: uppercase; }
-        .header p { color: #aaa; font-size: 14px; margin-top: 5px; }
+        /* Service Cards Grid */
+        .service-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .service-card { background: #1e1e1e; border: 2px solid #333; padding: 15px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .service-card:hover { border-color: #D4AF37; background: #252525; }
+        .service-card.selected { border-color: #D4AF37; background: #2d2610; }
+        .service-card p { margin: 5px 0 0; font-size: 13px; font-weight: bold; }
 
         .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; color: #D4AF37; font-size: 14px; font-weight: bold; letter-spacing: 1px; }
+        label { display: block; margin-bottom: 8px; color: #D4AF37; font-size: 13px; font-weight: bold; }
+        input, textarea { width: 100%; background: #2a2a2a; color: #fff; border: 1px solid #444; padding: 14px; border-radius: 8px; box-sizing: border-box; }
         
-        input, select { width: 100%; background: #2a2a2a; color: #fff; border: 1px solid #444; padding: 14px; border-radius: 8px; box-sizing: border-box; font-size: 15px; outline: none; transition: 0.3s; }
-        input:focus, select:focus { border-color: #D4AF37; box-shadow: 0 0 8px rgba(212, 175, 55, 0.3); }
-        
-        ::-webkit-calendar-picker-indicator { filter: invert(1) sepia(1) saturate(5) hue-rotate(10deg); cursor: pointer; }
-
-        .book-btn { background: linear-gradient(135deg, #D4AF37, #b5952f); color: #121212; width: 100%; padding: 16px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.3s; margin-top: 10px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); }
-        .book-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5); }
-
-        .success-msg { display: none; text-align: center; color: #fff; font-size: 18px; font-weight: bold; margin-top: 20px; padding: 25px 15px; border: 1px solid #333; border-radius: 8px; background: #252525; }
-        .booking-id-badge { background: rgba(212, 175, 55, 0.1); color: #D4AF37; border: 1px dashed #D4AF37; padding: 8px 15px; border-radius: 20px; display: inline-block; margin: 15px 0; font-size: 20px; letter-spacing: 1px; }
+        .book-btn { background: #D4AF37; color: #121212; width: 100%; padding: 16px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; }
+        #successMsg { display: none; text-align: center; background: #1e1e1e; padding: 20px; border-radius: 10px; border: 1px solid #D4AF37; }
     </style>
 </head>
 <body>
 
-    <div class="booking-container">
-        <div class="header">
-            <h1>Hairolozy</h1>
-            <p>Luxury Salon Experience</p>
+<div class="container">
+    <div class="header"><h1>Hairolozy</h1><p>Select Your Premium Service</p></div>
+
+    <div id="bookingForm">
+        <!-- Visual Service Cards -->
+        <div class="service-grid" id="serviceGrid">
+            <div class="service-card" onclick="selectService('Haircut', this)"><p>✂️ Haircut</p></div>
+            <div class="service-card" onclick="selectService('Hair Color', this)"><p>🎨 Hair Color</p></div>
+            <div class="service-card" onclick="selectService('Balayage', this)"><p>✨ Balayage</p></div>
+            <div class="service-card" onclick="selectService('Keratin', this)"><p>💆‍♀️ Keratin</p></div>
+        </div>
+        <input type="hidden" id="selected-service">
+
+        <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="client-name" placeholder="Your Name">
         </div>
 
-        <div id="bookingForm">
-            <div class="form-group">
-                <label>Full Name</label>
-                <input type="text" id="client-name" placeholder="Enter your name" required>
-            </div>
-
-            <div class="form-group">
-                <label>Phone Number</label>
-                <input type="tel" id="client-phone" placeholder="Enter your mobile number" required>
-            </div>
-
-            <div class="form-group">
-                <label>Select Service</label>
-                <select id="client-service" required>
-                    <option value="" disabled selected>Choose a service</option>
-                    <option value="Haircut">Haircut</option>
-                    <option value="Hair Color">Hair Color</option>
-                    <option value="Balayage">Balayage</option>
-                    <option value="Keratin Treatment">Keratin Treatment</option>
-                    <option value="Smoothening">Smoothening</option>
-                    <option value="Color Correction">Color Correction</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Select Date</label>
-                <input type="date" id="client-date" onchange="checkThursday()" required>
-            </div>
-
-            <div class="form-group">
-                <label>Select Time</label>
-                <input type="time" id="client-time" required>
-            </div>
-
-            <button class="book-btn" onclick="submitBooking()">Confirm Appointment</button>
+        <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" id="client-phone" placeholder="Your Number">
         </div>
 
-        <div id="successMsg" class="success-msg">
-            <!-- Content will be injected here via JavaScript -->
+        <!-- Hair History Box -->
+        <div class="form-group">
+            <label>Hair History (Box Dye/Henna/Smoothening?)</label>
+            <textarea id="hair-history" rows="3" placeholder="Tell me about your previous chemical treatments..."></textarea>
         </div>
+
+        <div class="form-group">
+            <label>Preferred Date</label>
+            <input type="date" id="client-date" onchange="checkThursday()">
+        </div>
+
+        <div class="form-group">
+            <label>Preferred Time</label>
+            <input type="time" id="client-time">
+        </div>
+
+        <button class="book-btn" onclick="submitBooking()">CONFIRM APPOINTMENT</button>
     </div>
 
-    <!-- Firebase Scripts -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <div id="successMsg"></div>
+</div>
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyABGjbHjlLdUIHrbUxhD_Jp2ZScrMegX5A",
-            authDomain: "hairolozy-12bec.firebaseapp.com",
-            projectId: "hairolozy-12bec",
-            storageBucket: "hairolozy-12bec.appspot.com",
-            messagingSenderId: "386170490787",
-            appId: "1:386170490787:web:58b592d8a44d0e3de65416"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
-        let today = new Date().toISOString().split('T')[0];
-        document.getElementById("client-date").setAttribute('min', today);
+<script>
+    const firebaseConfig = { apiKey: "AIzaSyABGjbHjlLdUIHrbUxhD_Jp2ZScrMegX5A", authDomain: "hairolozy-12bec.firebaseapp.com", projectId: "hairolozy-12bec", storageBucket: "hairolozy-12bec.appspot.com", messagingSenderId: "386170490787", appId: "1:386170490787:web:58b592d8a44d0e3de65416" };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-        function checkThursday() {
-            let dateInput = document.getElementById("client-date");
-            let selectedDate = new Date(dateInput.value);
-            if(selectedDate.getDay() === 4) {
-                alert("❌ Sorry! Every Thursday our salon is closed (Weekly Off). Please select another date.");
-                dateInput.value = "";
-            }
-        }
+    function selectService(service, el) {
+        document.getElementById('selected-service').value = service;
+        document.querySelectorAll('.service-card').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+    }
 
-        function submitBooking() {
-            const name = document.getElementById('client-name').value;
-            const phone = document.getElementById('client-phone').value;
-            const service = document.getElementById('client-service').value;
-            const date = document.getElementById('client-date').value;
-            let time = document.getElementById('client-time').value;
+    function checkThursday() {
+        let d = new Date(document.getElementById("client-date").value);
+        if(d.getDay() === 4) { alert("Thursday is Weekly Off!"); document.getElementById("client-date").value = ""; }
+    }
 
-            if(!name || !phone || !service || !date || !time) {
-                return alert("Please fill all the details to book your appointment.");
-            }
+    function submitBooking() {
+        const name = document.getElementById('client-name').value;
+        const phone = document.getElementById('client-phone').value;
+        const service = document.getElementById('selected-service').value;
+        const history = document.getElementById('hair-history').value;
+        const date = document.getElementById('client-date').value;
+        const time = document.getElementById('client-time').value;
 
-            let timeParts = time.split(':');
-            let hours = parseInt(timeParts[0]);
-            let ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12 || 12; 
-            let formattedTime = hours + ':' + timeParts[1] + ' ' + ampm;
+        if(!name || !service || !date) return alert("Please fill details!");
 
-            // Naya: Random Booking ID Generate karna (Jaise: HLZ-4892)
-            const randomNum = Math.floor(1000 + Math.random() * 9000);
-            const bookingID = "HLZ-" + randomNum;
-
-            db.collection("clients").add({
-                bookingID: bookingID,
-                clientName: name,
-                clientPhone: phone,
-                serviceName: service,
-                bookingDate: date,
-                bookingTime: formattedTime,
-                status: 'pending',
-                history: '',
-                billAmount: ''
-            }).then(() => {
-                document.getElementById('bookingForm').style.display = 'none';
-                
-                const successDiv = document.getElementById('successMsg');
-                successDiv.style.display = 'block';
-
-                // YAHAN APNA WHATSAPP NUMBER DAALEIN (Bina + ke)
-                const salonWhatsAppNumber = "918860504808"; // Example: "919876543210"
-
-                // WhatsApp par aane wala message
-                const msg = `🔔 *New Appointment Booking!*\n\n*Booking ID:* ${bookingID}\n*Name:* ${name}\n*Phone:* ${phone}\n*Service:* ${service}\n*Date:* ${date}\n*Time:* ${formattedTime}\n\nPlease confirm my appointment! ✨`;
-                
-                const encodedMsg = encodeURIComponent(msg);
-                
-                successDiv.innerHTML = `
-                    🎉 Booking Confirmed!<br>
-                    <div class="booking-id-badge">${bookingID}</div><br>
-                    <span style="font-size:14px; color:#aaa; font-weight:normal;">Take a screenshot of your ID.</span>
-                    <br><br>
-                    <a href="https://wa.me/${salonWhatsAppNumber}?text=${encodedMsg}" target="_blank" 
-                       style="background:#25d366; color:white; padding:15px 25px; border-radius:30px; text-decoration:none; font-size:15px; display:inline-block; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);">
-                       📲 Send to WhatsApp
-                    </a>
-                `;
-            }).catch((error) => {
-                alert("Error: " + error.message);
-            });
-        }
-    </script>
+        const bookingID = "HLZ-" + Math.floor(1000 + Math.random() * 9000);
+        db.collection("clients").add({
+            bookingID, clientName: name, clientPhone: phone, serviceName: service, 
+            history: "History: " + history, bookingDate: date, bookingTime: time, status: 'pending'
+        }).then(() => {
+            document.getElementById('bookingForm').innerHTML = `<h3>Booking Success!</h3><p>Your ID: ${bookingID}</p>
+            <a href="https://wa.me/91XXXXXXXXXX?text=New Booking: ${name}, ${service}, ID: ${bookingID}" style="color:#25d366; font-weight:bold;">📲 WhatsApp Arman</a>`;
+        });
+    }
+</script>
 </body>
 </html>
