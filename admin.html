@@ -44,6 +44,7 @@
         .save-btn { background: #d35400; color: white; flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
         .done-btn { background: #27ae60; color: white; flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
         .del-btn { background: #e74c3c; color: white; width: 100%; padding: 10px; border: none; border-radius: 8px; margin-top: 10px; font-size: 13px; cursor: pointer; }
+        .upload-btn { background: #2980b9; color: white; width: 100%; padding: 10px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 5px; }
 
         .fab { position: fixed; bottom: 30px; right: 30px; background: #d35400; color: white; width: 60px; height: 60px; border-radius: 50%; text-align: center; line-height: 55px; font-size: 35px; box-shadow: 0 4px 10px rgba(211,84,0,0.4); cursor: pointer; z-index: 101; border: none; }
         
@@ -92,6 +93,7 @@
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyABGjbHjlLdUIHrbUxhD_Jp2ZScrMegX5A",
@@ -104,7 +106,6 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Safe Dashboard Data Storage
         let allBookings = {};
 
         function openModal() { document.getElementById('walkinModal').style.display = 'flex'; }
@@ -125,26 +126,19 @@
             }
         }
 
-        // Dashboard Calculation Fix (Works with ALL Date formats)
         function updateDashboard() {
-            let rev = 0;
-            let clientsCount = 0;
-            
+            let rev = 0; let clientsCount = 0;
             const now = new Date();
-            const format1 = now.toLocaleDateString(); // e.g. 5/13/2026
-            const format2 = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`; // e.g. 2026-05-13
+            const format1 = now.toLocaleDateString(); 
+            const format2 = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`; 
 
             for (let id in allBookings) {
                 let b = allBookings[id];
-                // Check if date matches ANY format
                 if (b.date === format1 || b.date === format2) {
                     clientsCount++;
-                    if (b.status === 'done' && b.bill) {
-                        rev += parseFloat(b.bill);
-                    }
+                    if (b.status === 'done' && b.bill) rev += parseFloat(b.bill);
                 }
             }
-            
             document.getElementById('dash-clients').innerText = clientsCount;
             document.getElementById('dash-revenue').innerText = "₹" + rev;
         }
@@ -157,17 +151,9 @@
                     snap.forEach(doc => {
                         const data = doc.data();
                         if (!data.clientName && !data.name) return;
-                        
-                        // Save to our dashboard list
-                        allBookings[doc.id] = {
-                            date: data.bookingDate || data.date || '',
-                            status: data.status || 'pending',
-                            bill: data.billAmount || 0
-                        };
-                        
+                        allBookings[doc.id] = { date: data.bookingDate || data.date || '', status: data.status || 'pending', bill: data.billAmount || 0 };
                         renderCard(doc);
                     });
-                    // Update Dashboard Live
                     updateDashboard();
                 });
             });
@@ -188,6 +174,8 @@
             const statusClass = data.status === 'done' ? 'done' : '';
             const statusText = data.status === 'done' ? 'Completed' : (data.bookingTime || data.time || 'Walk-in');
             const billDisplay = data.billAmount ? `<div class="bill-badge">💰 Bill: ₹${data.billAmount}</div>` : '';
+            
+            const photoDisplay = data.photoUrl ? `<img src="${data.photoUrl}" style="max-width: 100%; border-radius: 8px; margin-bottom: 10px; border: 2px solid #ddd;">` : '';
 
             const card = document.createElement('div');
             card.className = `card ${statusClass}`;
@@ -204,6 +192,8 @@
                 </div>
                 
                 <div class="card-body" id="body-${id}">
+                    ${photoDisplay}
+
                     <div class="formula-box">
                         <strong>Last Formulation:</strong><br> ${data.history || "No record."}
                     </div>
@@ -220,7 +210,12 @@
                         </select>
                         <input type="text" id="time-${id}" placeholder="Processing Time">
                         <input type="text" id="ph-${id}" class="full-width" placeholder="Bond Builder / Notes">
-                        <input type="number" id="bill-${id}" class="bill-input" placeholder="Total Bill Amount (₹) - e.g. 2500" value="${data.billAmount || ''}">
+                        <input type="number" id="bill-${id}" class="bill-input" placeholder="Total Bill Amount (₹)" value="${data.billAmount || ''}">
+                    </div>
+
+                    <div style="background: #e8f4f8; padding: 10px; border-radius: 8px; margin-top: 10px;">
+                        <input type="file" id="img-${id}" accept="image/*" style="font-size: 13px; width: 100%;">
+                        <button class="upload-btn" onclick="uploadPhoto('${path}', '${id}')">📸 Upload Result Photo</button>
                     </div>
 
                     <div class="btn-group">
@@ -238,58 +233,67 @@
             const phone = document.getElementById('new-phone').value;
             const service = document.getElementById('new-service').value;
             const formula = document.getElementById('new-formula').value;
-
             if(!name) return alert("Name zaroori hai!");
-
             const todayFormatted = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate()).padStart(2, '0')}`;
-
-            db.collection("clients").add({
-                clientName: name, clientPhone: phone, serviceName: service, history: formula,
-                bookingDate: todayFormatted, bookingTime: "Walk-in", status: 'pending'
-            }).then(() => {
-                closeModal();
-                document.getElementById('new-name').value = ""; document.getElementById('new-formula').value = "";
-            });
+            db.collection("clients").add({ clientName: name, clientPhone: phone, serviceName: service, history: formula, bookingDate: todayFormatted, bookingTime: "Walk-in", status: 'pending' }).then(() => { closeModal(); document.getElementById('new-name').value = ""; document.getElementById('new-formula').value = ""; });
         }
 
-        // Helper to format Matrix
         function getMatrixData(id) {
-            const base = document.getElementById('base-' + id).value;
-            const target = document.getElementById('target-' + id).value;
-            const vol = document.getElementById('vol-' + id).value;
-            const time = document.getElementById('time-' + id).value;
-            const ph = document.getElementById('ph-' + id).value;
-
-            return `
-                <b>Base:</b> ${base || '-'} | <b>Target:</b> ${target || '-'} <br>
-                <b>Dev:</b> ${vol || '-'} | <b>Time:</b> ${time || '-'} <br>
-                <b>Treatments:</b> ${ph || '-'}
-            `;
+            const base = document.getElementById('base-' + id).value; const target = document.getElementById('target-' + id).value; const vol = document.getElementById('vol-' + id).value; const time = document.getElementById('time-' + id).value; const ph = document.getElementById('ph-' + id).value;
+            return `<b>Base:</b> ${base || '-'} | <b>Target:</b> ${target || '-'} <br><b>Dev:</b> ${vol || '-'} | <b>Time:</b> ${time || '-'} <br><b>Treatments:</b> ${ph || '-'}`;
         }
 
-        function updateFormula(fullPath, id) {
-            db.doc(fullPath).update({ history: getMatrixData(id) }).then(() => alert("Formulation Matrix Saved!"));
-        }
+        function updateFormula(fullPath, id) { db.doc(fullPath).update({ history: getMatrixData(id) }).then(() => alert("Formulation Matrix Saved!")); }
 
-        // NEW: Mark Done will save BOTH Bill AND Matrix Formula
         function markDone(fullPath, id) {
             const bill = document.getElementById('bill-' + id).value;
-            
-            if(!bill) {
-                if(!confirm("Aapne Bill Amount nahi dala hai. Bina bill ke 'Done' karein?")) return;
-            }
-            
-            db.doc(fullPath).update({ 
-                status: 'done',
-                billAmount: bill || "0",
-                history: getMatrixData(id) // Matrix ki details bhi yahi save ho jayengi
-            });
-            // Page reload ki zaroorat nahi hai, onSnapshot apne aap Dashboard update kar dega!
+            if(!bill && !confirm("Aapne Bill Amount nahi dala hai. Bina bill ke 'Done' karein?")) return;
+            db.doc(fullPath).update({ status: 'done', billAmount: bill || "0", history: getMatrixData(id) });
         }
 
-        function deleteEntry(fullPath) {
-            if(confirm("Are you sure?")) db.doc(fullPath).delete();
+        // 100% FREE IMGBB API UPLOAD SYSTEM
+        function uploadPhoto(fullPath, id) {
+            const fileInput = document.getElementById('img-' + id);
+            const file = fileInput.files[0];
+            if (!file) return alert("Pehle 'Choose File' par click karke photo select karein!");
+
+            const btn = fileInput.nextElementSibling;
+            btn.innerText = "⏳ Uploading... Please wait";
+            btn.disabled = true;
+
+            const formData = new FormData();
+            formData.append('image', file);
+
+            // AAPKI API KEY YAHAN ADD KAR DI GAYI HAI:
+            const apiKey = '784a2cd72d9a44a6df0073527b1eee04'; 
+
+            fetch('https://api.imgbb.com/1/upload?key=' + apiKey, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(result => {
+                if(result.success) {
+                    const imageUrl = result.data.url;
+                    db.doc(fullPath).update({ photoUrl: imageUrl }).then(() => {
+                        alert("Photo Upload Ho Gayi!");
+                        btn.innerText = "📸 Upload Result Photo";
+                        btn.disabled = false;
+                    });
+                } else {
+                    alert("Upload Failed. API Key check karein.");
+                    btn.innerText = "📸 Upload Result Photo";
+                    btn.disabled = false;
+                }
+            })
+            .catch(error => {
+                alert("Upload Failed: " + error.message);
+                btn.innerText = "📸 Upload Result Photo";
+                btn.disabled = false;
+            });
         }
+
+        function deleteEntry(fullPath) { if(confirm("Are you sure?")) db.doc(fullPath).delete(); }
 
         startSync();
     </script>
