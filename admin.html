@@ -5,20 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hairolozy Admin</title>
     <style>
-        body { font-family: sans-serif; padding: 15px; background: #f4f4f4; }
-        .card { background: white; padding: 15px; margin-bottom: 10px; border-radius: 8px; border-left: 5px solid #d35400; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #333; }
-        .detail { color: #555; margin: 5px 0; }
+        body { font-family: sans-serif; padding: 20px; background: #f0f2f5; color: #333; }
+        .card { background: white; padding: 15px; margin-bottom: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-top: 4px solid #d35400; }
+        h2 { text-align: center; color: #2c3e50; }
+        .info { margin: 5px 0; font-size: 14px; }
+        .loading { text-align: center; font-style: italic; color: #888; }
     </style>
 </head>
 <body>
     <h2>Hairolozy Bookings</h2>
-    <div id="list">Loading...</div>
+    <div id="booking-list" class="loading">Database se connect ho raha hai...</div>
 
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <script>
+        // Fix Config
         const firebaseConfig = {
             apiKey: "AIzaSyABGjbHjlLdUIHrbUxhD_Jp2ZScrMegX5A",
             authDomain: "hairolozy-12bec.firebaseapp.com",
@@ -27,30 +30,36 @@
             messagingSenderId: "386170490787",
             appId: "1:386170490787:web:58b592d8a44d0e3de65416"
         };
-        firebase.initializeApp(firebaseConfig);
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         const db = firebase.firestore();
 
-        // Sabse simple tarika data mangane ka
+        // Direct Data Pull
         db.collection("bookings").onSnapshot((querySnapshot) => {
-            const listDiv = document.getElementById("list");
-            listDiv.innerHTML = ""; 
+            const listDiv = document.getElementById("booking-list");
+            listDiv.classList.remove("loading");
             
             if (querySnapshot.empty) {
-                listDiv.innerHTML = "Database mein koi booking nahi mili.";
+                listDiv.innerHTML = "Koi booking nahi mili. Ek baar booking app se naya test karke dekhein.";
+                return;
             }
 
+            let html = "";
             querySnapshot.forEach((doc) => {
                 const data = doc.data();
-                listDiv.innerHTML += `
+                html += `
                     <div class="card">
-                        <b>${data.clientName}</b><br>
-                        <div class="detail">📞 ${data.clientPhone}</div>
-                        <div class="detail">✂️ ${data.serviceName}</div>
-                        <div class="detail">📅 ${data.bookingDate} | ${data.bookingTime}</div>
+                        <strong>👤 ${data.clientName || 'No Name'}</strong>
+                        <div class="info">📞 ${data.clientPhone || 'No Phone'}</div>
+                        <div class="info">✂️ ${data.serviceName || 'No Service'}</div>
+                        <div class="info">📅 ${data.bookingDate || ''} | ${data.bookingTime || ''}</div>
                     </div>`;
             });
+            listDiv.innerHTML = html;
         }, (error) => {
-            document.getElementById("list").innerHTML = "Error: " + error.message;
+            document.getElementById("booking-list").innerHTML = "Error: " + error.message;
         });
     </script>
 </body>
