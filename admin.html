@@ -21,7 +21,7 @@
 
         /* Search Bar */
         .search-container { margin: 20px 0; position: sticky; top: 75px; z-index: 99; }
-        .search-bar { width: 100%; padding: 15px 20px; border-radius: 30px; background: #1e1e1e; border: 1px solid #444; color: #fff; font-size: 15px; outline: none; transition: 0.3s; box-sizing: border-box; }
+        .search-bar { width: 100%; padding: 15px 20px; border-radius: 30px; background: #1e1e1e; border: 1px solid #444; color: #fff; font-size: 15px; outline: none; transition: 0.3s; }
         .search-bar:focus { border-color: #D4AF37; box-shadow: 0 0 8px rgba(212, 175, 55, 0.3); }
         .search-bar::placeholder { color: #777; }
 
@@ -71,10 +71,10 @@
         .modal-content input:focus { border-color: #D4AF37; }
         .add-btn { background: #D4AF37; color: #121212; width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 15px; }
 
-        /* NEW ADDITION: PILL GRID FOR MULTIPLE SERVICES IN MODAL */
-        .pill-grid { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
-        .service-pill { background: #2a2a2a; border: 1px solid #444; padding: 8px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; color: #ccc; transition: 0.3s; user-select: none; }
-        .service-pill.active { background: rgba(212, 175, 55, 0.2); border-color: #D4AF37; color: #D4AF37; font-weight: bold; }
+        /* NEW ADDITION: QUICK PILLS CSS */
+        .quick-pills { display: flex; flex-wrap: wrap; gap: 6px; margin: 5px 0 10px 0; }
+        .q-pill { background: #2a2a2a; border: 1px solid #444; padding: 6px 12px; border-radius: 15px; font-size: 12px; color: #ccc; cursor: pointer; transition: 0.2s; user-select: none; }
+        .q-pill.active { background: rgba(212, 175, 55, 0.2); color: #D4AF37; border-color: #D4AF37; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -98,10 +98,8 @@
         <div id="list">Loading Luxury Experience...</div>
     </div>
 
-    <!-- Floating Action Button (+) -->
     <button class="fab" onclick="openModal()">+</button>
 
-    <!-- NEW WALK-IN MODAL (UPDATED WITH MULTIPLE SERVICE PILLS) -->
     <div id="walkinModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
@@ -110,26 +108,24 @@
             <input type="text" id="new-name" placeholder="Client Name">
             <input type="tel" id="new-phone" placeholder="Phone Number">
             
-            <!-- Service Pills Area -->
-            <label style="color:#aaa; font-size:12px; margin-top:5px; display:block;">Select Services (Multiple)</label>
-            <div class="pill-grid">
-                <div class="service-pill" onclick="toggleModalService('Haircut', this)">Haircut</div>
-                <div class="service-pill" onclick="toggleModalService('Root Touch-up', this)">Root Touch-up</div>
-                <div class="service-pill" onclick="toggleModalService('Global Color', this)">Global Color</div>
-                <div class="service-pill" onclick="toggleModalService('Balayage', this)">Balayage</div>
-                <div class="service-pill" onclick="toggleModalService('Highlights', this)">Highlights</div>
-                <div class="service-pill" onclick="toggleModalService('Nanoplastia', this)">Nanoplastia</div>
-                <div class="service-pill" onclick="toggleModalService('Keratin/Botox', this)">Keratin/Botox</div>
-                <div class="service-pill" onclick="toggleModalService('Spa/Treatment', this)">Spa/Treatment</div>
+            <input type="text" id="new-service" placeholder="Service (Type or Select Below)">
+            
+            <!-- NEW QUICK PILLS -->
+            <div class="quick-pills">
+                <div class="q-pill" onclick="addServicePill('Haircut', this)">Haircut</div>
+                <div class="q-pill" onclick="addServicePill('Global Color', this)">Global Color</div>
+                <div class="q-pill" onclick="addServicePill('Root Touch-up', this)">Root Touch-up</div>
+                <div class="q-pill" onclick="addServicePill('Balayage', this)">Balayage</div>
+                <div class="q-pill" onclick="addServicePill('Nanoplastia', this)">Nanoplastia</div>
+                <div class="q-pill" onclick="addServicePill('Keratin/Botox', this)">Keratin/Botox</div>
+                <div class="q-pill" onclick="addServicePill('Spa/Treatment', this)">Spa/Treatment</div>
             </div>
-            <input type="hidden" id="new-service"> <!-- Hidden field for saving data -->
 
-            <input type="text" id="new-formula" placeholder="Quick Notes / Formula...">
+            <input type="text" id="new-formula" placeholder="Quick Notes...">
             <button class="add-btn" onclick="addDirectClient()">Save Client</button>
         </div>
     </div>
 
-    <!-- Firebase Scripts -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
@@ -146,36 +142,37 @@
         const db = firebase.firestore();
         let allBookings = {};
 
-        // MULTIPLE SERVICE SELECTION LOGIC
-        let modalSelectedArray = [];
-        function toggleModalService(serviceName, element) {
-            const index = modalSelectedArray.indexOf(serviceName);
+        // NEW LOGIC FOR QUICK PILLS (Super Safe)
+        function addServicePill(serviceName, el) {
+            let inputField = document.getElementById('new-service');
+            let currentServices = inputField.value ? inputField.value.split(', ') : [];
+            
+            let index = currentServices.indexOf(serviceName);
             if (index > -1) {
-                modalSelectedArray.splice(index, 1);
-                element.classList.remove('active');
+                currentServices.splice(index, 1);
+                el.classList.remove('active');
             } else {
-                modalSelectedArray.push(serviceName);
-                element.classList.add('active');
+                currentServices.push(serviceName);
+                el.classList.add('active');
             }
-            document.getElementById('new-service').value = modalSelectedArray.join(', ');
-        }
-
-        // RESET FORM SAFELY
-        function resetModalForm() {
-            if(document.getElementById('new-name')) document.getElementById('new-name').value = "";
-            if(document.getElementById('new-phone')) document.getElementById('new-phone').value = "";
-            if(document.getElementById('new-formula')) document.getElementById('new-formula').value = "";
-            if(document.getElementById('new-service')) document.getElementById('new-service').value = "";
-            modalSelectedArray = [];
-            document.querySelectorAll('.service-pill').forEach(pill => pill.classList.remove('active'));
+            
+            inputField.value = currentServices.join(', ');
         }
 
         function openModal() { document.getElementById('walkinModal').style.display = 'flex'; }
+        
         function closeModal() { 
             document.getElementById('walkinModal').style.display = 'none'; 
-            resetModalForm();
+            // Clear pills visually when closing
+            document.querySelectorAll('.q-pill').forEach(p => p.classList.remove('active'));
         }
+        
         window.onclick = function(event) { if (event.target == document.getElementById('walkinModal')) closeModal(); }
+
+        function toggleCard(id) {
+            let body = document.getElementById('body-' + id);
+            body.style.display = (body.style.display === 'block') ? 'none' : 'block';
+        }
 
         function filterList() {
             let input = document.getElementById('searchInput').value.toLowerCase();
@@ -184,11 +181,6 @@
                 let text = cards[i].innerText.toLowerCase();
                 cards[i].style.display = text.includes(input) ? "" : "none";
             }
-        }
-
-        function toggleCard(id) {
-            let body = document.getElementById('body-' + id);
-            body.style.display = (body.style.display === 'block') ? 'none' : 'block';
         }
 
         function updateDashboard() {
@@ -302,29 +294,33 @@
             listDiv.insertBefore(card, listDiv.firstChild);
         }
 
-        // SAVE NEW WALK-IN CLIENT
         function addDirectClient() {
             const name = document.getElementById('new-name').value;
             const phone = document.getElementById('new-phone').value;
-            // Agar service select nahi ki, toh by default "Walk-in Service" chala jayega
-            const service = document.getElementById('new-service').value || "Walk-in Service"; 
+            const service = document.getElementById('new-service').value;
             const formula = document.getElementById('new-formula').value;
+            if(!name) return alert("Name zaroori hai!");
             
-            if(!name) return alert("Client ka naam likhna zaroori hai!");
-            
-            // NOTE: Thursday wala popup hata diya hai taaki button block na ho!
+            // Checking Thursday (Day 4) for Walk-in Alert
+            if(new Date().getDay() === 4) {
+                if(!confirm("Aaj Thursday (Weekly Off) hai! Phir bhi entry karni hai?")) return;
+            }
 
             const todayFormatted = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate()).padStart(2, '0')}`;
-            db.collection("clients").add({ 
-                clientName: name, 
-                clientPhone: phone, 
-                serviceName: service, 
-                history: formula, 
-                bookingDate: todayFormatted, 
-                bookingTime: "Walk-in", 
-                status: 'pending' 
-            }).then(() => { 
+            db.collection("clients").add({ clientName: name, clientPhone: phone, serviceName: service, history: formula, bookingDate: todayFormatted, bookingTime: "Walk-in", status: 'pending' }).then(() => { 
                 closeModal(); 
-            }).catch(err => {
-                alert("Database Error: " + err.message);
-            }
+                document.getElementById('new-name').value = ""; 
+                document.getElementById('new-formula').value = ""; 
+                document.getElementById('new-phone').value = "";
+                document.getElementById('new-service').value = "";
+            });
+        }
+
+        function getMatrixData(id) {
+            const brand = document.getElementById('brand-' + id).value; const base = document.getElementById('base-' + id).value; const target = document.getElementById('target-' + id).value; const vol = document.getElementById('vol-' + id).value; const time = document.getElementById('time-' + id).value; const ph = document.getElementById('ph-' + id).value;
+            return `<b>Brand:</b> <span style="color:#D4AF37">${brand || '-'}</span> <br><b>Base:</b> ${base || '-'} | <b>Target:</b> ${target || '-'} <br><b>Dev:</b> ${vol || '-'} | <b>Time:</b> ${time || '-'} <br><b>Treatments:</b> ${ph || '-'}`;
+        }
+
+        function updateFormula(fullPath, id) { db.doc(fullPath).update({ history: getMatrixData(id) }).then(() => alert("Formulation Matrix Saved!")); }
+        function markDone(fullPath, id) {
+            const bill = do
