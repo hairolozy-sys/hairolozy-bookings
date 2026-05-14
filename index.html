@@ -1,201 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Appointment | Hairolozy Luxury Salon</title>
-    <style>
-        /* LUXURY DARK THEME STYLING */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #121212; color: #e0e0e0; margin: 0; padding: 20px; display: flex; justify-content: center; }
-        
-        .container { width: 100%; max-width: 500px; background: #1e1e1e; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid #333; border-top: 4px solid #D4AF37; }
-        
-        .header { text-align: center; margin-bottom: 30px; }
-        .header h1 { color: #D4AF37; margin: 0; font-size: 32px; letter-spacing: 3px; text-transform: uppercase; }
-        .header p { color: #aaa; font-size: 14px; margin-top: 5px; }
+<!-- START: Floating WhatsApp Button -->
+<style>
+    .wa-float {
+        position: fixed;
+        bottom: 25px;
+        right: 25px;
+        width: 60px;
+        height: 60px;
+        background-color: #25d366;
+        color: #fff;
+        border-radius: 50px;
+        text-align: center;
+        font-size: 30px;
+        box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+    .wa-float:hover {
+        background-color: #128c7e;
+        transform: scale(1.1);
+    }
+</style>
 
-        /* SERVICE CARDS GRID - 18 SERVICES */
-        .service-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 25px; }
-        .service-card { background: #252525; border: 1px solid #444; padding: 15px 10px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
-        .service-card:hover { border-color: #D4AF37; background: #2a2a2a; }
-        
-        /* Multiple Selection Styling */
-        .service-card.selected { border-color: #D4AF37; background: rgba(212, 175, 55, 0.15); box-shadow: 0 0 15px rgba(212, 175, 55, 0.2); }
-        .service-card.selected::after { content: '✔️'; position: absolute; top: 5px; right: 8px; font-size: 12px; }
-
-        .service-card span { font-size: 22px; margin-bottom: 5px; }
-        .service-card p { margin: 0; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; color: #fff; }
-
-        /* FORM STYLING */
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; color: #D4AF37; font-size: 13px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; }
-        
-        input, textarea { width: 100%; background: #2a2a2a; color: #fff; border: 1px solid #444; padding: 14px; border-radius: 8px; box-sizing: border-box; font-size: 14px; outline: none; transition: 0.3s; }
-        input:focus, textarea:focus { border-color: #D4AF37; }
-        
-        ::-webkit-calendar-picker-indicator { filter: invert(1) sepia(1) saturate(5) hue-rotate(10deg); cursor: pointer; }
-
-        .book-btn { background: linear-gradient(135deg, #D4AF37, #b5952f); color: #121212; width: 100%; padding: 18px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; cursor: pointer; transition: 0.3s; margin-top: 10px; }
-        .book-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4); }
-
-        /* SUCCESS MESSAGE */
-        #successMsg { display: none; text-align: center; background: #1e1e1e; padding: 30px 15px; border-radius: 12px; border: 1px solid #333; }
-        .booking-id-badge { background: rgba(212, 175, 55, 0.1); color: #D4AF37; border: 1px dashed #D4AF37; padding: 10px 20px; border-radius: 30px; display: inline-block; margin: 20px 0; font-size: 22px; font-weight: bold; }
-    </style>
-</head>
-<body>
-
-    <div class="container">
-        <div class="header">
-            <h1>Hairolozy</h1>
-            <p>Luxury Hair Experience</p>
-        </div>
-
-        <div id="bookingForm">
-            <label style="text-align: center; display: block; margin-bottom: 5px;">Choose Services</label>
-            <p style="text-align: center; font-size: 11px; color: #aaa; margin-top: 0; margin-bottom: 15px;">(You can select multiple options)</p>
-            
-            <!-- MASTER MENU: 18 SERVICES -->
-            <div class="service-grid" id="serviceGrid">
-                <div class="service-card" onclick="selectService('Precision Haircut', this)"><span>✂️</span><p>Haircut</p></div>
-                <div class="service-card" onclick="selectService('Root Touch-up', this)"><span>🖌️</span><p>Root Touch-up</p></div>
-                <div class="service-card" onclick="selectService('Global Hair Color', this)"><span>🎨</span><p>Global Color</p></div>
-                <div class="service-card" onclick="selectService('Balayage / Ombre', this)"><span>✨</span><p>Balayage</p></div>
-                <div class="service-card" onclick="selectService('Highlights', this)"><span>🌟</span><p>Highlights</p></div>
-                <div class="service-card" onclick="selectService('Color Correction', this)"><span>🛠️</span><p>Correction</p></div>
-                <div class="service-card" onclick="selectService('Vivid Shades', this)"><span>🌈</span><p>Vivid Shades</p></div>
-                <div class="service-card" onclick="selectService('Glossing / Glazing', this)"><span>💎</span><p>Glossing</p></div>
-                <div class="service-card" onclick="selectService('Nanoplastia Treatment', this)"><span>🍃</span><p>Nanoplastia</p></div>
-                <div class="service-card" onclick="selectService('Keratin / Botox', this)"><span>💆‍♀️</span><p>Keratin/Botox</p></div>
-                <div class="service-card" onclick="selectService('Smoothening', this)"><span>🧴</span><p>Smoothening</p></div>
-                <div class="service-card" onclick="selectService('Bond Treatment', this)"><span>🧪</span><p>Bond Treat</p></div>
-                <div class="service-card" onclick="selectService('Olaplex Standalone', this)"><span>💧</span><p>Olaplex Special</p></div>
-                <div class="service-card" onclick="selectService('Deep Hair Spa', this)"><span>🌿</span><p>Deep Spa</p></div>
-                <div class="service-card" onclick="selectService('Silk Protein Infusion', this)"><span>✨</span><p>Silk Protein</p></div>
-                <div class="service-card" onclick="selectService('Scalp Detox', this)"><span>🧖‍♂️</span><p>Scalp Detox</p></div>
-                <div class="service-card" onclick="selectService('Anti-Hair Fall', this)"><span>🛡️</span><p>Hair Fall</p></div>
-                <div class="service-card" onclick="selectService('Blow Dry / Styling', this)"><span>💈</span><p>Styling</p></div>
-            </div>
-            
-            <input type="hidden" id="selected-service">
-
-            <div class="form-group">
-                <label>Full Name</label>
-                <input type="text" id="client-name" placeholder="Enter your name">
-            </div>
-
-            <div class="form-group">
-                <label>Phone Number</label>
-                <input type="tel" id="client-phone" placeholder="Enter WhatsApp number">
-            </div>
-
-            <div class="form-group">
-                <label>Hair History (Last 2 Years)</label>
-                <textarea id="hair-history" rows="3" placeholder="Box Dye, Henna, or Smoothening history?"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label>Preferred Date</label>
-                <input type="date" id="client-date" onchange="checkThursday()">
-            </div>
-
-            <div class="form-group">
-                <label>Preferred Time</label>
-                <input type="time" id="client-time">
-            </div>
-
-            <button class="book-btn" onclick="submitBooking()">Confirm Appointment</button>
-        </div>
-
-        <div id="successMsg"></div>
-    </div>
-
-    <!-- Firebase Integration -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
-    <script>
-        const firebaseConfig = { 
-            apiKey: "AIzaSyABGjbHjlLdUIHrbUxhD_Jp2ZScrMegX5A", 
-            authDomain: "hairolozy-12bec.firebaseapp.com", 
-            projectId: "hairolozy-12bec", 
-            storageBucket: "hairolozy-12bec.appspot.com", 
-            messagingSenderId: "386170490787", 
-            appId: "1:386170490787:web:58b592d8a44d0e3de65416" 
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        // Set Min Date to Today
-        document.getElementById("client-date").setAttribute('min', new Date().toISOString().split('T')[0]);
-
-        // MULTIPLE SERVICE SELECTION LOGIC
-        let selectedServicesArray = [];
-
-        function selectService(service, el) {
-            const index = selectedServicesArray.indexOf(service);
-            if (index > -1) {
-                // Agar pehle se selected hai, toh usko remove karo (Deselect)
-                selectedServicesArray.splice(index, 1);
-                el.classList.remove('selected');
-            } else {
-                // Agar selected nahi hai, toh usko array mein add karo (Select)
-                selectedServicesArray.push(service);
-                el.classList.add('selected');
-            }
-            // Array ko comma (,) laga kar text mein badal do
-            document.getElementById('selected-service').value = selectedServicesArray.join(', ');
-        }
-
-        function checkThursday() {
-            let d = new Date(document.getElementById("client-date").value);
-            if(d.getDay() === 4) { 
-                alert("❌ Thursday is our Weekly Off. Please select another date!"); 
-                document.getElementById("client-date").value = ""; 
-            }
-        }
-
-        function submitBooking() {
-            const name = document.getElementById('client-name').value;
-            const phone = document.getElementById('client-phone').value;
-            const service = document.getElementById('selected-service').value;
-            const history = document.getElementById('hair-history').value;
-            const date = document.getElementById('client-date').value;
-            let time = document.getElementById('client-time').value;
-
-            if(selectedServicesArray.length === 0) return alert("Please select at least one Service!");
-            if(!name || !phone || !date || !time) return alert("Please fill all details!");
-
-            // Format Time 12 hr
-            let timeParts = time.split(':');
-            let hours = parseInt(timeParts[0]);
-            let ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12 || 12; 
-            let formattedTime = hours + ':' + timeParts[1] + ' ' + ampm;
-
-            const bookingID = "HLZ-" + Math.floor(1000 + Math.random() * 9000);
-            
-            db.collection("clients").add({
-                bookingID, clientName: name, clientPhone: phone, serviceName: service, 
-                history: "History: " + (history || "None"), bookingDate: date, bookingTime: formattedTime, status: 'pending'
-            }).then(() => {
-                document.getElementById('bookingForm').style.display = 'none';
-                
-                // 🛑 YAHAN APNA WHATSAPP NUMBER DAALEIN 🛑
-                const salonNumber = "918860504808"; 
-
-                const msg = `🔔 *New Booking Alert!*\n\n*ID:* ${bookingID}\n*Client:* ${name}\n*Services:* ${service}\n*Date:* ${date}\n*Time:* ${formattedTime}\n*History:* ${history || 'None'}`;
-                const waUrl = `https://wa.me/${salonNumber}?text=${encodeURIComponent(msg)}`;
-
-                document.getElementById('successMsg').innerHTML = `
-                    <h2 style="color:#D4AF37; margin-top:0;">Booking Sent!</h2>
-                    <div class="booking-id-badge">${bookingID}</div>
-                    <p style="color:#aaa; font-size:14px;">Please click the button below to confirm your slot on WhatsApp.</p>
-                    <a href="${waUrl}" target="_blank" style="background:#25d366; color:white; padding:15px 25px; border-radius:30px; text-decoration:none; font-weight:bold; display:inline-block; margin-top:10px;">📲 Confirm on WhatsApp</a>
-                `;
-                document.getElementById('successMsg').style.display = 'block';
-            });
-        }
-    </script>
-</body>
-</html>
+<a href="https://wa.me/918860504808?text=Hi, I want to book an appointment." class="wa-float" target="_blank">
+    <svg width="35" height="35" viewBox="0 0 24 24" fill="white">
+        <path d="M12.031 6.172c-3.23 0-5.859 2.628-5.859 5.859 0 1.033.27 2.037.785 2.923l-.834 3.05 3.125-.82c.854.466 1.815.713 2.784.713 3.23 0 5.859-2.628 5.859-5.859 0-3.23-2.629-5.859-5.859-5.859zm0 10.517c-.896 0-1.776-.239-2.546-.689l-1.826.478.487-1.782c-.477-.827-.729-1.776-.729-2.748 0-3.036 2.472-5.508 5.509-5.508 3.036 0 5.508 2.472 5.508 5.508 0 3.036-2.472 5.508-5.508 5.508zm3.018-4.043c-.166-.083-.984-.486-1.136-.541-.152-.055-.264-.083-.375.083-.111.166-.43.541-.527.652-.097.111-.194.125-.36.042-.166-.083-.702-.259-1.337-.827-.494-.44-.828-.984-.925-1.15-.097-.166-.01-.256.073-.339.075-.074.166-.194.25-.291.083-.097.111-.166.166-.277.055-.111.028-.208-.014-.291-.042-.083-.375-.902-.514-1.236-.137-.327-.278-.283-.375-.289-.097-.006-.208-.006-.319-.006-.111 0-.291.042-.444.222-.152.18-.583.57-.583 1.389 0 1.201.896 2.361 1.022 2.527.125.166 1.763 2.708 4.272 3.794.596.257 1.062.411 1.425.527.6.192 1.146.165 1.577.101.481-.072 1.485-.607 1.694-1.192.208-.585.208-1.087.145-1.198-.063-.111-.233-.175-.486-.303z"/>
+    </svg>
+</a>
+<!-- END: Floating WhatsApp Button -->
