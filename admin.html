@@ -71,11 +71,6 @@
         .modal-content input { background: #2a2a2a; color: #fff; width: 100%; padding: 14px; margin: 8px 0; border-radius: 8px; border: 1px solid #444; box-sizing: border-box; font-size: 14px; outline: none; }
         .modal-content input:focus { border-color: #D4AF37; }
         .add-btn { background: #D4AF37; color: #121212; width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 15px; }
-
-        /* QUICK PILLS CSS */
-        .quick-pills { display: flex; flex-wrap: wrap; gap: 6px; margin: 5px 0 10px 0; }
-        .q-pill { background: #2a2a2a; border: 1px solid #444; padding: 6px 12px; border-radius: 15px; font-size: 12px; color: #ccc; cursor: pointer; transition: 0.2s; user-select: none; }
-        .q-pill.active { background: rgba(212, 175, 55, 0.2); color: #D4AF37; border-color: #D4AF37; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -107,19 +102,7 @@
             <h3 style="margin-top:0; color:#D4AF37; text-align:center;">New Walk-in</h3>
             <input type="text" id="new-name" placeholder="Client Name">
             <input type="tel" id="new-phone" placeholder="Phone Number">
-            <input type="text" id="new-service" placeholder="Service (Type or Select Below)">
-            
-            <!-- QUICK PILLS HTML -->
-            <div class="quick-pills">
-                <div class="q-pill" onclick="addServicePill('Haircut', this)">Haircut</div>
-                <div class="q-pill" onclick="addServicePill('Global Color', this)">Global Color</div>
-                <div class="q-pill" onclick="addServicePill('Root Touch-up', this)">Root Touch-up</div>
-                <div class="q-pill" onclick="addServicePill('Balayage', this)">Balayage</div>
-                <div class="q-pill" onclick="addServicePill('Nanoplastia', this)">Nanoplastia</div>
-                <div class="q-pill" onclick="addServicePill('Keratin/Botox', this)">Keratin/Botox</div>
-                <div class="q-pill" onclick="addServicePill('Spa/Treatment', this)">Spa/Treatment</div>
-            </div>
-
+            <input type="text" id="new-service" placeholder="Service (e.g. Color Correction)">
             <input type="text" id="new-formula" placeholder="Quick Notes...">
             <button class="add-btn" onclick="addDirectClient()">Save Client</button>
         </div>
@@ -141,30 +124,8 @@
         const db = firebase.firestore();
         let allBookings = {};
 
-        // NEW QUICK PILLS LOGIC
-        function addServicePill(serviceName, el) {
-            let inputField = document.getElementById('new-service');
-            let currentServices = inputField.value ? inputField.value.split(', ') : [];
-            
-            let index = currentServices.indexOf(serviceName);
-            if (index > -1) {
-                currentServices.splice(index, 1);
-                el.classList.remove('active');
-            } else {
-                currentServices.push(serviceName);
-                el.classList.add('active');
-            }
-            
-            inputField.value = currentServices.join(', ');
-        }
-
         function openModal() { document.getElementById('walkinModal').style.display = 'flex'; }
-        
-        function closeModal() { 
-            document.getElementById('walkinModal').style.display = 'none'; 
-            document.querySelectorAll('.q-pill').forEach(p => p.classList.remove('active'));
-        }
-        
+        function closeModal() { document.getElementById('walkinModal').style.display = 'none'; }
         window.onclick = function(event) { if (event.target == document.getElementById('walkinModal')) closeModal(); }
 
         function toggleCard(id) {
@@ -303,29 +264,50 @@
             const phone = document.getElementById('new-phone').value;
             const service = document.getElementById('new-service').value;
             const formula = document.getElementById('new-formula').value;
-            
             if(!name) return alert("Name zaroori hai!");
             
-            // NOTE: THURSDAY BLOCKER REMOVED. Ab seedha save hoga!
+            // Checking Thursday (Day 4) for Walk-in Alert
+            if(new Date().getDay() === 4) {
+                if(!confirm("Aaj Thursday (Weekly Off) hai! Phir bhi entry karni hai?")) return;
+            }
 
             const todayFormatted = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate()).padStart(2, '0')}`;
-            db.collection("clients").add({ 
-                clientName: name, 
-                clientPhone: phone, 
-                serviceName: service, 
-                history: formula, 
-                bookingDate: todayFormatted, 
-                bookingTime: "Walk-in", 
-                status: 'pending' 
-            }).then(() => { 
-                closeModal(); 
-                document.getElementById('new-name').value = ""; 
-                document.getElementById('new-phone').value = ""; 
-                document.getElementById('new-service').value = ""; 
-                document.getElementById('new-formula').value = ""; 
-                document.querySelectorAll('.q-pill').forEach(p => p.classList.remove('active'));
-            });
+            db.collection("clients").add({ clientName: name, clientPhone: phone, serviceName: service, history: formula, bookingDate: todayFormatted, bookingTime: "Walk-in", status: 'pending' }).then(() => { closeModal(); document.getElementById('new-name').value = ""; document.getElementById('new-formula').value = ""; });
         }
 
         function getMatrixData(id) {
-            const brand = document.getElementById('brand-' + id).value; const base = document.getElementById('base-' + id).value; const target = document.getElementById('target-' + id).value; const vol = document.getElementById('vol-' + 
+            const brand = document.getElementById('brand-' + id).value; const base = document.getElementById('base-' + id).value; const target = document.getElementById('target-' + id).value; const vol = document.getElementById('vol-' + id).value; const time = document.getElementById('time-' + id).value; const ph = document.getElementById('ph-' + id).value;
+            return `<b>Brand:</b> <span style="color:#D4AF37">${brand || '-'}</span> <br><b>Base:</b> ${base || '-'} | <b>Target:</b> ${target || '-'} <br><b>Dev:</b> ${vol || '-'} | <b>Time:</b> ${time || '-'} <br><b>Treatments:</b> ${ph || '-'}`;
+        }
+
+        function updateFormula(fullPath, id) { db.doc(fullPath).update({ history: getMatrixData(id) }).then(() => alert("Formulation Matrix Saved!")); }
+        function markDone(fullPath, id) {
+            const bill = document.getElementById('bill-' + id).value;
+            if(!bill && !confirm("Aapne Bill Amount nahi dala hai. Bina bill ke 'Done' karein?")) return;
+            db.doc(fullPath).update({ status: 'done', billAmount: bill || "0", history: getMatrixData(id) });
+        }
+
+        function uploadPhoto(fullPath, id) {
+            const fileInput = document.getElementById('img-' + id);
+            const file = fileInput.files[0];
+            if (!file) return alert("Pehle 'Choose File' par click karke photo select karein!");
+            const btn = fileInput.nextElementSibling;
+            btn.innerText = "⏳ Uploading... Please wait"; btn.disabled = true;
+
+            const formData = new FormData(); formData.append('image', file);
+            const apiKey = '784a2cd72d9a44a6df0073527b1eee04'; 
+
+            fetch('https://api.imgbb.com/1/upload?key=' + apiKey, { method: 'POST', body: formData })
+            .then(res => res.json())
+            .then(result => {
+                if(result.success) {
+                    db.doc(fullPath).update({ photoUrl: result.data.url }).then(() => { alert("Photo Upload Ho Gayi!"); btn.innerText = "📸 Upload Result Photo"; btn.disabled = false; });
+                } else { alert("Upload Failed."); btn.innerText = "📸 Upload Result Photo"; btn.disabled = false; }
+            }).catch(err => { alert("Upload Failed."); btn.innerText = "📸 Upload Result Photo"; btn.disabled = false; });
+        }
+        function deleteEntry(fullPath) { if(confirm("Are you sure?")) db.doc(fullPath).delete(); }
+
+        startSync();
+    </script>
+</body>
+</html>
