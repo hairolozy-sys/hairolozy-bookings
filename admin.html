@@ -162,7 +162,6 @@
         
         function closeModal() { 
             document.getElementById('walkinModal').style.display = 'none'; 
-            // Clear active state of pills when closed
             document.querySelectorAll('.q-pill').forEach(p => p.classList.remove('active'));
         }
         
@@ -304,22 +303,29 @@
             const phone = document.getElementById('new-phone').value;
             const service = document.getElementById('new-service').value;
             const formula = document.getElementById('new-formula').value;
+            
             if(!name) return alert("Name zaroori hai!");
             
-            // Checking Thursday (Day 4) for Walk-in Alert
-            if(new Date().getDay() === 4) {
-                if(!confirm("Aaj Thursday (Weekly Off) hai! Phir bhi entry karni hai?")) return;
-            }
+            // NOTE: THURSDAY BLOCKER REMOVED. Ab seedha save hoga!
 
             const todayFormatted = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate()).padStart(2, '0')}`;
-            db.collection("clients").add({ clientName: name, clientPhone: phone, serviceName: service, history: formula, bookingDate: todayFormatted, bookingTime: "Walk-in", status: 'pending' }).then(() => { 
+            db.collection("clients").add({ 
+                clientName: name, 
+                clientPhone: phone, 
+                serviceName: service, 
+                history: formula, 
+                bookingDate: todayFormatted, 
+                bookingTime: "Walk-in", 
+                status: 'pending' 
+            }).then(() => { 
                 closeModal(); 
                 document.getElementById('new-name').value = ""; 
                 document.getElementById('new-phone').value = ""; 
                 document.getElementById('new-service').value = ""; 
                 document.getElementById('new-formula').value = ""; 
+                document.querySelectorAll('.q-pill').forEach(p => p.classList.remove('active'));
             });
         }
 
         function getMatrixData(id) {
-            const brand = document.getElementById('brand-' + id).value; const base = document.getElementById('base-' + id).value; const target = document.getElementById('target-' + id).value; const vol = document.getElementById('vol-' + id).value; const time = document.getEleme
+            const brand = document.getElementById('brand-' + id).value; const base = document.getElementById('base-' + id).value; const target = document.getElementById('target-' + id).value; const vol = document.getElementById('vol-' + 
