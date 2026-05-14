@@ -70,6 +70,14 @@
         .modal-content input { background: #2a2a2a; color: #fff; width: 100%; padding: 14px; margin: 8px 0; border-radius: 8px; border: 1px solid #444; box-sizing: border-box; font-size: 14px; outline: none; }
         .modal-content input:focus { border-color: #D4AF37; }
         .add-btn { background: #D4AF37; color: #121212; width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 15px; }
+
+        /* ---------------------------------------------------
+           NEW VIP FEATURE CSS (Bina purane design ko chhere)
+           --------------------------------------------------- */
+        .vip-tag { background: #f1c40f; color: #121212; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; margin-left: 8px; vertical-align: middle; }
+        .vip-btn { background: transparent; color: #f1c40f; width: 100%; padding: 10px; border: 1px solid #f1c40f; border-radius: 8px; margin-top: 12px; font-size: 13px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .vip-btn:hover { background: #f1c40f; color: #121212; }
+        .card.vip-card { border-left: 5px solid #f1c40f; box-shadow: 0 0 10px rgba(241, 196, 15, 0.2); }
     </style>
 </head>
 <body>
@@ -186,7 +194,13 @@
             const listDiv = document.getElementById("list");
             if (listDiv.innerHTML.includes("Loading")) listDiv.innerHTML = "";
 
-            const statusClass = data.status === 'done' ? 'done' : '';
+            // VIP Logic Added Safely Here
+            let statusClass = data.status === 'done' ? 'done' : '';
+            if (data.isVIP) statusClass += ' vip-card'; // Adds glowing gold border
+            
+            const vipBadge = data.isVIP ? `<span class="vip-tag">VIP 👑</span>` : '';
+            const vipBtnText = data.isVIP ? "⭐ Remove VIP Status" : "⭐ Mark as VIP";
+
             const statusText = data.status === 'done' ? 'Completed' : (data.bookingTime || data.time || 'Walk-in');
             const billDisplay = data.billAmount ? `<div class="bill-badge">💰 Bill: ₹${data.billAmount}</div>` : '';
             const photoDisplay = data.photoUrl ? `<img src="${data.photoUrl}" style="max-width: 100%; border-radius: 8px; margin-bottom: 15px; border: 1px solid #444;">` : '';
@@ -198,7 +212,7 @@
             card.innerHTML = `
                 <div class="card-header" onclick="toggleCard('${id}')">
                     <div class="client-info">
-                        <span class="client-name">👤 ${data.clientName || data.name}</span>
+                        <span class="client-name">👤 ${data.clientName || data.name} ${vipBadge}</span>
                         <span class="client-details">✂️ ${data.serviceName || 'N/A'} | 📞 ${data.clientPhone || 'N/A'}</span>
                         ${billDisplay}
                     </div>
@@ -246,6 +260,10 @@
                         <button class="save-btn" onclick="updateFormula('${path}', '${id}')">💾 Save Matrix</button>
                         <button class="done-btn" onclick="markDone('${path}', '${id}')">✔️ Mark Done</button>
                     </div>
+                    
+                    <!-- NEW VIP BUTTON SAFELY ADDED HERE -->
+                    <button class="vip-btn" onclick="toggleVIP('${path}', ${!data.isVIP})">${vipBtnText}</button>
+                    
                     <button class="del-btn" onclick="deleteEntry('${path}')">🗑️ Delete Record</button>
                 </div>
             `;
@@ -265,7 +283,7 @@
             }
 
             const todayFormatted = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate()).padStart(2, '0')}`;
-            db.collection("clients").add({ clientName: name, clientPhone: phone, serviceName: service, history: formula, bookingDate: todayFormatted, bookingTime: "Walk-in", status: 'pending' }).then(() => { closeModal(); document.getElementById('new-name').value = ""; document.getElementById('new-formula').value = ""; });
+            db.collection("clients").add({ clientName: name, clientPhone: phone, serviceName: service, history: formula, bookingDate: todayFormatted, bookingTime: "Walk-in", status: 'pending', isVIP: false }).then(() => { closeModal(); document.getElementById('new-name').value = ""; document.getElementById('new-formula').value = ""; });
         }
 
         function getMatrixData(id) {
@@ -294,13 +312,4 @@
             .then(res => res.json())
             .then(result => {
                 if(result.success) {
-                    db.doc(fullPath).update({ photoUrl: result.data.url }).then(() => { alert("Photo Upload Ho Gayi!"); btn.innerText = "📸 Upload Result Photo"; btn.disabled = false; });
-                } else { alert("Upload Failed."); btn.innerText = "📸 Upload Result Photo"; btn.disabled = false; }
-            }).catch(err => { alert("Upload Failed."); btn.innerText = "📸 Upload Result Photo"; btn.disabled = false; });
-        }
-        function deleteEntry(fullPath) { if(confirm("Are you sure?")) db.doc(fullPath).delete(); }
-
-        startSync();
-    </script>
-</body>
-</html>
+       
