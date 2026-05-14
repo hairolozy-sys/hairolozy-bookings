@@ -3,94 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard | Hairolozy</title>
+    <title>Hairolozy Admin | Master Suite</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #121212; color: #e0e0e0; margin: 0; padding: 15px; }
+        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: #e0e0e0; margin: 0; padding: 15px; }
         .header { text-align: center; margin-bottom: 20px; }
-        .header h1 { color: #D4AF37; margin: 0; font-size: 24px; letter-spacing: 2px; text-transform: uppercase; }
+        .header h1 { color: #D4AF37; margin: 0; font-size: 24px; text-transform: uppercase; letter-spacing: 2px; }
         
-        /* FORM PANEL */
-        .form-panel { background: #1e1e1e; padding: 20px; border-radius: 12px; border: 1px solid #333; border-top: 4px solid #D4AF37; margin-bottom: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; color: #D4AF37; font-size: 12px; font-weight: bold; text-transform: uppercase; }
-        input, textarea { width: 100%; background: #2a2a2a; color: #fff; border: 1px solid #444; padding: 12px; border-radius: 8px; box-sizing: border-box; outline: none; }
+        .panel { background: #1e1e1e; padding: 20px; border-radius: 12px; border: 1px solid #333; margin-bottom: 25px; border-top: 4px solid #D4AF37; }
+        label { display: block; margin-bottom: 8px; color: #D4AF37; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+        input, textarea { width: 100%; background: #2a2a2a; color: #fff; border: 1px solid #444; padding: 12px; border-radius: 8px; box-sizing: border-box; outline: none; margin-bottom: 15px; }
 
-        /* PILL BUTTONS */
-        .pill-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 5px; }
-        .service-pill { background: #2a2a2a; border: 1px solid #444; padding: 8px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; color: #ccc; }
-        .service-pill.active { background: rgba(212, 175, 55, 0.2); border-color: #D4AF37; color: #D4AF37; font-weight: bold; }
+        /* PILLS & BRAND BOX */
+        .pill-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
+        .pill { background: #2a2a2a; border: 1px solid #444; padding: 8px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; color: #ccc; }
+        .pill.active { background: rgba(212, 175, 55, 0.2); border-color: #D4AF37; color: #D4AF37; font-weight: bold; }
 
-        .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .btn-save { background: linear-gradient(135deg, #D4AF37, #b5952f); color: #121212; width: 100%; padding: 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 15px; text-transform: uppercase; }
+        .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+        .btn-save { background: linear-gradient(135deg, #D4AF37, #b5952f); color: #121212; width: 100%; padding: 16px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 14px; }
 
-        /* RECENT BOOKINGS - OLD CARD STYLE */
-        .section-title { color: #fff; font-size: 18px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
-        .client-card { background: #1e1e1e; border: 1px solid #333; border-radius: 12px; padding: 15px; margin-bottom: 15px; position: relative; transition: 0.3s; }
-        .client-card.pending { border-left: 4px solid #ff9800; }
-        .client-card.done { border-left: 4px solid #25d366; }
-
-        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-        .client-info h3 { margin: 0; color: #D4AF37; font-size: 18px; }
-        .client-info p { margin: 2px 0; color: #aaa; font-size: 12px; }
+        /* CARD STYLE DASHBOARD */
+        .client-card { background: #1e1e1e; border: 1px solid #333; border-radius: 12px; padding: 15px; margin-bottom: 15px; cursor: pointer; border-left: 4px solid #333; }
+        .client-card.done { border-left-color: #25d366; }
+        .client-card.pending { border-left-color: #ff9800; }
         
-        .service-list { color: #fff; font-weight: bold; font-size: 14px; margin: 10px 0; }
-        .matrix-info { background: #252525; padding: 8px; border-radius: 6px; font-size: 11px; color: #bbb; line-height: 1.4; white-space: pre-line; }
+        .card-main { display: flex; justify-content: space-between; }
+        .card-name { color: #D4AF37; font-size: 18px; font-weight: bold; margin: 0; }
+        .card-services { color: #fff; font-size: 13px; margin: 5px 0; }
         
-        .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; border-top: 1px solid #333; padding-top: 10px; }
-        .price-tag { font-size: 16px; font-weight: bold; color: #25d366; }
-        .btn-done { background: #333; color: #fff; border: 1px solid #555; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+        /* EXPANDABLE SECTION */
+        .card-details { display: none; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #444; animation: fadeIn 0.3s; }
+        .matrix-box { background: #252525; padding: 10px; border-radius: 6px; font-size: 12px; color: #bbb; white-space: pre-line; }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
     <div class="header"><h1>Hairolozy Admin</h1></div>
 
-    <div class="form-panel">
-        <div class="form-group">
-            <label>Client Details</label>
-            <div style="display: flex; gap: 10px;">
-                <input type="text" id="c-name" placeholder="Name">
-                <input type="tel" id="c-phone" placeholder="Phone">
-            </div>
+    <!-- ADD RECORD SECTION -->
+    <div class="panel">
+        <label>Client & Phone</label>
+        <div style="display: flex; gap: 10px;">
+            <input type="text" id="c-name" placeholder="Name">
+            <input type="tel" id="c-phone" placeholder="Phone">
         </div>
 
-        <div class="form-group">
-            <label>Services (Multiple)</label>
-            <div class="pill-grid">
-                <div class="service-pill" onclick="toggleAdminService('Haircut', this)">Haircut</div>
-                <div class="service-pill" onclick="toggleAdminService('Root Touch-up', this)">Root Touch-up</div>
-                <div class="service-pill" onclick="toggleAdminService('Global Color', this)">Global Color</div>
-                <div class="service-pill" onclick="toggleAdminService('Balayage', this)">Balayage</div>
-                <div class="service-pill" onclick="toggleAdminService('Highlights', this)">Highlights</div>
-                <div class="service-pill" onclick="toggleAdminService('Correction', this)">Correction</div>
-                <div class="service-pill" onclick="toggleAdminService('Vivid Shades', this)">Vivid Shades</div>
-                <div class="service-pill" onclick="toggleAdminService('Nanoplastia', this)">Nanoplastia</div>
-                <div class="service-pill" onclick="toggleAdminService('Keratin/Botox', this)">Keratin/Botox</div>
-                <div class="service-pill" onclick="toggleAdminService('Smoothening', this)">Smoothening</div>
-                <div class="service-pill" onclick="toggleAdminService('Bond Treat', this)">Bond Treat</div>
-                <div class="service-pill" onclick="toggleAdminService('Deep Spa', this)">Deep Spa</div>
-            </div>
-            <input type="hidden" id="c-services">
+        <label>Brands (Select One or More)</label>
+        <div class="pill-grid" id="brand-grid">
+            <div class="pill" onclick="togglePill(this, 'brands')">L'Oréal</div>
+            <div class="pill" onclick="togglePill(this, 'brands')">Redken</div>
+            <div class="pill" onclick="togglePill(this, 'brands')">Schwarzkopf</div>
+            <div class="pill" onclick="togglePill(this, 'brands')">Wella</div>
         </div>
 
-        <div class="form-group">
-            <label>Color Matrix</label>
-            <div class="matrix-grid">
-                <input type="text" id="m-base" placeholder="Base">
-                <input type="text" id="m-target" placeholder="Target">
-                <input type="text" id="m-dev" placeholder="Dev %">
-                <input type="text" id="m-time" placeholder="Time">
-            </div>
+        <label>Services (Multiple)</label>
+        <div class="pill-grid" id="service-grid">
+            <div class="pill" onclick="togglePill(this, 'services')">Haircut</div>
+            <div class="pill" onclick="togglePill(this, 'services')">Global Color</div>
+            <div class="pill" onclick="togglePill(this, 'services')">Balayage</div>
+            <div class="pill" onclick="togglePill(this, 'services')">Nanoplastia</div>
+            <div class="pill" onclick="togglePill(this, 'services')">Keratin</div>
+            <div class="pill" onclick="togglePill(this, 'services')">Root Touch-up</div>
         </div>
 
-        <input type="number" id="c-bill" placeholder="Bill Amount (₹)" style="margin-top:10px;">
-        <button class="btn-save" onclick="saveRecord()">SAVE RECORD</button>
+        <label>Color Matrix & Mix</label>
+        <div class="matrix-grid">
+            <input type="text" id="m-base" placeholder="Base Formula">
+            <input type="text" id="m-target" placeholder="Target/Mix">
+            <input type="text" id="m-dev" placeholder="Developer (%)">
+            <input type="text" id="m-time" placeholder="Time (Min)">
+        </div>
+
+        <input type="number" id="c-bill" placeholder="Bill Amount (₹)">
+        <button class="btn-save" onclick="saveRecord()">Save Final Record</button>
     </div>
 
-    <div class="section-title">📋 Recent Bookings</div>
-    <div id="clientCardsContainer">
-        <!-- Cards load here -->
-    </div>
+    <h2 style="font-size: 18px; margin-left: 5px;">📋 Client Logs</h2>
+    <div id="cards-container"></div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -100,60 +90,71 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        let adminSelectedArray = [];
-        function toggleAdminService(name, el) {
-            const i = adminSelectedArray.indexOf(name);
-            i > -1 ? (adminSelectedArray.splice(i, 1), el.classList.remove('active')) : (adminSelectedArray.push(name), el.classList.add('active'));
-            document.getElementById('c-services').value = adminSelectedArray.join(', ');
+        let selectedBrands = [];
+        let selectedServices = [];
+
+        function togglePill(el, type) {
+            const val = el.innerText;
+            const arr = type === 'brands' ? selectedBrands : selectedServices;
+            const idx = arr.indexOf(val);
+            
+            if(idx > -1) { arr.splice(idx, 1); el.classList.remove('active'); }
+            else { arr.push(val); el.classList.add('active'); }
         }
 
         function saveRecord() {
             const name = document.getElementById('c-name').value;
-            const services = document.getElementById('c-services').value;
-            const history = `Base: ${document.getElementById('m-base').value} | Target: ${document.getElementById('m-target').value}\nDev: ${document.getElementById('m-dev').value} | Time: ${document.getElementById('m-time').value}`;
+            const history = `Brand: ${selectedBrands.join(', ')}\nBase: ${document.getElementById('m-base').value}\nTarget: ${document.getElementById('m-target').value}\nDev: ${document.getElementById('m-dev').value} | Time: ${document.getElementById('m-time').value}`;
             
-            if(!name || !services) return alert("Fill Name & Services!");
+            if(!name || selectedServices.length === 0) return alert("Name & Services are must!");
 
             db.collection("clients").add({
-                clientName: name, clientPhone: document.getElementById('c-phone').value,
-                serviceName: services, history: history, billAmount: document.getElementById('c-bill').value,
-                status: 'done', bookingDate: new Date().toISOString().split('T')[0]
+                clientName: name, 
+                clientPhone: document.getElementById('c-phone').value,
+                serviceName: selectedServices.join(', '),
+                history: history,
+                billAmount: document.getElementById('c-bill').value,
+                status: 'done',
+                bookingDate: new Date().toISOString().split('T')[0]
             }).then(() => location.reload());
         }
 
-        function loadClients() {
-            db.collection("clients").orderBy("bookingDate", "desc").limit(15).onSnapshot(snap => {
-                const container = document.getElementById('clientCardsContainer');
+        function loadRecords() {
+            db.collection("clients").orderBy("bookingDate", "desc").onSnapshot(snap => {
+                const container = document.getElementById('cards-container');
                 container.innerHTML = '';
                 snap.forEach(doc => {
                     const d = doc.data();
-                    const statusClass = d.status === 'done' ? 'done' : 'pending';
-                    container.innerHTML += `
-                        <div class="client-card ${statusClass}">
-                            <div class="card-header">
-                                <div class="client-info">
-                                    <h3>${d.clientName}</h3>
-                                    <p>📞 ${d.clientPhone || 'No Phone'}</p>
-                                    <p>📅 ${d.bookingDate}</p>
-                                </div>
-                                <span style="font-size:10px; color:${d.status==='done'?'#25d366':'#ff9800'}">${d.status.toUpperCase()}</span>
+                    const card = document.createElement('div');
+                    card.className = `client-card ${d.status}`;
+                    card.innerHTML = `
+                        <div class="card-main" onclick="toggleDetails('${doc.id}')">
+                            <div>
+                                <p class="card-name">${d.clientName}</p>
+                                <p class="card-services">${d.serviceName}</p>
                             </div>
-                            <div class="service-list">✨ ${d.serviceName}</div>
-                            ${d.history ? `<div class="matrix-info">${d.history}</div>` : ''}
-                            <div class="card-footer">
-                                <div class="price-tag">₹${d.billAmount || '0'}</div>
-                                ${d.status === 'pending' ? `<button class="btn-done" onclick="markDone('${doc.id}')">Mark Done</button>` : '<span>✅</span>'}
+                            <div style="text-align:right">
+                                <span style="font-size:14px; font-weight:bold; color:#25d366;">₹${d.billAmount || 0}</span><br>
+                                <span style="font-size:10px; color:#aaa;">${d.bookingDate}</span>
                             </div>
-                        </div>`;
+                        </div>
+                        <div class="card-details" id="det-${doc.id}">
+                            <div class="matrix-box">${d.history || 'No Matrix Recorded'}</div>
+                            <p style="font-size:11px; color:#D4AF37; margin-top:10px;">Phone: ${d.clientPhone || 'N/A'}</p>
+                        </div>
+                    `;
+                    container.appendChild(card);
                 });
             });
         }
 
-        function markDone(id) {
-            let bill = prompt("Enter Final Bill:");
-            if(bill) db.collection("clients").doc(id).update({ status: 'done', billAmount: bill });
+        function toggleDetails(id) {
+            const el = document.getElementById('det-' + id);
+            el.style.display = (el.style.display === 'block') ? 'none' : 'block';
         }
-        window.onload = loadClients;
+
+        window.onload = loadRecords;
     </script>
 </body>
-</html>
+                </html>
+                                                                                
