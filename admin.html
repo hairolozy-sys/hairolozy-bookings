@@ -98,7 +98,7 @@
         <div id="list">Loading Luxury Experience...</div>
     </div>
 
-    <!-- Floating Action Button for Walk-ins -->
+    <!-- Floating Action Button (+) -->
     <button class="fab" onclick="openModal()">+</button>
 
     <!-- NEW WALK-IN MODAL (UPDATED WITH MULTIPLE SERVICE PILLS) -->
@@ -146,7 +146,7 @@
         const db = firebase.firestore();
         let allBookings = {};
 
-        // NEW LOGIC: Modal Multiple Service Selection
+        // MULTIPLE SERVICE SELECTION LOGIC
         let modalSelectedArray = [];
         function toggleModalService(serviceName, element) {
             const index = modalSelectedArray.indexOf(serviceName);
@@ -160,11 +160,12 @@
             document.getElementById('new-service').value = modalSelectedArray.join(', ');
         }
 
+        // RESET FORM SAFELY
         function resetModalForm() {
-            document.getElementById('new-name').value = "";
-            document.getElementById('new-phone').value = "";
-            document.getElementById('new-formula').value = "";
-            document.getElementById('new-service').value = "";
+            if(document.getElementById('new-name')) document.getElementById('new-name').value = "";
+            if(document.getElementById('new-phone')) document.getElementById('new-phone').value = "";
+            if(document.getElementById('new-formula')) document.getElementById('new-formula').value = "";
+            if(document.getElementById('new-service')) document.getElementById('new-service').value = "";
             modalSelectedArray = [];
             document.querySelectorAll('.service-pill').forEach(pill => pill.classList.remove('active'));
         }
@@ -176,11 +177,6 @@
         }
         window.onclick = function(event) { if (event.target == document.getElementById('walkinModal')) closeModal(); }
 
-        function toggleCard(id) {
-            let body = document.getElementById('body-' + id);
-            body.style.display = (body.style.display === 'block') ? 'none' : 'block';
-        }
-
         function filterList() {
             let input = document.getElementById('searchInput').value.toLowerCase();
             let cards = document.getElementsByClassName('card');
@@ -188,6 +184,11 @@
                 let text = cards[i].innerText.toLowerCase();
                 cards[i].style.display = text.includes(input) ? "" : "none";
             }
+        }
+
+        function toggleCard(id) {
+            let body = document.getElementById('body-' + id);
+            body.style.display = (body.style.display === 'block') ? 'none' : 'block';
         }
 
         function updateDashboard() {
@@ -301,19 +302,17 @@
             listDiv.insertBefore(card, listDiv.firstChild);
         }
 
+        // SAVE NEW WALK-IN CLIENT
         function addDirectClient() {
             const name = document.getElementById('new-name').value;
             const phone = document.getElementById('new-phone').value;
-            const service = document.getElementById('new-service').value; // Ab ye pills se aayega
+            // Agar service select nahi ki, toh by default "Walk-in Service" chala jayega
+            const service = document.getElementById('new-service').value || "Walk-in Service"; 
             const formula = document.getElementById('new-formula').value;
             
             if(!name) return alert("Client ka naam likhna zaroori hai!");
-            if(!service) return alert("Kam se kam ek Service jarur select karein!");
             
-            // Checking Thursday (Day 4) for Walk-in Alert
-            if(new Date().getDay() === 4) {
-                if(!confirm("Aaj Thursday (Weekly Off) hai! Phir bhi entry karni hai?")) return;
-            }
+            // NOTE: Thursday wala popup hata diya hai taaki button block na ho!
 
             const todayFormatted = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate()).padStart(2, '0')}`;
             db.collection("clients").add({ 
@@ -326,8 +325,6 @@
                 status: 'pending' 
             }).then(() => { 
                 closeModal(); 
-            });
-        }
-
-        function getMatrixData(id) {
-            const brand = document.getElementById('brand-' + id).value; const base = document.getElementById('base-'
+            }).catch(err => {
+                alert("Database Error: " + err.message);
+            }
