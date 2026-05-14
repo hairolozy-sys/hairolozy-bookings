@@ -2,202 +2,90 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hairolozy Admin</title>
     <style>
-        /* BASE THEME TO MATCH SCREENSHOT */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #121212; color: #e0e0e0; margin: 0; padding: 10px; }
-        .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 10px; }
-        .header h1 { color: #fff; margin: 0; font-size: 22px; font-weight: 600; }
-        
-        /* PANELS */
-        .panel { background: #1a1a1a; padding: 20px; border-radius: 12px; margin-bottom: 20px; }
-        .section-title { color: #fff; font-size: 16px; margin-bottom: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
-        .label { color: #D4AF37; font-size: 11px; font-weight: bold; text-transform: uppercase; margin-bottom: 8px; margin-top: 15px; display: block; }
-
-        /* INPUTS & PILLS */
-        .input-row { display: flex; gap: 10px; margin-bottom: 10px; }
-        input { width: 100%; background: #222; color: #fff; border: 1px solid #333; padding: 12px; border-radius: 6px; font-size: 13px; outline: none; }
-        input:focus { border-color: #D4AF37; }
-
-        .pill-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
-        .pill { background: #222; border: 1px solid #333; padding: 8px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; color: #aaa; transition: 0.2s; }
-        .pill.active { background: #D4AF37; color: #000; font-weight: bold; border-color: #D4AF37; }
-
-        .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
-        .btn-save { background: #cca53f; color: #000; width: 100%; padding: 15px; border: none; border-radius: 6px; font-weight: bold; font-size: 14px; margin-top: 20px; cursor: pointer; text-transform: uppercase; }
-
-        /* EXACT TABLE STYLE FROM SCREENSHOT */
-        .table-container { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; min-width: 600px; }
-        th { color: #D4AF37; font-size: 11px; text-transform: uppercase; text-align: left; padding: 12px 5px; border-bottom: 1px solid #333; font-weight: bold; }
-        td { padding: 15px 5px; border-bottom: 1px solid #222; vertical-align: top; }
-        
-        /* TABLE COLUMNS STYLING */
-        .col-date { font-size: 13px; color: #ccc; line-height: 1.4; width: 60px; }
-        .col-client { font-size: 14px; font-weight: bold; color: #fff; line-height: 1.3; }
-        .client-phone { font-size: 11px; color: #888; font-weight: normal; }
-        .col-services { color: #cca53f; font-size: 13px; }
-        .matrix-details { font-size: 10px; color: #888; margin-top: 5px; line-height: 1.5; }
-        .col-bill { font-size: 13px; color: #fff; }
-        .col-status { font-size: 12px; font-weight: bold; }
-        .status-pending { color: #ff9800; }
-        .status-completed { color: #25d366; }
-        
-        .btn-mark-done { background: #333; color: #ccc; border: 1px solid #444; padding: 6px 10px; border-radius: 4px; font-size: 11px; cursor: pointer; }
+        body { background: #121212; color: #fff; font-family: sans-serif; padding: 10px; }
+        .panel { background: #1a1a1a; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #333; }
+        input { width: 100%; padding: 10px; background: #222; border: 1px solid #444; color: #fff; margin-bottom: 10px; border-radius: 5px; }
+        .pill { display: inline-block; padding: 5px 10px; border: 1px solid #555; border-radius: 15px; font-size: 12px; margin: 3px; cursor: pointer; }
+        .pill.active { background: #D4AF37; color: #000; border-color: #D4AF37; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { color: #D4AF37; font-size: 10px; text-transform: uppercase; text-align: left; padding: 10px; }
+        td { padding: 10px; border-bottom: 1px solid #333; font-size: 13px; }
+        .btn-save { background: #D4AF37; width: 100%; padding: 12px; border: none; font-weight: bold; border-radius: 5px; cursor: pointer; }
     </style>
 </head>
 <body>
-
-    <div class="header">
-        <h1>Hairolozy Admin</h1>
-    </div>
-
-    <!-- FORM PANEL (Matching your image) -->
     <div class="panel">
-        <div class="input-row">
-            <input type="text" id="c-name" placeholder="Client Name">
-            <input type="tel" id="c-phone" placeholder="Phone Number">
+        <input type="text" id="c-name" placeholder="Client Name">
+        <input type="tel" id="c-phone" placeholder="Phone">
+        
+        <label style="font-size:10px; color:#D4AF37;">BRANDS</label>
+        <div id="brand-pills">
+            <span class="pill" onclick="toggle(this, 'brands')">L'Oréal</span>
+            <span class="pill" onclick="toggle(this, 'brands')">Redken</span>
+            <span class="pill" onclick="toggle(this, 'brands')">Wella</span>
+        </div>
+        
+        <label style="font-size:10px; color:#D4AF37; display:block; margin-top:10px;">SERVICES</label>
+        <div id="service-pills">
+            <span class="pill" onclick="toggle(this, 'services')">Haircut</span>
+            <span class="pill" onclick="toggle(this, 'services')">Color</span>
+            <span class="pill" onclick="toggle(this, 'services')">Nanoplastia</span>
+            <span class="pill" onclick="toggle(this, 'services')">Keratin</span>
         </div>
 
-        <label class="label">BRANDS & SERVICES</label>
-        <div class="pill-grid">
-            <div class="pill" onclick="togglePill(this)">L'Oréal</div>
-            <div class="pill" onclick="togglePill(this)">Redken</div>
-            <div class="pill" onclick="togglePill(this)">Schwarzkopf</div>
-            <div class="pill" onclick="togglePill(this)">Haircut</div>
-            <div class="pill" onclick="togglePill(this)">Global Color</div>
-            <div class="pill" onclick="togglePill(this)">Balayage</div>
-            <div class="pill" onclick="togglePill(this)">Vivid Shades</div>
-            <div class="pill" onclick="togglePill(this)">Nanoplastia</div>
-            <div class="pill" onclick="togglePill(this)">Keratin/Botox</div>
-            <div class="pill" onclick="togglePill(this)">Smoothening</div>
-            <div class="pill" onclick="togglePill(this)">Bond Treat</div>
-            <div class="pill" onclick="togglePill(this)">Olaplex Special</div>
-            <div class="pill" onclick="togglePill(this)">Deep Spa</div>
-        </div>
-
-        <label class="label">COLOR MATRIX & FORMULATION</label>
-        <div class="matrix-grid">
-            <input type="text" id="m-base" placeholder="Base Color">
-            <input type="text" id="m-target" placeholder="Target Color">
-            <input type="text" id="m-dev" placeholder="Developer (%)">
-            <input type="text" id="m-time" placeholder="Timing (Mins)">
-        </div>
-
-        <label class="label">BILL AMOUNT (₹)</label>
-        <input type="number" id="c-bill" placeholder="e.g. 4500">
-
+        <input type="text" id="m-base" placeholder="Base/Target/Dev/Time">
+        <input type="number" id="c-bill" placeholder="Bill Amount">
         <button class="btn-save" onclick="saveRecord()">SAVE RECORD</button>
     </div>
 
-    <!-- RECENT BOOKINGS TABLE (Exactly like your image) -->
-    <div class="panel">
-        <div class="section-title">📋 Recent Bookings & Records</div>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>DATE</th>
-                        <th>CLIENT</th>
-                        <th>SERVICES</th>
-                        <th>BILL</th>
-                        <th>STATUS</th>
-                        <th>ACTION</th>
-                    </tr>
-                </thead>
-                <tbody id="table-body">
-                    <!-- Data will load here -->
-                </tbody>
-            </table>
-        </div>
-    </div>
+    <table>
+        <thead><tr><th>DATE</th><th>CLIENT</th><th>SERVICES</th><th>BILL</th><th>STATUS</th></tr></thead>
+        <tbody id="table-body"></tbody>
+    </table>
 
-    <!-- FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
     <script>
-        const firebaseConfig = { apiKey: "AIzaSyABGjbHjlLdUIHrbUxhD_Jp2ZScrMegX5A", authDomain: "hairolozy-12bec.firebaseapp.com", projectId: "hairolozy-12bec", storageBucket: "hairolozy-12bec.appspot.com", messagingSenderId: "386170490787", appId: "1:386170490787:web:58b592d8a44d0e3de65416" };
-        firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-
-        let selectedItems = [];
-
-        function togglePill(el) {
-            const val = el.innerText;
-            const idx = selectedItems.indexOf(val);
-            if(idx > -1) { selectedItems.splice(idx, 1); el.classList.remove('active'); }
-            else { selectedItems.push(val); el.classList.add('active'); }
+        firebase.initializeApp({ /* Wahi configs */ });
+        
+        let sB = [], sS = [];
+        function toggle(el, type) {
+            el.classList.toggle('active');
+            let val = el.innerText;
+            if(type=='brands') sB.includes(val) ? sB.splice(sB.indexOf(val), 1) : sB.push(val);
+            else sS.includes(val) ? sS.splice(sS.indexOf(val), 1) : sS.push(val);
         }
 
         function saveRecord() {
-            const name = document.getElementById('c-name').value;
-            const phone = document.getElementById('c-phone').value;
-            const base = document.getElementById('m-base').value;
-            const target = document.getElementById('m-target').value;
-            const dev = document.getElementById('m-dev').value;
-            const time = document.getElementById('m-time').value;
-            const bill = document.getElementById('c-bill').value;
-
-            if(!name) return alert("Client Name is required!");
-
-            let matrixData = "";
-            if(base || target || dev) {
-                matrixData = `Base: ${base} | Target: ${target}<br>Dev: ${dev} | Time: ${time} mins`;
-            }
-
             db.collection("clients").add({
-                clientName: name, clientPhone: phone,
-                serviceName: selectedItems.join(', '),
-                history: matrixData, billAmount: bill || "0",
-                status: 'completed',
+                clientName: document.getElementById('c-name').value,
+                serviceName: sS.join(', '),
+                history: `Brands: ${sB.join(', ')} | Matrix: ${document.getElementById('m-base').value}`,
+                billAmount: document.getElementById('c-bill').value,
+                status: 'done',
                 bookingDate: new Date().toISOString().split('T')[0]
             }).then(() => location.reload());
         }
 
-        function loadRecords() {
-            db.collection("clients").orderBy("bookingDate", "desc").onSnapshot(snap => {
-                const tbody = document.getElementById('table-body');
-                tbody.innerHTML = '';
-                snap.forEach(doc => {
-                    const d = doc.data();
-                    
-                    // Format Date to stack like the image (2026- \n 05-15)
-                    let displayDate = d.bookingDate;
-                    if(d.bookingDate && d.bookingDate.length === 10) {
-                        displayDate = d.bookingDate.substring(0,5) + "<br>" + d.bookingDate.substring(5);
-                    }
-
-                    const statusClass = d.status === 'completed' || d.status === 'done' ? 'status-completed' : 'status-pending';
-                    const statusText = d.status === 'completed' || d.status === 'done' ? 'Completed' : 'Pending';
-                    const actionHtml = statusText === 'Pending' ? `<button class="btn-mark-done" onclick="markDone('${doc.id}')">Mark<br>Done</button>` : `<span style="color:#555; font-size:16px;">✔️</span>`;
-                    
-                    const historyHtml = d.history && d.history !== 'None' ? `<div class="matrix-details">${d.history}</div>` : '';
-
-                    tbody.innerHTML += `
-                        <tr>
-                            <td class="col-date">${displayDate}</td>
-                            <td class="col-client">${d.clientName}<br><span class="client-phone">${d.clientPhone || 'No Phone'}</span></td>
-                            <td class="col-services">${d.serviceName || 'Service'}${historyHtml}</td>
-                            <td class="col-bill">₹${d.billAmount || '0'}</td>
-                            <td class="col-status ${statusClass}">${statusText}</td>
-                            <td>${actionHtml}</td>
-                        </tr>
-                    `;
-                });
+        db.collection("clients").orderBy("bookingDate", "desc").onSnapshot(snap => {
+            const body = document.getElementById('table-body');
+            body.innerHTML = '';
+            snap.forEach(doc => {
+                let d = doc.data();
+                body.innerHTML += `<tr>
+                    <td>${d.bookingDate}</td>
+                    <td>${d.clientName}</td>
+                    <td>${d.serviceName}<br><small style="color:#777">${d.history}</small></td>
+                    <td>₹${d.billAmount}</td>
+                    <td onclick="markDone('${doc.id}')" style="cursor:pointer">${d.status=='done'?'✔️':'Pending'}</td>
+                </tr>`;
             });
-        }
+        });
 
-        function markDone(id) {
-            let bill = prompt("Enter Final Bill Amount (₹):");
-            if(bill !== null) {
-                db.collection("clients").doc(id).update({ status: 'completed', billAmount: bill });
-            }
-        }
-
-        window.onload = loadRecords;
+        function markDone(id) { db.collection("clients").doc(id).update({status:'done'}); }
     </script>
 </body>
 </html>
