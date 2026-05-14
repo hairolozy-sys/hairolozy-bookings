@@ -28,8 +28,7 @@
         /* Client Cards */
         .card { background: #1e1e1e; margin-bottom: 15px; border-radius: 12px; border-left: 5px solid #D4AF37; box-shadow: 0 4px 10px rgba(0,0,0,0.3); overflow: hidden; transition: 0.3s; border-right: 1px solid #333; border-top: 1px solid #333; border-bottom: 1px solid #333; }
         .card.done { border-left: 5px solid #27ae60; opacity: 0.8; }
-        /* VIP Glowing Border */
-        .card.vip-card { border-left: 5px solid #f1c40f !important; box-shadow: 0 0 12px rgba(241, 196, 15, 0.3); }
+        .card.vip { border-left: 5px solid #D4AF37 !important; box-shadow: 0 0 10px rgba(212, 175, 55, 0.4); }
 
         .card-header { padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         .client-info { display: flex; flex-direction: column; gap: 5px; }
@@ -188,17 +187,14 @@
             const listDiv = document.getElementById("list");
             if (listDiv.innerHTML.includes("Loading")) listDiv.innerHTML = "";
 
-            // --- VIP LOGIC ADDED HERE ---
             let statusClass = data.status === 'done' ? 'done' : '';
-            if (data.isVIP) statusClass += ' vip-card';
-            
-            const vipBadge = data.isVIP ? `<span style="background:#f1c40f; color:#000; padding:2px 6px; border-radius:4px; font-size:10px; margin-left:8px; font-weight:bold; vertical-align:middle;">VIP 👑</span>` : '';
-            const vipBtnText = data.isVIP ? '⭐ Remove VIP Status' : '⭐ Mark as VIP';
-            // ----------------------------
+            if (data.isVIP) statusClass += ' vip';
 
             const statusText = data.status === 'done' ? 'Completed' : (data.bookingTime || data.time || 'Walk-in');
             const billDisplay = data.billAmount ? `<div class="bill-badge">💰 Bill: ₹${data.billAmount}</div>` : '';
             const photoDisplay = data.photoUrl ? `<img src="${data.photoUrl}" style="max-width: 100%; border-radius: 8px; margin-bottom: 15px; border: 1px solid #444;">` : '';
+
+            const vipBadge = data.isVIP ? ` <span style="color:#D4AF37; font-size:12px;">[VIP]</span>` : '';
 
             const card = document.createElement('div');
             card.className = `card ${statusClass}`;
@@ -207,7 +203,7 @@
             card.innerHTML = `
                 <div class="card-header" onclick="toggleCard('${id}')">
                     <div class="client-info">
-                        <span class="client-name">👤 ${data.clientName || data.name} ${vipBadge}</span>
+                        <span class="client-name">👤 ${data.clientName || data.name}${vipBadge}</span>
                         <span class="client-details">✂️ ${data.serviceName || 'N/A'} | 📞 ${data.clientPhone || 'N/A'}</span>
                         ${billDisplay}
                     </div>
@@ -255,11 +251,9 @@
                         <button class="save-btn" onclick="updateFormula('${path}', '${id}')">💾 Save Matrix</button>
                         <button class="done-btn" onclick="markDone('${path}', '${id}')">✔️ Mark Done</button>
                     </div>
-                    
-                    <!-- VIP TOGGLE BUTTON -->
-                    <button onclick="toggleVIP('${path}', ${!data.isVIP})" style="background:transparent; color:#f1c40f; width:100%; padding:10px; border:1px solid #f1c40f; border-radius:8px; margin-top:12px; font-size:13px; font-weight:bold; cursor:pointer;">${vipBtnText}</button>
-
                     <button class="del-btn" onclick="deleteEntry('${path}')">🗑️ Delete Record</button>
+                    
+                    <button onclick="db.doc('${path}').update({isVIP: ${!data.isVIP}})" style="background:transparent; color:#D4AF37; width:100%; padding:10px; border:1px solid #D4AF37; border-radius:8px; margin-top:12px; font-size:13px; cursor:pointer;">${data.isVIP ? 'Remove VIP' : 'Mark as VIP'}</button>
                 </div>
             `;
             listDiv.insertBefore(card, listDiv.firstChild);
@@ -309,4 +303,11 @@
                 if(result.success) {
                     db.doc(fullPath).update({ photoUrl: result.data.url }).then(() => { alert("Photo Upload Ho Gayi!"); btn.innerText = "📸 Upload Result Photo"; btn.disabled = false; });
                 } else { alert("Upload Failed."); btn.innerText = "📸 Upload Result Photo"; btn.disabled = false; }
-            }).catch(err => { alert("Upload 
+            }).catch(err => { alert("Upload Failed."); btn.innerText = "📸 Upload Result Photo"; btn.disabled = false; });
+        }
+        function deleteEntry(fullPath) { if(confirm("Are you sure?")) db.doc(fullPath).delete(); }
+
+        startSync();
+    </script>
+</body>
+</html>
