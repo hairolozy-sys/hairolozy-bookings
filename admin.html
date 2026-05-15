@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hairolozy Premium Admin</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
     <style>
         /* ========================================== */
         /* ORIGINAL DARK LUXURY THEME (UNTOUCHED)     */
@@ -17,7 +19,7 @@
         .dash-box p { margin: 10px 0 0; font-size: 28px; font-weight: bold; color: #D4AF37; }
         .dash-box.green p { color: #2ecc71; }
         .search-container { margin: 20px 0; position: sticky; top: 75px; z-index: 99; }
-        .search-bar { width: 100%; padding: 15px 20px; border-radius: 30px; background: #1e1e1e; border: 1px solid #444; color: #fff; font-size: 15px; outline: none; transition: 0.3s; }
+        .search-bar { width: 100%; padding: 15px 20px; border-radius: 30px; background: #1e1e1e; border: 1px solid #444; color: #fff; font-size: 15px; outline: none; transition: 0.3s; box-sizing: border-box; }
         .search-bar:focus { border-color: #D4AF37; box-shadow: 0 0 8px rgba(212, 175, 55, 0.3); }
         .search-bar::placeholder { color: #777; }
         .card { background: #1e1e1e; margin-bottom: 15px; border-radius: 12px; border-left: 5px solid #D4AF37; box-shadow: 0 4px 10px rgba(0,0,0,0.3); overflow: hidden; transition: 0.3s; border-right: 1px solid #333; border-top: 1px solid #333; border-bottom: 1px solid #333; }
@@ -55,7 +57,7 @@
         .add-btn { background: #D4AF37; color: #121212; width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 15px; }
 
         /* ========================================== */
-        /* NEW BLENSOR-STYLE AI INTERFACE             */
+        /* CLEAN LIGHT-THEME AI INTERFACE             */
         /* ========================================== */
         .ai-fab { position: fixed; bottom: 30px; right: 110px; background: #2c3e50; color: #D4AF37; width: 65px; height: 65px; border-radius: 50%; text-align: center; line-height: 60px; font-size: 24px; box-shadow: 0 4px 15px rgba(0,0,0, 0.5); cursor: pointer; z-index: 101; border: 2px solid #D4AF37; font-weight: bold; transition: 0.3s; }
         
@@ -81,131 +83,31 @@
         .ai-form-area input, .ai-form-area select { width: 100%; padding: 14px; margin-bottom: 12px; border: 1px solid #eee; border-radius: 10px; background: #f9f9f9; box-sizing: border-box; font-size: 14px; outline: none; }
         .ai-form-area input:focus, .ai-form-area select:focus { border-color: #C2A284; }
         .ai-submit-btn { width: 100%; background: #111; color: #fff; border: none; padding: 15px; border-radius: 10px; font-weight: bold; font-size: 15px; margin-top: 5px; cursor: pointer; }
-
-        .ai-chat-area { position: fixed; bottom: 20px; left: 20px; right: 20px; background: #fff; border: 1px solid #eaeaea; border-radius: 25px; display: flex; align-items: center; padding: 5px 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        .ai-chat-input { flex: 1; border: none; outline: none; padding: 15px 10px; font-size: 15px; background: transparent; }
-        .ai-icon-btn { width: 40px; height: 40px; border-radius: 50%; border: none; background: #f5f5f5; display: flex; justify-content: center; align-items: center; font-size: 18px; margin: 0 5px; cursor: pointer; color: #555; }
-        .ai-send-btn { background: #111; color: #fff; }
-
-        .ai-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #FAF9F6; display: flex; justify-content: space-around; padding: 10px 0 15px 0; border-top: 1px solid #eee; font-size: 11px; color: #888; z-index: 10; }
-        .ai-nav-item { display: flex; flex-direction: column; align-items: center; gap: 5px; }
-        .ai-nav-item.active { color: #C2A284; font-weight: bold; }
+        
+        .result-box { background: #f4f4f4; padding: 15px; border-radius: 10px; border-left: 4px solid #C2A284; margin-top: 15px; display: none; font-size: 14px; line-height: 1.6; }
     </style>
 </head>
 <body>
-    <div class="header"><h2>Hairolozy</h2></div>
-    
-    <div style="padding: 15px;">
-        <div class="dashboard">
-            <div class="dash-box">
-                <h3>Today's Clients</h3>
-                <p id="dash-clients">0</p>
-            </div>
-            <div class="dash-box green">
-                <h3>Today's Revenue</h3>
-                <p id="dash-revenue">₹0</p>
-            </div>
-        </div>
 
-        <div class="search-container">
-            <input type="text" id="searchInput" class="search-bar" placeholder="🔍 Search Client or Phone..." onkeyup="filterList()">
-        </div>
-        <div id="list">Loading Luxury Experience...</div>
-    </div>
-
-    <button class="fab" onclick="openModal()">+</button>
-    <button class="ai-fab" onclick="openAIFullScreen()">AI</button>
-
-    <div id="walkinModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h3 style="margin-top:0; color:#D4AF37; text-align:center;">New Walk-in</h3>
-            <input type="text" id="new-name" placeholder="Client Name">
-            <input type="tel" id="new-phone" placeholder="Phone Number">
-            <input type="text" id="new-service" placeholder="Service (e.g. Color Correction)">
-            <input type="text" id="new-formula" placeholder="Quick Notes...">
-            <button class="add-btn" onclick="addDirectClient()">Save Client</button>
-        </div>
-    </div>
-
-    <div id="aiFullScreen" class="ai-fullscreen">
-        <div class="ai-topbar">
-            <div style="font-size: 22px; cursor: pointer;">☰</div>
-            <div class="ai-logo"><span style="font-family:serif; font-style:italic; font-size:28px;">ℋ</span>airolozy</div>
-            <div style="font-size: 28px; cursor: pointer; color: #888;" onclick="closeAIFullScreen()">&times;</div>
-        </div>
-
-        <div class="ai-avatar-container">
-            <div class="ai-avatar">ℋ</div>
-        </div>
-
-        <div class="ai-greeting">
-            Your client trusts you, Expert.<br>I'll give you the data.
-        </div>
-
-        <div class="ai-pills">
-            <button class="ai-pill" onclick="showFormulaForm()">🎨 Create formula</button>
-            <button class="ai-pill" onclick="alert('Analysis feature coming soon!')">⛶ Analyze color</button>
-        </div>
-
-        <div class="ai-card" id="advisorCard" onclick="showFormulaForm()">
-            <div class="ai-card-tag">Salon Advisor</div>
-            <div class="ai-card-title">Start consultation <span>&rarr;</span></div>
-            <div class="ai-card-desc">What are you doing today? Color, cut, or both.</div>
-        </div>
-
-        <div class="ai-form-area" id="aiFormArea">
-            <h3 style="margin-top:0; color:#111;">Formulation Details</h3>
-            <input type="text" id="aiClientName" placeholder="Client Name (for PDF)">
-            <input type="tel" id="aiClientPhone" placeholder="Phone Number">
-            <div style="display:flex; gap:10px;">
-                <input type="number" id="aiCurrentLevel" placeholder="Current Level (1-10)">
-                <input type="text" id="aiTargetShade" placeholder="Target Shade (e.g. 8.1)">
-            </div>
-            <select id="aiBrandSelect">
-                <option value="" style="color:#aaa;">🎨 Choose Preferred Brand</option>
-                <option value="L'Oréal">L'Oréal</option>
-                <option value="Redken">Redken</option>
-                <option value="Schwarzkopf">Schwarzkopf</option>
-                <option value="Wella">Wella</option>
-                <option value="Matrix">Matrix</option>
-                <option value="Keune">Keune</option>
-                <option value="Other">Other (None/General)</option>
-            </select>
-            <textarea id="aiSpecialNotes" style="width:100%; padding:14px; border:1px solid #eee; border-radius:10px; background:#f9f9f9; outline:none; font-family:inherit; margin-bottom:10px;" rows="2" placeholder="Special Condition? (Stubborn grey, etc.)"></textarea>
-            
-            <button class="ai-submit-btn" onclick="generateAndDownloadAIPdf()">✨ Calculate & Download PDF</button>
-        </div>
-
-        <div class="ai-chat-area" style="bottom: 80px;">
-            <button class="ai-icon-btn">+</button>
-            <input type="text" class="ai-chat-input" placeholder="Type your query...">
-            <button class="ai-icon-btn">🎤</button>
-            <button class="ai-icon-btn ai-send-btn">➤</button>
-        </div>
-        
-        <div style="text-align: center; font-size: 10px; color: #aaa; position: fixed; bottom: 65px; width: 100%;">
-            Hairolozy can make mistakes. Always verify.
-        </div>
-
-        <div class="ai-bottom-nav">
-            <div class="ai-nav-item active"><span style="font-size:20px;">💬</span> Chat</div>
-            <div class="ai-nav-item"><span style="font-size:20px;">👥</span> Clients</div>
-            <div class="ai-nav-item"><span style="font-size:20px;">📖</span> Learn</div>
-            <div class="ai-nav-item"><span style="font-size:20px;">⚙️</span> Settings</div>
-        </div>
-    </div>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyABGjbHjlLdUIHrbUxhD_Jp2ZScrMegX5A",
+            authDomain: "hairolozy-12bec.firebaseapp.com",
+            projectId: "hairolozy-12bec",
+            storageBucket: "hairolozy-12bec.appspot.com",
+            messagingSenderId: "386170490787",
+            appId: "1:386170490787:web:58b592d8a44d0e3de65416"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        let allBookings = {};
+
         function openModal() { document.getElementById('walkinModal').style.display = 'flex'; }
         function closeModal() { document.getElementById('walkinModal').style.display = 'none'; }
-        function openAIFullScreen() { document.getElementById('aiFullScreen').style.display = 'block'; document.body.style.overflow = 'hidden'; }
-        function closeAIFullScreen() { document.getElementById('aiFullScreen').style.display = 'none'; document.body.style.overflow = 'auto'; }
-        function showFormulaForm() { document.getElementById('advisorCard').style.display = 'none'; document.getElementById('aiFormArea').style.display = 'block'; }
-        
-        window.onclick = function(event) { 
-            if (event.target == document.getElementById('walkinModal')) closeModal(); 
-        }
+        window.onclick = function(event) { if (event.target == document.getElementById('walkinModal')) closeModal(); }
 
         function toggleCard(id) {
             let body = document.getElementById('body-' + id);
@@ -220,59 +122,145 @@
                 cards[i].style.display = text.includes(input) ? "" : "none";
             }
         }
-    </script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+        function updateDashboard() {
+            let rev = 0; let clientsCount = 0;
+            const now = new Date();
+            const format1 = now.toLocaleDateString(); 
+            const format2 = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`; 
 
-    <script>
-        function generateAndDownloadAIPdf() {
-            const clientName = document.getElementById('aiClientName').value || "Client";
-            const clientPhone = document.getElementById('aiClientPhone').value || "N/A";
-            const currentLvlInput = document.getElementById('aiCurrentLevel').value;
-            const targetShadeInput = document.getElementById('aiTargetShade').value;
-            const brand = document.getElementById('aiBrandSelect').value;
-            const notes = document.getElementById('aiSpecialNotes').value;
-
-            if (!currentLvlInput || !targetShadeInput || !brand) {
-                alert("Please fill Current Level, Target Shade, and Brand.");
-                return;
+            for (let id in allBookings) {
+                let b = allBookings[id];
+                if (b.date === format1 || b.date === format2) {
+                    clientsCount++;
+                    if (b.status === 'done' && b.bill) rev += parseFloat(b.bill);
+                }
             }
+            document.getElementById('dash-clients').innerText = clientsCount;
+            document.getElementById('dash-revenue').innerText = "₹" + rev;
+        }
 
-            let currentLvl = parseFloat(currentLvlInput);
-            let targetLvl = parseFloat(targetShadeInput.split('.')[0] || targetShadeInput.split(',')[0] || targetShadeInput);
-            let lift = targetLvl - currentLvl;
+        function startSync() {
+            const folders = ["Bookings", "bookings", "clientname", "clients"];
+            folders.forEach(folder => {
+                const ref = (folder === "clients") ? db.collection(folder) : db.collectionGroup(folder);
+                ref.onSnapshot((snap) => {
+                    snap.forEach(doc => {
+                        const data = doc.data();
+                        if (!data.clientName && !data.name) return;
+                        allBookings[doc.id] = { date: data.bookingDate || data.date || '', status: data.status || 'pending', bill: data.billAmount || 0 };
+                        renderCard(doc);
+                    });
+                    updateDashboard();
+                });
+            });
+        }
+
+        function renderCard(doc) {
+            const data = doc.data();
+            if (!data.clientName && !data.name) return;
+            const id = doc.id;
+            const path = doc.ref.path;
             
-            let devVol = "20 Vol (6%)";
-            let strategy = "Standard Color Deposit";
-            let pigmentExposed = "None";
-            let neutralization = "No extra neutralization needed";
+            let existingCard = document.getElementById('card-' + id);
+            if (existingCard) { existingCard.remove(); }
 
-            if (lift > 0) {
-                if (lift <= 1) devVol = "20 Vol (6%)";
-                else if (lift == 2) devVol = "30 Vol (9%)";
-                else if (lift >= 3) { devVol = "40 Vol / Pre-Lightener"; strategy = "High Lift required."; }
+            const listDiv = document.getElementById("list");
+            if (listDiv.innerHTML.includes("Loading")) listDiv.innerHTML = "";
 
-                if (targetLvl <= 4) { pigmentExposed = "Red"; neutralization = "Add Green (Matte/Ash)"; }
-                else if (targetLvl == 5 || targetLvl == 6) { pigmentExposed = "Orange / Red-Orange"; neutralization = "Add Blue (Ash)"; }
-                else if (targetLvl == 7) { pigmentExposed = "Yellow-Orange"; neutralization = "Add Blue-Violet"; }
-                else if (targetLvl >= 8) { pigmentExposed = "Pale Yellow"; neutralization = "Add Violet (.2) toner"; }
-            } else if (lift < 0) {
-                devVol = "10 Vol (3%)";
-                strategy = "Going Darker";
+            let statusClass = data.status === 'done' ? 'done' : '';
+            if (data.isVIP) statusClass += ' vip';
+
+            const statusText = data.status === 'done' ? 'Completed' : (data.bookingTime || data.time || 'Walk-in');
+            const billDisplay = data.billAmount ? `<div class="bill-badge">💰 Bill: ₹${data.billAmount}</div>` : '';
+            const photoDisplay = data.photoUrl ? `<img src="${data.photoUrl}" style="max-width: 100%; border-radius: 8px; margin-bottom: 15px; border: 1px solid #444;">` : '';
+
+            const vipBadge = data.isVIP ? ` <span style="color:#D4AF37; font-size:12px;">[VIP]</span>` : '';
+
+            const card = document.createElement('div');
+            card.className = `card ${statusClass}`;
+            card.id = 'card-' + id;
+            
+            card.innerHTML = `
+                <div class="card-header" onclick="toggleCard('${id}')">
+                    <div class="client-info">
+                        <span class="client-name">👤 ${data.clientName || data.name}${vipBadge}</span>
+                        <span class="client-details">✂️ ${data.serviceName || 'N/A'} | 📞 ${data.clientPhone || 'N/A'}</span>
+                        ${billDisplay}
+                    </div>
+                    <div class="time-badge">🕒 ${statusText}</div>
+                </div>
+                
+                <div class="card-body" id="body-${id}">
+                    ${photoDisplay}
+                    <div class="formula-box">
+                        <strong>Last Formulation:</strong><br> ${data.history || "No record."}
+                    </div>
+                    
+                    <div class="matrix-grid">
+                        <select id="brand-${id}" class="full-width brand-select">
+                            <option value="" style="color:#aaa;">🎨 Select Color Brand</option>
+                            <option value="L'Oréal">L'Oréal</option>
+                            <option value="Redken">Redken</option>
+                            <option value="Schwarzkopf">Schwarzkopf</option>
+                            <option value="Keune">Keune</option>
+                            <option value="Alfaparf">Alfaparf</option>
+                            <option value="Wella">Wella</option>
+                            <option value="Matrix">Matrix</option>
+                            <option value="Other">Other (Note below)</option>
+                        </select>
+                        <input type="text" id="base-${id}" placeholder="Base Color / Roots">
+                        <input type="text" id="target-${id}" placeholder="Target Tone">
+                        <select id="vol-${id}">
+                            <option value="" style="color:#aaa;">Developer Volume</option>
+                            <option value="10V">10 Vol (3%)</option>
+                            <option value="20V">20 Vol (6%)</option>
+                            <option value="30V">30 Vol (9%)</option>
+                            <option value="40V">40 Vol (12%)</option>
+                        </select>
+                        <input type="text" id="time-${id}" placeholder="Processing Time">
+                        <input type="text" id="ph-${id}" class="full-width" placeholder="Bond Builder / Notes">
+                        <input type="number" id="bill-${id}" class="bill-input" placeholder="Total Bill (₹)" value="${data.billAmount || ''}">
+                    </div>
+
+                    <div style="background: #252525; padding: 12px; border-radius: 8px; margin-top: 10px; border: 1px dashed #444;">
+                        <input type="file" id="img-${id}" accept="image/*" style="font-size: 13px; width: 100%; border: none; padding: 0;">
+                        <button class="upload-btn" onclick="uploadPhoto('${path}', '${id}')">📸 Upload Result Photo</button>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="save-btn" onclick="updateFormula('${path}', '${id}')">💾 Save Matrix</button>
+                        <button class="done-btn" onclick="markDone('${path}', '${id}')">✔️ Mark Done</button>
+                    </div>
+                    <button class="del-btn" onclick="deleteEntry('${path}')">🗑️ Delete Record</button>
+                    
+                    <button onclick="db.doc('${path}').update({isVIP: ${!data.isVIP}})" style="background:transparent; color:#D4AF37; width:100%; padding:10px; border:1px solid #D4AF37; border-radius:8px; margin-top:12px; font-size:13px; cursor:pointer;">${data.isVIP ? 'Remove VIP' : 'Mark as VIP'}</button>
+                </div>
+            `;
+            listDiv.insertBefore(card, listDiv.firstChild);
+        }
+
+        function addDirectClient() {
+            const name = document.getElementById('new-name').value;
+            const phone = document.getElementById('new-phone').value;
+            const service = document.getElementById('new-service').value;
+            const formula = document.getElementById('new-formula').value;
+            if(!name) return alert("Name zaroori hai!");
+            
+            if(new Date().getDay() === 4) {
+                if(!confirm("Aaj Thursday (Weekly Off) hai! Phir bhi entry karni hai?")) return;
             }
 
-            let formula = `40g of [${targetShadeInput}] + 60g of [${devVol}]`;
+            const todayFormatted = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate()).padStart(2, '0')}`;
+            db.collection("clients").add({ clientName: name, clientPhone: phone, serviceName: service, history: formula, bookingDate: todayFormatted, bookingTime: "Walk-in", status: 'pending' }).then(() => { closeModal(); document.getElementById('new-name').value = ""; document.getElementById('new-formula').value = ""; });
+        }
 
-            try {
-                const jsPDF = window.jspdf.jsPDF;
-                const doc = new jsPDF();
-                
-                doc.setFillColor(250, 249, 246); doc.rect(0, 0, 210, 297, 'F');
-                doc.setTextColor(17, 17, 17); doc.setFontSize(24); doc.setFont("times", "italic");
-                doc.text("Hairolozy", 105, 25, null, null, "center");
-                
-                doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(100, 100, 100);
-                doc.text("Salon Advisor & Formulation Report", 105, 32, null, null, "center");
-                doc.setDrawColor(200, 200, 20
+        function getMatrixData(id) {
+            const brand = document.getElementById('brand-' + id).value; const base = document.getElementById('base-' + id).value; const target = document.getElementById('target-' + id).value; const vol = document.getElementById('vol-' + id).value; const time = document.getElementById('time-' + id).value; const ph = document.getElementById('ph-' + id).value;
+            return `<b>Brand:</b> <span style="color:#D4AF37">${brand || '-'}</span> <br><b>Base:</b> ${base || '-'} | <b>Target:</b> ${target || '-'} <br><b>Dev:</b> ${vol || '-'} | <b>Time:</b> ${time || '-'} <br><b>Treatments:</b> ${ph || '-'}`;
+        }
+
+        function updateFormula(fullPath, id) { db.doc(fullPath).update({ history: getMatrixData(id) }).then(() => alert("Formulation Matrix Saved!")); }
+        function markDone(fullPath, id) {
+            const bill = document.getElementById('bill-' + id).value;
+            if(!bill && !confirm("Aa
