@@ -64,21 +64,13 @@
         .fab { position: fixed; bottom: 30px; right: 30px; background: #D4AF37; color: #121212; width: 65px; height: 65px; border-radius: 50%; text-align: center; line-height: 60px; font-size: 35px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); cursor: pointer; z-index: 101; border: none; font-weight: bold; transition: 0.3s; }
         .fab:hover { transform: scale(1.05); }
 
-        /* NEW AI FAB (Positioned next to the original one) */
-        .ai-fab { position: fixed; bottom: 30px; right: 110px; background: #2c3e50; color: #D4AF37; width: 65px; height: 65px; border-radius: 50%; text-align: center; line-height: 60px; font-size: 24px; box-shadow: 0 4px 15px rgba(0,0,0, 0.5); cursor: pointer; z-index: 101; border: 2px solid #D4AF37; font-weight: bold; transition: 0.3s; }
-        .ai-fab:hover { transform: scale(1.05); background: #34495e; }
-
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 102; justify-content: center; align-items: center; }
         .modal-content { background: #1e1e1e; padding: 25px; border-radius: 15px; width: 90%; max-width: 400px; animation: slideUp 0.3s ease; border: 1px solid #333; }
         @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .close-btn { float: right; cursor: pointer; font-size: 26px; font-weight: bold; color: #888; margin-top: -15px; }
-        .modal-content input, .modal-content select, .modal-content textarea { background: #2a2a2a; color: #fff; width: 100%; padding: 14px; margin: 8px 0; border-radius: 8px; border: 1px solid #444; box-sizing: border-box; font-size: 14px; outline: none; }
-        .modal-content input:focus, .modal-content select:focus, .modal-content textarea:focus { border-color: #D4AF37; }
+        .modal-content input { background: #2a2a2a; color: #fff; width: 100%; padding: 14px; margin: 8px 0; border-radius: 8px; border: 1px solid #444; box-sizing: border-box; font-size: 14px; outline: none; }
+        .modal-content input:focus { border-color: #D4AF37; }
         .add-btn { background: #D4AF37; color: #121212; width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 15px; }
-        
-        /* Specific Styles for AI Modal */
-        #aiResultBox { display: none; background: #252525; padding: 15px; border-radius: 8px; border: 1px dashed #D4AF37; margin-top: 15px; font-size: 14px; color: #ddd; line-height: 1.6; }
-        .pdf-btn { background: #c0392b; color: white; width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 10px; display: none; }
     </style>
 </head>
 <body>
@@ -102,13 +94,8 @@
         <div id="list">Loading Luxury Experience...</div>
     </div>
 
-    <!-- Original Walk-in Button -->
     <button class="fab" onclick="openModal()">+</button>
-    
-    <!-- NEW AI Formulation Button -->
-    <button class="ai-fab" onclick="openAIModal()">AI</button>
 
-    <!-- Original Walk-in Modal -->
     <div id="walkinModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
@@ -121,48 +108,10 @@
         </div>
     </div>
 
-    <!-- NEW AI Formulation Modal -->
-    <div id="aiModal" class="modal">
-        <div class="modal-content" style="max-width: 500px;">
-            <span class="close-btn" onclick="closeAIModal()">&times;</span>
-            <h3 style="margin-top:0; color:#D4AF37; text-align:center;">🤖 AI Expert Formulator</h3>
-            
-            <input type="text" id="aiClientName" placeholder="Client Name (for PDF)">
-            
-            <div class="matrix-grid">
-                <input type="text" id="aiCurrentLevel" placeholder="Current Level (e.g. 5)">
-                <input type="text" id="aiTargetShade" placeholder="Target Shade (e.g. 8.1)">
-            </div>
-            
-            <select id="aiBrandSelect" class="brand-select" style="margin-bottom: 8px;">
-                <option value="" style="color:#aaa;">🎨 Choose Preferred Brand</option>
-                <option value="L'Oréal">L'Oréal (Majirel / INOA)</option>
-                <option value="Redken">Redken (Shades EQ / Color Gels)</option>
-                <option value="Schwarzkopf">Schwarzkopf (Igora Royal)</option>
-                <option value="Wella">Wella (Koleston Perfect)</option>
-                <option value="Matrix">Matrix (SoColor)</option>
-            </select>
-            
-            <textarea id="aiSpecialNotes" rows="2" placeholder="Special Condition? (e.g. Stubborn grey, Box dye history)"></textarea>
-            
-            <button class="add-btn" onclick="generateAIFormula()">✨ Calculate Formulation</button>
-            
-            <!-- Result Box -->
-            <div id="aiResultBox">
-                <!-- AI Output will appear here -->
-            </div>
-            
-            <button id="aiPdfBtn" class="pdf-btn" onclick="downloadAIPdf()">📄 Download PDF Report</button>
-        </div>
-    </div>
-
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <!-- Include jsPDF for PDF generation -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <script>
-        // --- EXISTING FIREBASE LOGIC (UNTOUCHED) ---
         const firebaseConfig = {
             apiKey: "AIzaSyABGjbHjlLdUIHrbUxhD_Jp2ZScrMegX5A",
             authDomain: "hairolozy-12bec.firebaseapp.com",
@@ -177,12 +126,7 @@
 
         function openModal() { document.getElementById('walkinModal').style.display = 'flex'; }
         function closeModal() { document.getElementById('walkinModal').style.display = 'none'; }
-        
-        window.onclick = function(event) { 
-            if (event.target == document.getElementById('walkinModal')) closeModal(); 
-            // Close AI modal when clicking outside
-            if (event.target == document.getElementById('aiModal')) closeAIModal(); 
-        }
+        window.onclick = function(event) { if (event.target == document.getElementById('walkinModal')) closeModal(); }
 
         function toggleCard(id) {
             let body = document.getElementById('body-' + id);
@@ -320,3 +264,50 @@
             const phone = document.getElementById('new-phone').value;
             const service = document.getElementById('new-service').value;
             const formula = document.getElementById('new-formula').value;
+            if(!name) return alert("Name zaroori hai!");
+            
+            // Checking Thursday (Day 4) for Walk-in Alert
+            if(new Date().getDay() === 4) {
+                if(!confirm("Aaj Thursday (Weekly Off) hai! Phir bhi entry karni hai?")) return;
+            }
+
+            const todayFormatted = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate()).padStart(2, '0')}`;
+            db.collection("clients").add({ clientName: name, clientPhone: phone, serviceName: service, history: formula, bookingDate: todayFormatted, bookingTime: "Walk-in", status: 'pending' }).then(() => { closeModal(); document.getElementById('new-name').value = ""; document.getElementById('new-formula').value = ""; });
+        }
+
+        function getMatrixData(id) {
+            const brand = document.getElementById('brand-' + id).value; const base = document.getElementById('base-' + id).value; const target = document.getElementById('target-' + id).value; const vol = document.getElementById('vol-' + id).value; const time = document.getElementById('time-' + id).value; const ph = document.getElementById('ph-' + id).value;
+            return `<b>Brand:</b> <span style="color:#D4AF37">${brand || '-'}</span> <br><b>Base:</b> ${base || '-'} | <b>Target:</b> ${target || '-'} <br><b>Dev:</b> ${vol || '-'} | <b>Time:</b> ${time || '-'} <br><b>Treatments:</b> ${ph || '-'}`;
+        }
+
+        function updateFormula(fullPath, id) { db.doc(fullPath).update({ history: getMatrixData(id) }).then(() => alert("Formulation Matrix Saved!")); }
+        function markDone(fullPath, id) {
+            const bill = document.getElementById('bill-' + id).value;
+            if(!bill && !confirm("Aapne Bill Amount nahi dala hai. Bina bill ke 'Done' karein?")) return;
+            db.doc(fullPath).update({ status: 'done', billAmount: bill || "0", history: getMatrixData(id) });
+        }
+
+        function uploadPhoto(fullPath, id) {
+            const fileInput = document.getElementById('img-' + id);
+            const file = fileInput.files[0];
+            if (!file) return alert("Pehle 'Choose File' par click karke photo select karein!");
+            const btn = fileInput.nextElementSibling;
+            btn.innerText = "⏳ Uploading... Please wait"; btn.disabled = true;
+
+            const formData = new FormData(); formData.append('image', file);
+            const apiKey = '784a2cd72d9a44a6df0073527b1eee04'; 
+
+            fetch('https://api.imgbb.com/1/upload?key=' + apiKey, { method: 'POST', body: formData })
+            .then(res => res.json())
+            .then(result => {
+                if(result.success) {
+                    db.doc(fullPath).update({ photoUrl: result.data.url }).then(() => { alert("Photo Upload Ho Gayi!"); btn.innerText = "📸 Upload Result Photo"; btn.disabled = false; });
+                } else { alert("Upload Failed."); btn.innerText = "📸 Upload Result Photo"; btn.disabled = false; }
+            }).catch(err => { alert("Upload Failed."); btn.innerText = "📸 Upload Result Photo"; btn.disabled = false; });
+        }
+        function deleteEntry(fullPath) { if(confirm("Are you sure?")) db.doc(fullPath).delete(); }
+
+        startSync();
+    </script>
+</body>
+</html>
