@@ -52,17 +52,19 @@
         .upload-btn { background: #2980b9; color: white; width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 8px; }
 
         /* Floating Buttons */
-        .fab { position: fixed; bottom: 30px; right: 30px; background: #D4AF37; color: #121212; width: 65px; height: 65px; border-radius: 50%; font-size: 35px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); border: none; font-weight: bold; z-index: 101; }
-        .ai-fab { position: fixed; bottom: 30px; right: 110px; background: #2c3e50; color: #D4AF37; width: 65px; height: 65px; border-radius: 50%; font-size: 24px; box-shadow: 0 4px 15px rgba(0,0,0, 0.5); border: 2px solid #D4AF37; font-weight: bold; z-index: 101; }
+        .fab { position: fixed; bottom: 30px; right: 30px; background: #D4AF37; color: #121212; width: 65px; height: 65px; border-radius: 50%; font-size: 35px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); border: none; font-weight: bold; z-index: 101; cursor: pointer;}
+        .ai-fab { position: fixed; bottom: 30px; right: 110px; background: #2c3e50; color: #D4AF37; width: 65px; height: 65px; border-radius: 50%; font-size: 24px; box-shadow: 0 4px 15px rgba(0,0,0, 0.5); border: 2px solid #D4AF37; font-weight: bold; z-index: 101; cursor: pointer;}
 
         /* Modals */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 102; justify-content: center; align-items: center; }
-        .modal-content { background: #1e1e1e; padding: 25px; border-radius: 15px; width: 90%; max-width: 400px; border: 1px solid #333; }
+        .modal-content { background: #1e1e1e; padding: 25px; border-radius: 15px; width: 90%; max-width: 400px; animation: slideUp 0.3s ease; border: 1px solid #333; max-height: 90vh; overflow-y: auto;}
+        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .close-btn { float: right; cursor: pointer; font-size: 26px; font-weight: bold; color: #888; margin-top: -15px; }
         .modal-content input, .modal-content select, .modal-content textarea { background: #2a2a2a; color: #fff; width: 100%; padding: 14px; margin: 8px 0; border-radius: 8px; border: 1px solid #444; box-sizing: border-box; font-size: 14px; outline: none; }
         .add-btn { background: #D4AF37; color: #121212; width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 15px; }
         
-        #aiResultBox { display: none; background: #252525; padding: 15px; border-radius: 8px; border: 1px dashed #D4AF37; margin-top: 15px; font-size: 14px; line-height: 1.6; }
+        /* AI Result Box */
+        #aiResultBox { display: none; background: #252525; padding: 15px; border-radius: 8px; border: 1px dashed #D4AF37; margin-top: 15px; font-size: 14px; color: #ddd; line-height: 1.6; }
         .pdf-btn { background: #c0392b; color: white; width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 10px; display: none; }
     </style>
 </head>
@@ -106,11 +108,13 @@
         <div class="modal-content" style="max-width: 500px;">
             <span class="close-btn" onclick="closeAIModal()">&times;</span>
             <h3 style="margin-top:0; color:#D4AF37; text-align:center;">🤖 AI Expert Formulator</h3>
+            
             <input type="text" id="aiClientName" placeholder="Client Name (for PDF)">
-            <div class="matrix-grid">
-                <input type="text" id="aiCurrentLevel" placeholder="Current Level (e.g. 5)">
-                <input type="text" id="aiTargetShade" placeholder="Target Shade (e.g. 8.1)">
+            <input type="tel" id="aiClientPhone" placeholder="Phone Number"> <div class="matrix-grid">
+                <input type="number" id="aiCurrentLevel" placeholder="Current Level (1-10)">
+                <input type="number" id="aiTargetShade" placeholder="Target Level (1-10)">
             </div>
+            
             <select id="aiBrandSelect" class="brand-select" style="margin-bottom: 8px;">
                 <option value="" style="color:#aaa;">🎨 Choose Preferred Brand</option>
                 <option value="L'Oréal">L'Oréal (Majirel / INOA)</option>
@@ -118,9 +122,17 @@
                 <option value="Schwarzkopf">Schwarzkopf (Igora Royal)</option>
                 <option value="Wella">Wella (Koleston Perfect)</option>
                 <option value="Matrix">Matrix (SoColor)</option>
+                <option value="Keune">Keune (Tinta Color)</option>
+                <option value="Alfaparf">Alfaparf (Evolution)</option>
+                <option value="Joico">Joico (LumiShine)</option>
+                <option value="Pravana">Pravana (ChromaSilk)</option>
+                <option value="Other">Other (None/General)</option>
             </select>
+            
             <textarea id="aiSpecialNotes" rows="2" placeholder="Special Condition? (e.g. Stubborn grey, Box dye)"></textarea>
+            
             <button class="add-btn" onclick="generateAIFormula()">✨ Calculate Formulation</button>
+            
             <div id="aiResultBox"></div>
             <button id="aiPdfBtn" class="pdf-btn" onclick="downloadAIPdf()">📄 Download PDF Report</button>
         </div>
@@ -155,46 +167,67 @@
             }
         }
 
+        // --- UPGRADED AI SCIENCE LOGIC ---
         let currentAIFormula = {};
         function generateAIFormula() {
             const clientName = document.getElementById('aiClientName').value || "Client";
-            const currentLvl = document.getElementById('aiCurrentLevel').value;
-            const targetLvl = document.getElementById('aiTargetShade').value;
+            const clientPhone = document.getElementById('aiClientPhone').value || "N/A";
+            const currentLvl = parseInt(document.getElementById('aiCurrentLevel').value);
+            const targetLvl = parseInt(document.getElementById('aiTargetShade').value);
             const brand = document.getElementById('aiBrandSelect').value;
             const notes = document.getElementById('aiSpecialNotes').value;
 
             if (!currentLvl || !targetLvl || !brand) {
-                alert("Please fill Current Level, Target, and Brand.");
+                alert("Please fill Current Level, Target Level, and Brand.");
                 return;
             }
 
             const resultBox = document.getElementById('aiResultBox');
-            let devVol = "20 Vol";
-            let instructions = "Standard processing.";
-
-            if (parseInt(targetLvl) > parseInt(currentLvl)) {
-                devVol = (parseInt(targetLvl) - parseInt(currentLvl)) > 2 ? "30 Vol / 40 Vol" : "20 Vol";
-                instructions = "Lifting required. Pre-lighten if lifting more than 3 levels.";
-            } else {
-                devVol = "10 Vol";
-                instructions = "Depositing only.";
+            
+            // Advance Hair Science Calculation
+            let devVol = "20 Vol (6%)";
+            let strategy = "Standard Processing / Deposit";
+            let pigmentExposed = "None (No Lift)";
+            let neutralization = "Target shade directly applied";
+            
+            if (targetLvl > currentLvl) {
+                let liftLevels = targetLvl - currentLvl;
+                
+                // Developer Logic based on lift
+                if (liftLevels == 1) devVol = "20 Vol (6%)";
+                else if (liftLevels == 2) devVol = "30 Vol (9%)";
+                else if (liftLevels >= 3) { devVol = "40 Vol / Pre-lightener Needed"; strategy = "High Lift / Bleach Wash required before deposit."; }
+                
+                // Underlying Pigment & Neutralization Logic
+                if (targetLvl <= 4) { pigmentExposed = "Red"; neutralization = "Add Green/Matte (Ash) tone to neutralize."; }
+                else if (targetLvl == 5 || targetLvl == 6) { pigmentExposed = "Orange / Red-Orange"; neutralization = "Add Blue/Ash tone to neutralize warmth."; }
+                else if (targetLvl == 7) { pigmentExposed = "Yellow-Orange"; neutralization = "Add Blue-Violet tone."; }
+                else if (targetLvl >= 8) { pigmentExposed = "Pale Yellow"; neutralization = "Add Violet tone (Toner) to achieve clean blonde."; }
+            } else if (targetLvl < currentLvl) {
+                devVol = "10 Vol (3%)";
+                strategy = "Color Deposition (Going Darker). Consider filling missing pigments if dropping 2+ levels.";
             }
 
+            // Grams Calculation (Standard 1:1.5 Mix)
+            let colorGrams = 40;
+            let devGrams = 60; // 40 * 1.5
+
             currentAIFormula = {
-                client: clientName, date: new Date().toLocaleDateString(), brand: brand,
+                client: clientName, phone: clientPhone, date: new Date().toLocaleDateString(), brand: brand,
                 current: currentLvl, target: targetLvl, notes: notes,
-                formula: `45g ${targetLvl} + 15g base`, developer: `${devVol} (1:1.5 ratio)`, instructions: instructions
+                formula: `${colorGrams}g of Level ${targetLvl}`, developer: `${devGrams}g of ${devVol}`,
+                pigment: pigmentExposed, neutralize: neutralization, strategy: strategy
             };
 
             resultBox.style.display = 'block';
             resultBox.innerHTML = `
-                <h4 style="color:#D4AF37; margin-top:0;">Hybrid AI Formula</h4>
-                <strong>Target Brand:</strong> ${brand}<br>
-                <strong>Mix:</strong> ${currentAIFormula.formula}<br>
-                <strong>Developer:</strong> ${currentAIFormula.developer}<br>
-                <strong>Strategy:</strong> ${instructions}<br>
+                <h4 style="color:#D4AF37; margin-top:0;">Hybrid Science Analysis</h4>
+                <strong>Underlying Pigment:</strong> <span style="color:#e74c3c;">${pigmentExposed}</span><br>
+                <strong>Neutralization Required:</strong> <span style="color:#3498db;">${neutralization}</span><br>
                 <hr style="border: 0.5px solid #444;">
-                <small><i>Note: Based on hybrid rules. Always perform strand test.</i></small>
+                <strong>Brand:</strong> ${brand}<br>
+                <strong>Exact Mix:</strong> ${currentAIFormula.formula} + ${currentAIFormula.developer} <span style="color:#aaa;">(Ratio 1:1.5)</span><br>
+                <strong>Action:</strong> ${strategy}<br>
             `;
             document.getElementById('aiPdfBtn').style.display = 'block';
         }
@@ -234,6 +267,7 @@
             document.getElementById('dash-revenue').innerText = "₹" + rev;
         }
 
+        // EXACT ORIGINAL SYNC LOGIC RESTORED
         function startSync() {
             const folders = ["Bookings", "bookings", "clientname", "clients"];
             folders.forEach(folder => {
@@ -290,36 +324,4 @@
                     
                     <div class="matrix-grid">
                         <select id="brand-${id}" class="full-width brand-select">
-                            <option value="" style="color:#aaa;">🎨 Select Color Brand</option>
-                            <option value="L'Oréal">L'Oréal</option>
-                            <option value="Redken">Redken</option>
-                            <option value="Schwarzkopf">Schwarzkopf</option>
-                            <option value="Wella">Wella</option>
-                            <option value="Matrix">Matrix</option>
-                            <option value="Other">Other</option>
-                        </select>
-                        <input type="text" id="base-${id}" placeholder="Base Color / Roots">
-                        <input type="text" id="target-${id}" placeholder="Target Tone">
-                        <select id="vol-${id}">
-                            <option value="" style="color:#aaa;">Developer Volume</option>
-                            <option value="10V">10 Vol (3%)</option>
-                            <option value="20V">20 Vol (6%)</option>
-                            <option value="30V">30 Vol (9%)</option>
-                            <option value="40V">40 Vol (12%)</option>
-                        </select>
-                        <input type="text" id="time-${id}" placeholder="Processing Time">
-                        <input type="text" id="ph-${id}" class="full-width" placeholder="Bond Builder / Notes">
-                        <input type="number" id="bill-${id}" class="bill-input" placeholder="Total Bill (₹)" value="${data.billAmount || ''}">
-                    </div>
-
-                    <div style="background: #252525; padding: 12px; border-radius: 8px; margin-top: 10px; border: 1px dashed #444;">
-                        <input type="file" id="img-${id}" accept="image/*" style="font-size: 13px; width: 100%; border: none; padding: 0;">
-                        <button class="upload-btn" onclick="uploadPhoto('${path}', '${id}')">📸 Upload Result Photo</button>
-                    </div>
-
-                    <div class="btn-group">
-                        <button class="save-btn" onclick="updateFormula('${path}', '${id}')">💾 Save Matrix</button>
-                        <button class="done-btn" onclick="markDone('${path}', '${id}')">✔️ Mark Done</button>
-                    </div>
-                    <button class="del-btn" onclick="deleteEntry('${path}')">🗑️ Delete Record</button>
-                    <button onclick="db.doc('${path}').update({isVIP: ${!data.isVIP}})" style="background:transparent
+                            <option value="" style="color:#aaa;">🎨 Select Colo
