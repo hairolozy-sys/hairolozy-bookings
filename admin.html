@@ -4,113 +4,165 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hairolozy Premium Admin</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
     <style>
-        /* LUXURY DARK THEME (ORIGINAL) */
+        /* LUXURY DARK THEME BASED ON YOUR IMAGE */
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #121212; color: #e0e0e0; padding: 15px; margin: 0; }
-        .header { background: #1a1a1a; color: #D4AF37; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; border-bottom: 2px solid #D4AF37; }
-        .dashboard { display: flex; gap: 15px; margin-top: 15px; }
-        .dash-box { background: #1e1e1e; color: #fff; flex: 1; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #333; }
-        .dash-box p { margin: 10px 0 0; font-size: 28px; font-weight: bold; color: #D4AF37; }
-        .search-container { margin: 20px 0; position: sticky; top: 75px; z-index: 99; }
-        .search-bar { width: 100%; padding: 15px 20px; border-radius: 30px; background: #1e1e1e; border: 1px solid #444; color: #fff; font-size: 15px; outline: none; box-sizing: border-box; }
-        .card { background: #1e1e1e; margin-bottom: 15px; border-radius: 12px; border-left: 5px solid #D4AF37; padding: 15px; border-right: 1px solid #333; }
-        .card-header { cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-        .client-name { font-size: 18px; font-weight: bold; color: #fff; }
-        .time-badge { background: rgba(212, 175, 55, 0.1); color: #D4AF37; border: 1px solid #D4AF37; padding: 5px 12px; border-radius: 20px; font-size: 12px; }
-        .card-body { display: none; margin-top: 15px; border-top: 1px solid #333; padding-top: 15px; }
-        .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
-        .matrix-grid input, .matrix-grid select { background: #2a2a2a; color: #fff; width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #444; font-size: 13px; box-sizing: border-box; }
         
-        /* FLOATING BUTTONS */
-        .fab { position: fixed; bottom: 30px; right: 30px; background: #D4AF37; color: #121212; width: 65px; height: 65px; border-radius: 50%; font-size: 35px; border: none; font-weight: bold; z-index: 101; cursor: pointer; }
-        .ai-fab { position: fixed; bottom: 30px; right: 110px; background: #2c3e50; color: #D4AF37; width: 65px; height: 65px; border-radius: 50%; font-size: 24px; border: 2px solid #D4AF37; font-weight: bold; z-index: 101; cursor: pointer; }
+        /* Header */
+        .header { background: #1a1a1a; color: #D4AF37; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.5); border-bottom: 2px solid #D4AF37; }
+        h2 { margin: 0; font-size: 24px; letter-spacing: 2px; font-weight: 600; text-transform: uppercase; }
 
-        /* AI FULLSCREEN (LIGHT THEME) */
-        .ai-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #FAF9F6; z-index: 2000; overflow-y: auto; color: #111; padding-bottom: 50px; }
-        .ai-top { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .ai-avatar { width: 70px; height: 70px; background: #111; border-radius: 50%; margin: 20px auto; display: flex; justify-content: center; align-items: center; color: #D4AF37; font-size: 30px; font-style: italic; }
-        .ai-greeting { text-align: center; font-family: serif; font-size: 26px; font-style: italic; padding: 0 20px; margin-bottom: 30px; }
-        .ai-pills { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; }
-        .pill { background: #fff; border: 1px solid #ddd; padding: 10px 15px; border-radius: 25px; font-size: 14px; font-weight: bold; cursor: pointer; }
-        .ai-card { background: #fff; border: 1px solid #EAE3D9; border-radius: 16px; padding: 20px; margin: 0 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .ai-form { display: none; padding: 20px; }
-        .ai-form input, .ai-form select, .ai-form textarea { width: 100%; padding: 14px; margin-bottom: 10px; border-radius: 10px; border: 1px solid #eee; background: #f9f9f9; box-sizing: border-box; }
-        .ai-btn { width: 100%; background: #111; color: #fff; padding: 15px; border: none; border-radius: 10px; font-weight: bold; font-size: 16px; cursor: pointer; }
+        /* Dashboard Overview */
+        .dashboard { display: flex; gap: 15px; margin-top: 15px; }
+        .dash-box { background: #1e1e1e; color: #fff; flex: 1; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #333; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .dash-box h3 { margin: 0; font-size: 13px; font-weight: normal; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
+        .dash-box p { margin: 10px 0 0; font-size: 28px; font-weight: bold; color: #D4AF37; }
+        .dash-box.green p { color: #2ecc71; }
+
+        /* Search Bar */
+        .search-container { margin: 20px 0; position: sticky; top: 75px; z-index: 99; }
+        .search-bar { width: 100%; padding: 15px 20px; border-radius: 30px; background: #1e1e1e; border: 1px solid #444; color: #fff; font-size: 15px; outline: none; transition: 0.3s; }
+        .search-bar:focus { border-color: #D4AF37; box-shadow: 0 0 8px rgba(212, 175, 55, 0.3); }
+        .search-bar::placeholder { color: #777; }
+
+        /* Client Cards */
+        .card { background: #1e1e1e; margin-bottom: 15px; border-radius: 12px; border-left: 5px solid #D4AF37; box-shadow: 0 4px 10px rgba(0,0,0,0.3); overflow: hidden; transition: 0.3s; border-right: 1px solid #333; border-top: 1px solid #333; border-bottom: 1px solid #333; }
+        .card.done { border-left: 5px solid #27ae60; opacity: 0.8; }
+        .card.vip { border-left: 5px solid #D4AF37 !important; box-shadow: 0 0 10px rgba(212, 175, 55, 0.4); }
+
+        .card-header { padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .client-info { display: flex; flex-direction: column; gap: 5px; }
+        .client-name { font-size: 18px; font-weight: bold; color: #fff; }
+        .client-details { font-size: 13px; color: #aaa; }
+
+        .time-badge { background: rgba(212, 175, 55, 0.1); color: #D4AF37; border: 1px solid #D4AF37; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .done .time-badge { background: rgba(39, 174, 96, 0.1); color: #2ecc71; border-color: #2ecc71; text-decoration: line-through; }
+        .bill-badge { font-size: 14px; color: #2ecc71; font-weight: bold; margin-top: 5px; }
+
+        /* Card Body & Inputs */
+        .card-body { padding: 0 15px 15px 15px; display: none; border-top: 1px solid #333; margin-top: 5px; padding-top: 15px; }
+        .formula-box { background: #252525; padding: 15px; border-radius: 8px; border: 1px dashed #555; margin-bottom: 15px; font-size: 14px; color: #ddd; line-height: 1.6; }
+        .formula-box strong { color: #D4AF37; }
         
+        .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
+        .matrix-grid input, .matrix-grid select { background: #2a2a2a; color: #fff; width: 100%; padding: 12px; margin: 0; border-radius: 6px; border: 1px solid #444; font-size: 13px; box-sizing: border-box; outline: none; }
+        .matrix-grid input:focus, .matrix-grid select:focus { border-color: #D4AF37; }
+        .full-width { grid-column: span 2; }
+        .bill-input { grid-column: span 2; border: 1px solid #2ecc71 !important; color: #2ecc71 !important; font-weight: bold; font-size: 16px !important; }
+        .brand-select { border: 1px solid #D4AF37 !important; color: #D4AF37 !important; font-weight: bold; }
+
+        /* Buttons */
+        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
+        .save-btn { background: #d35400; color: white; flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .done-btn { background: #27ae60; color: white; flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .del-btn { background: transparent; color: #e74c3c; width: 100%; padding: 10px; border: 1px solid #e74c3c; border-radius: 8px; margin-top: 12px; font-size: 13px; cursor: pointer; transition: 0.2s; }
+        .upload-btn { background: #2980b9; color: white; width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 8px; }
+        
+        .save-btn:hover { background: #e67e22; } .done-btn:hover { background: #2ecc71; } .del-btn:hover { background: #e74c3c; color: white; }
+
+        /* Floating Button & Modal */
+        .fab { position: fixed; bottom: 30px; right: 30px; background: #D4AF37; color: #121212; width: 65px; height: 65px; border-radius: 50%; text-align: center; line-height: 60px; font-size: 35px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); cursor: pointer; z-index: 101; border: none; font-weight: bold; transition: 0.3s; }
+        .fab:hover { transform: scale(1.05); }
+
+        /* NEW AI FAB (Positioned next to the original one) */
+        .ai-fab { position: fixed; bottom: 30px; right: 110px; background: #2c3e50; color: #D4AF37; width: 65px; height: 65px; border-radius: 50%; text-align: center; line-height: 60px; font-size: 24px; box-shadow: 0 4px 15px rgba(0,0,0, 0.5); cursor: pointer; z-index: 101; border: 2px solid #D4AF37; font-weight: bold; transition: 0.3s; }
+        .ai-fab:hover { transform: scale(1.05); background: #34495e; }
+
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 102; justify-content: center; align-items: center; }
-        .modal-content { background: #1e1e1e; padding: 25px; border-radius: 15px; width: 90%; max-width: 400px; border: 1px solid #333; }
+        .modal-content { background: #1e1e1e; padding: 25px; border-radius: 15px; width: 90%; max-width: 400px; animation: slideUp 0.3s ease; border: 1px solid #333; }
+        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .close-btn { float: right; cursor: pointer; font-size: 26px; font-weight: bold; color: #888; margin-top: -15px; }
+        .modal-content input, .modal-content select, .modal-content textarea { background: #2a2a2a; color: #fff; width: 100%; padding: 14px; margin: 8px 0; border-radius: 8px; border: 1px solid #444; box-sizing: border-box; font-size: 14px; outline: none; }
+        .modal-content input:focus, .modal-content select:focus, .modal-content textarea:focus { border-color: #D4AF37; }
+        .add-btn { background: #D4AF37; color: #121212; width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 15px; }
+        
+        /* Specific Styles for AI Modal */
+        #aiResultBox { display: none; background: #252525; padding: 15px; border-radius: 8px; border: 1px dashed #D4AF37; margin-top: 15px; font-size: 14px; color: #ddd; line-height: 1.6; }
+        .pdf-btn { background: #c0392b; color: white; width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 10px; display: none; }
     </style>
 </head>
 <body>
-
-    <div class="header"><h2>Hairolozy Admin</h2></div>
+    <div class="header"><h2>Hairolozy</h2></div>
+    
     <div style="padding: 15px;">
         <div class="dashboard">
-            <div class="dash-box"><h3>Today's Clients</h3><p id="dash-clients">0</p></div>
-            <div class="dash-box"><h3>Revenue</h3><p id="dash-revenue">₹0</p></div>
+            <div class="dash-box">
+                <h3>Today's Clients</h3>
+                <p id="dash-clients">0</p>
+            </div>
+            <div class="dash-box green">
+                <h3>Today's Revenue</h3>
+                <p id="dash-revenue">₹0</p>
+            </div>
         </div>
+
         <div class="search-container">
-            <input type="text" id="searchInput" class="search-bar" placeholder="🔍 Search Client..." onkeyup="filterList()">
+            <input type="text" id="searchInput" class="search-bar" placeholder="🔍 Search Client or Phone..." onkeyup="filterList()">
         </div>
         <div id="list">Loading Luxury Experience...</div>
     </div>
 
-    <button class="fab" onclick="document.getElementById('walkinModal').style.display='flex'">+</button>
-    <button class="ai-fab" onclick="openAIScreen()">AI</button>
+    <!-- Original Walk-in Button -->
+    <button class="fab" onclick="openModal()">+</button>
+    
+    <!-- NEW AI Formulation Button -->
+    <button class="ai-fab" onclick="openAIModal()">AI</button>
 
+    <!-- Original Walk-in Modal -->
     <div id="walkinModal" class="modal">
         <div class="modal-content">
-            <h3 style="color:#D4AF37; text-align:center;">New Walk-in</h3>
-            <input type="text" id="new-name" placeholder="Client Name" style="width:100%; padding:12px; margin-bottom:10px; background:#2a2a2a; color:#fff; border:1px solid #444; border-radius:8px;">
-            <input type="tel" id="new-phone" placeholder="Phone Number" style="width:100%; padding:12px; margin-bottom:10px; background:#2a2a2a; color:#fff; border:1px solid #444; border-radius:8px;">
-            <button class="add-btn" onclick="addClient()" style="width:100%; background:#D4AF37; padding:15px; border:none; border-radius:8px; font-weight:bold;">Save Client</button>
-            <button onclick="document.getElementById('walkinModal').style.display='none'" style="width:100%; background:transparent; color:#888; border:none; margin-top:10px;">Close</button>
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h3 style="margin-top:0; color:#D4AF37; text-align:center;">New Walk-in</h3>
+            <input type="text" id="new-name" placeholder="Client Name">
+            <input type="tel" id="new-phone" placeholder="Phone Number">
+            <input type="text" id="new-service" placeholder="Service (e.g. Color Correction)">
+            <input type="text" id="new-formula" placeholder="Quick Notes...">
+            <button class="add-btn" onclick="addDirectClient()">Save Client</button>
         </div>
     </div>
 
-    <div id="aiScreen" class="ai-screen">
-        <div class="ai-top">
-            <div style="font-size:24px;">☰</div>
-            <div style="font-weight:bold; letter-spacing:1px;">HAIROLOZY</div>
-            <div style="font-size:30px; cursor:pointer;" onclick="closeAIScreen()">&times;</div>
-        </div>
-        <div class="ai-avatar">ℋ</div>
-        <div class="ai-greeting">Your client trusts you, Arman. I'll give you the data.</div>
-        
-        <div class="ai-pills">
-            <button class="pill" onclick="showAIForm()">🎨 Create formula</button>
-            <label for="cameraInput" class="pill">⛶ Analyze color</label>
-            <input type="file" id="cameraInput" accept="image/*" capture="camera" style="display:none;" onchange="analyzeHair()">
-        </div>
-
-        <div class="ai-card" id="aiConsultCard" onclick="showAIForm()">
-            <div style="font-size:10px; color:#C2A284; font-weight:bold; letter-spacing:1px;">SALON ADVISOR</div>
-            <div style="font-size:18px; font-weight:bold; margin:5px 0;">Start consultation &rarr;</div>
-            <div style="font-size:13px; color:#666;">Advanced formulation with exact mixing ratios.</div>
-        </div>
-
-        <div id="aiFormArea" class="ai-form">
-            <input type="text" id="aiName" placeholder="Client Name">
-            <input type="number" id="aiBase" placeholder="Current Level (1-10)">
-            <input type="text" id="aiTarget" placeholder="Target Shade (e.g. 8.1)">
-            <select id="aiBrand">
-                <option value="">Select Color Brand</option>
-                <option value="L'Oréal Majirel / INOA">L'Oréal (Majirel / INOA / Dia)</option>
-                <option value="Redken Shades EQ">Redken (Shades EQ / Color Gels)</option>
-                <option value="Schwarzkopf Igora">Schwarzkopf (Igora / Vibrance)</option>
-                <option value="Wella Koleston">Wella (Koleston / Illumina)</option>
+    <!-- NEW AI Formulation Modal -->
+    <div id="aiModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <span class="close-btn" onclick="closeAIModal()">&times;</span>
+            <h3 style="margin-top:0; color:#D4AF37; text-align:center;">🤖 AI Expert Formulator</h3>
+            
+            <input type="text" id="aiClientName" placeholder="Client Name (for PDF)">
+            
+            <div class="matrix-grid">
+                <input type="text" id="aiCurrentLevel" placeholder="Current Level (e.g. 5)">
+                <input type="text" id="aiTargetShade" placeholder="Target Shade (e.g. 8.1)">
+            </div>
+            
+            <select id="aiBrandSelect" class="brand-select" style="margin-bottom: 8px;">
+                <option value="" style="color:#aaa;">🎨 Choose Preferred Brand</option>
+                <option value="L'Oréal">L'Oréal (Majirel / INOA)</option>
+                <option value="Redken">Redken (Shades EQ / Color Gels)</option>
+                <option value="Schwarzkopf">Schwarzkopf (Igora Royal)</option>
+                <option value="Wella">Wella (Koleston Perfect)</option>
+                <option value="Matrix">Matrix (SoColor)</option>
             </select>
-            <button class="ai-btn" onclick="calculateFormula()">✨ Calculate & Download PDF</button>
-            <div id="aiResult" style="margin-top:20px; padding:15px; background:#fff; border-radius:10px; border-left:4px solid #D4AF37; display:none; font-size:14px;"></div>
+            
+            <textarea id="aiSpecialNotes" rows="2" placeholder="Special Condition? (e.g. Stubborn grey, Box dye history)"></textarea>
+            
+            <button class="add-btn" onclick="generateAIFormula()">✨ Calculate Formulation</button>
+            
+            <!-- Result Box -->
+            <div id="aiResultBox">
+                <!-- AI Output will appear here -->
+            </div>
+            
+            <button id="aiPdfBtn" class="pdf-btn" onclick="downloadAIPdf()">📄 Download PDF Report</button>
         </div>
     </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <!-- Include jsPDF for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <script>
-        // --- FIREBASE LOGIC (Original Restoration) ---
+        // --- EXISTING FIREBASE LOGIC (UNTOUCHED) ---
         const firebaseConfig = {
             apiKey: "AIzaSyABGjbHjlLdUIHrbUxhD_Jp2ZScrMegX5A",
             authDomain: "hairolozy-12bec.firebaseapp.com",
@@ -123,113 +175,18 @@
         const db = firebase.firestore();
         let allBookings = {};
 
-        function startSync() {
-            db.collectionGroup("clients").onSnapshot((snap) => {
-                snap.forEach(doc => {
-                    const data = doc.data();
-                    allBookings[doc.id] = data;
-                    renderCard(doc);
-                });
-                updateDashboard();
-            });
-            // Adding backup for "clients" root folder
-            db.collection("clients").onSnapshot((snap) => {
-                snap.forEach(doc => {
-                    const data = doc.data();
-                    allBookings[doc.id] = data;
-                    renderCard(doc);
-                });
-                updateDashboard();
-            });
-        }
-
-        function renderCard(doc) {
-            const data = doc.data();
-            const id = doc.id;
-            const listDiv = document.getElementById("list");
-            if (listDiv.innerHTML.includes("Loading")) listDiv.innerHTML = "";
-
-            let existing = document.getElementById('card-' + id);
-            if (existing) existing.remove();
-
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.id = 'card-' + id;
-            card.innerHTML = `
-                <div class="card-header" onclick="toggleCard('${id}')">
-                    <div class="client-info">
-                        <span class="client-name">👤 ${data.clientName || data.name || 'Unknown'}</span><br>
-                        <span style="font-size:12px; color:#aaa;">📞 ${data.clientPhone || 'N/A'}</span>
-                    </div>
-                    <div class="time-badge">${data.status || 'Walk-in'}</div>
-                </div>
-                <div class="card-body" id="body-${id}">
-                    <div class="formula-box"><strong>History:</strong> ${data.history || 'No records found.'}</div>
-                </div>
-            `;
-            listDiv.insertBefore(card, listDiv.firstChild);
+        function openModal() { document.getElementById('walkinModal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('walkinModal').style.display = 'none'; }
+        
+        window.onclick = function(event) { 
+            if (event.target == document.getElementById('walkinModal')) closeModal(); 
+            // Close AI modal when clicking outside
+            if (event.target == document.getElementById('aiModal')) closeAIModal(); 
         }
 
         function toggleCard(id) {
-            let b = document.getElementById('body-' + id);
-            b.style.display = (b.style.display === 'block') ? 'none' : 'block';
-        }
-
-        function updateDashboard() {
-            document.getElementById('dash-clients').innerText = Object.keys(allBookings).length;
-        }
-
-        function addClient() {
-            const n = document.getElementById('new-name').value;
-            const p = document.getElementById('new-phone').value;
-            if(!n) return alert("Name required!");
-            db.collection("clients").add({ clientName: n, clientPhone: p, date: new Date().toLocaleDateString(), status: 'pending' })
-            .then(() => { document.getElementById('walkinModal').style.display='none'; });
-        }
-
-        // --- AI & PDF LOGIC ---
-        function openAIScreen() { document.getElementById('aiScreen').style.display='block'; }
-        function closeAIScreen() { document.getElementById('aiScreen').style.display='none'; }
-        function showAIForm() { 
-            document.getElementById('aiConsultCard').style.display='none';
-            document.getElementById('aiFormArea').style.display='block';
-        }
-
-        function analyzeHair() {
-            alert("Analyzing hair structure via camera...");
-            setTimeout(() => {
-                showAIForm();
-                document.getElementById('aiBase').value = 5;
-                alert("AI Detected: Base Level 5 (Orange-Red Pigment)");
-            }, 1500);
-        }
-
-        function calculateFormula() {
-            const name = document.getElementById('aiName').value;
-            const base = parseInt(document.getElementById('aiBase').value);
-            const targetStr = document.getElementById('aiTarget').value;
-            const brand = document.getElementById('aiBrand').value;
-
-            if(!name || !base || !targetStr || !brand) return alert("Fill all details!");
-
-            let target = parseFloat(targetStr);
-            let lift = target - base;
-            let dev = lift > 2 ? "30 Vol" : "20 Vol";
-            let ratio = "1:1.5";
-            let formula = `40g Shade ${targetStr} + 60g ${dev}`;
-
-            const res = document.getElementById('aiResult');
-            res.style.display = 'block';
-            res.innerHTML = `<strong>Result:</strong> ${formula} <br><strong>Pigment:</strong> Neutralize with Blue/Ash.`;
-
-            // PDF Download
-            const doc = new jspdf.jsPDF();
-            doc.text("HAIROLOZY AI REPORT", 105, 20, null, null, "center");
-            doc.text(`Client: ${name}`, 20, 40);
-            doc.text(`Brand: ${brand}`, 20, 50);
-            doc.text(`Formula: ${formula}`, 20, 60);
-            doc.text(`Ratio: ${ratio}`, 20, 70);
-            doc.save(`Formula_${name}.pdf`);
+            let body = document.getElementById('body-' + id);
+            body.style.display = (body.style.display === 'block') ? 'none' : 'block';
         }
 
         function filterList() {
@@ -241,7 +198,125 @@
             }
         }
 
-        startSync();
-    </script>
-</body>
-</html>
+        function updateDashboard() {
+            let rev = 0; let clientsCount = 0;
+            const now = new Date();
+            const format1 = now.toLocaleDateString(); 
+            const format2 = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`; 
+
+            for (let id in allBookings) {
+                let b = allBookings[id];
+                if (b.date === format1 || b.date === format2) {
+                    clientsCount++;
+                    if (b.status === 'done' && b.bill) rev += parseFloat(b.bill);
+                }
+            }
+            document.getElementById('dash-clients').innerText = clientsCount;
+            document.getElementById('dash-revenue').innerText = "₹" + rev;
+        }
+
+        function startSync() {
+            const folders = ["Bookings", "bookings", "clientname", "clients"];
+            folders.forEach(folder => {
+                const ref = (folder === "clients") ? db.collection(folder) : db.collectionGroup(folder);
+                ref.onSnapshot((snap) => {
+                    snap.forEach(doc => {
+                        const data = doc.data();
+                        if (!data.clientName && !data.name) return;
+                        allBookings[doc.id] = { date: data.bookingDate || data.date || '', status: data.status || 'pending', bill: data.billAmount || 0 };
+                        renderCard(doc);
+                    });
+                    updateDashboard();
+                });
+            });
+        }
+
+        function renderCard(doc) {
+            const data = doc.data();
+            if (!data.clientName && !data.name) return;
+            const id = doc.id;
+            const path = doc.ref.path;
+            
+            let existingCard = document.getElementById('card-' + id);
+            if (existingCard) { existingCard.remove(); }
+
+            const listDiv = document.getElementById("list");
+            if (listDiv.innerHTML.includes("Loading")) listDiv.innerHTML = "";
+
+            let statusClass = data.status === 'done' ? 'done' : '';
+            if (data.isVIP) statusClass += ' vip';
+
+            const statusText = data.status === 'done' ? 'Completed' : (data.bookingTime || data.time || 'Walk-in');
+            const billDisplay = data.billAmount ? `<div class="bill-badge">💰 Bill: ₹${data.billAmount}</div>` : '';
+            const photoDisplay = data.photoUrl ? `<img src="${data.photoUrl}" style="max-width: 100%; border-radius: 8px; margin-bottom: 15px; border: 1px solid #444;">` : '';
+
+            const vipBadge = data.isVIP ? ` <span style="color:#D4AF37; font-size:12px;">[VIP]</span>` : '';
+
+            const card = document.createElement('div');
+            card.className = `card ${statusClass}`;
+            card.id = 'card-' + id;
+            
+            card.innerHTML = `
+                <div class="card-header" onclick="toggleCard('${id}')">
+                    <div class="client-info">
+                        <span class="client-name">👤 ${data.clientName || data.name}${vipBadge}</span>
+                        <span class="client-details">✂️ ${data.serviceName || 'N/A'} | 📞 ${data.clientPhone || 'N/A'}</span>
+                        ${billDisplay}
+                    </div>
+                    <div class="time-badge">🕒 ${statusText}</div>
+                </div>
+                
+                <div class="card-body" id="body-${id}">
+                    ${photoDisplay}
+                    <div class="formula-box">
+                        <strong>Last Formulation:</strong><br> ${data.history || "No record."}
+                    </div>
+                    
+                    <div class="matrix-grid">
+                        <select id="brand-${id}" class="full-width brand-select">
+                            <option value="" style="color:#aaa;">🎨 Select Color Brand</option>
+                            <option value="L'Oréal">L'Oréal</option>
+                            <option value="Redken">Redken</option>
+                            <option value="Schwarzkopf">Schwarzkopf</option>
+                            <option value="Keune">Keune</option>
+                            <option value="Alfaparf">Alfaparf</option>
+                            <option value="Wella">Wella</option>
+                            <option value="Matrix">Matrix</option>
+                            <option value="Other">Other (Note below)</option>
+                        </select>
+                        <input type="text" id="base-${id}" placeholder="Base Color / Roots">
+                        <input type="text" id="target-${id}" placeholder="Target Tone">
+                        <select id="vol-${id}">
+                            <option value="" style="color:#aaa;">Developer Volume</option>
+                            <option value="10V">10 Vol (3%)</option>
+                            <option value="20V">20 Vol (6%)</option>
+                            <option value="30V">30 Vol (9%)</option>
+                            <option value="40V">40 Vol (12%)</option>
+                        </select>
+                        <input type="text" id="time-${id}" placeholder="Processing Time">
+                        <input type="text" id="ph-${id}" class="full-width" placeholder="Bond Builder / Notes">
+                        <input type="number" id="bill-${id}" class="bill-input" placeholder="Total Bill (₹)" value="${data.billAmount || ''}">
+                    </div>
+
+                    <div style="background: #252525; padding: 12px; border-radius: 8px; margin-top: 10px; border: 1px dashed #444;">
+                        <input type="file" id="img-${id}" accept="image/*" style="font-size: 13px; width: 100%; border: none; padding: 0;">
+                        <button class="upload-btn" onclick="uploadPhoto('${path}', '${id}')">📸 Upload Result Photo</button>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="save-btn" onclick="updateFormula('${path}', '${id}')">💾 Save Matrix</button>
+                        <button class="done-btn" onclick="markDone('${path}', '${id}')">✔️ Mark Done</button>
+                    </div>
+                    <button class="del-btn" onclick="deleteEntry('${path}')">🗑️ Delete Record</button>
+                    
+                    <button onclick="db.doc('${path}').update({isVIP: ${!data.isVIP}})" style="background:transparent; color:#D4AF37; width:100%; padding:10px; border:1px solid #D4AF37; border-radius:8px; margin-top:12px; font-size:13px; cursor:pointer;">${data.isVIP ? 'Remove VIP' : 'Mark as VIP'}</button>
+                </div>
+            `;
+            listDiv.insertBefore(card, listDiv.firstChild);
+        }
+
+        function addDirectClient() {
+            const name = document.getElementById('new-name').value;
+            const phone = document.getElementById('new-phone').value;
+            const service = document.getElementById('new-service').value;
+            const formula = document.getElementById('new-formula').value;
