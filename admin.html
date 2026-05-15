@@ -77,7 +77,6 @@
         .ai-card-title { font-size: 16px; font-weight: 700; margin-bottom: 5px; display: flex; justify-content: space-between; }
         .ai-card-desc { font-size: 13px; color: #666; }
 
-        /* The hidden formulation form inside AI screen */
         .ai-form-area { display: none; margin: 20px; background: #fff; border: 1px solid #ddd; border-radius: 16px; padding: 20px; }
         .ai-form-area input, .ai-form-area select { width: 100%; padding: 14px; margin-bottom: 12px; border: 1px solid #eee; border-radius: 10px; background: #f9f9f9; box-sizing: border-box; font-size: 14px; outline: none; }
         .ai-form-area input:focus, .ai-form-area select:focus { border-color: #C2A284; }
@@ -115,7 +114,6 @@
     </div>
 
     <button class="fab" onclick="openModal()">+</button>
-    
     <button class="ai-fab" onclick="openAIFullScreen()">AI</button>
 
     <div id="walkinModal" class="modal">
@@ -142,7 +140,7 @@
         </div>
 
         <div class="ai-greeting">
-            Your client trusts you,<br>Arman. I'll give you the data.
+            Your client trusts you, Expert.<br>I'll give you the data.
         </div>
 
         <div class="ai-pills">
@@ -198,25 +196,16 @@
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyABGjbHjlLdUIHrbUxhD_Jp2ZScrMegX5A",
-            authDomain: "hairolozy-12bec.firebaseapp.com",
-            projectId: "hairolozy-12bec",
-            storageBucket: "hairolozy-12bec.appspot.com",
-            messagingSenderId: "386170490787",
-            appId: "1:386170490787:web:58b592d8a44d0e3de65416"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        let allBookings = {};
-
         function openModal() { document.getElementById('walkinModal').style.display = 'flex'; }
         function closeModal() { document.getElementById('walkinModal').style.display = 'none'; }
-        window.onclick = function(event) { if (event.target == document.getElementById('walkinModal')) closeModal(); }
+        function openAIFullScreen() { document.getElementById('aiFullScreen').style.display = 'block'; document.body.style.overflow = 'hidden'; }
+        function closeAIFullScreen() { document.getElementById('aiFullScreen').style.display = 'none'; document.body.style.overflow = 'auto'; }
+        function showFormulaForm() { document.getElementById('advisorCard').style.display = 'none'; document.getElementById('aiFormArea').style.display = 'block'; }
+        
+        window.onclick = function(event) { 
+            if (event.target == document.getElementById('walkinModal')) closeModal(); 
+        }
 
         function toggleCard(id) {
             let body = document.getElementById('body-' + id);
@@ -231,62 +220,59 @@
                 cards[i].style.display = text.includes(input) ? "" : "none";
             }
         }
+    </script>
 
-        function updateDashboard() {
-            let rev = 0; let clientsCount = 0;
-            const now = new Date();
-            const format1 = now.toLocaleDateString(); 
-            const format2 = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`; 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
-            for (let id in allBookings) {
-                let b = allBookings[id];
-                if (b.date === format1 || b.date === format2) {
-                    clientsCount++;
-                    if (b.status === 'done' && b.bill) rev += parseFloat(b.bill);
-                }
+    <script>
+        function generateAndDownloadAIPdf() {
+            const clientName = document.getElementById('aiClientName').value || "Client";
+            const clientPhone = document.getElementById('aiClientPhone').value || "N/A";
+            const currentLvlInput = document.getElementById('aiCurrentLevel').value;
+            const targetShadeInput = document.getElementById('aiTargetShade').value;
+            const brand = document.getElementById('aiBrandSelect').value;
+            const notes = document.getElementById('aiSpecialNotes').value;
+
+            if (!currentLvlInput || !targetShadeInput || !brand) {
+                alert("Please fill Current Level, Target Shade, and Brand.");
+                return;
             }
-            document.getElementById('dash-clients').innerText = clientsCount;
-            document.getElementById('dash-revenue').innerText = "₹" + rev;
-        }
 
-        function startSync() {
-            const folders = ["Bookings", "bookings", "clientname", "clients"];
-            folders.forEach(folder => {
-                const ref = (folder === "clients") ? db.collection(folder) : db.collectionGroup(folder);
-                ref.onSnapshot((snap) => {
-                    snap.forEach(doc => {
-                        const data = doc.data();
-                        if (!data.clientName && !data.name) return;
-                        allBookings[doc.id] = { date: data.bookingDate || data.date || '', status: data.status || 'pending', bill: data.billAmount || 0 };
-                        renderCard(doc);
-                    });
-                    updateDashboard();
-                });
-            });
-        }
-
-        function renderCard(doc) {
-            const data = doc.data();
-            if (!data.clientName && !data.name) return;
-            const id = doc.id;
-            const path = doc.ref.path;
+            let currentLvl = parseFloat(currentLvlInput);
+            let targetLvl = parseFloat(targetShadeInput.split('.')[0] || targetShadeInput.split(',')[0] || targetShadeInput);
+            let lift = targetLvl - currentLvl;
             
-            let existingCard = document.getElementById('card-' + id);
-            if (existingCard) { existingCard.remove(); }
+            let devVol = "20 Vol (6%)";
+            let strategy = "Standard Color Deposit";
+            let pigmentExposed = "None";
+            let neutralization = "No extra neutralization needed";
 
-            const listDiv = document.getElementById("list");
-            if (listDiv.innerHTML.includes("Loading")) listDiv.innerHTML = "";
+            if (lift > 0) {
+                if (lift <= 1) devVol = "20 Vol (6%)";
+                else if (lift == 2) devVol = "30 Vol (9%)";
+                else if (lift >= 3) { devVol = "40 Vol / Pre-Lightener"; strategy = "High Lift required."; }
 
-            let statusClass = data.status === 'done' ? 'done' : '';
-            if (data.isVIP) statusClass += ' vip';
+                if (targetLvl <= 4) { pigmentExposed = "Red"; neutralization = "Add Green (Matte/Ash)"; }
+                else if (targetLvl == 5 || targetLvl == 6) { pigmentExposed = "Orange / Red-Orange"; neutralization = "Add Blue (Ash)"; }
+                else if (targetLvl == 7) { pigmentExposed = "Yellow-Orange"; neutralization = "Add Blue-Violet"; }
+                else if (targetLvl >= 8) { pigmentExposed = "Pale Yellow"; neutralization = "Add Violet (.2) toner"; }
+            } else if (lift < 0) {
+                devVol = "10 Vol (3%)";
+                strategy = "Going Darker";
+            }
 
-            const statusText = data.status === 'done' ? 'Completed' : (data.bookingTime || data.time || 'Walk-in');
-            const billDisplay = data.billAmount ? `<div class="bill-badge">💰 Bill: ₹${data.billAmount}</div>` : '';
-            const photoDisplay = data.photoUrl ? `<img src="${data.photoUrl}" style="max-width: 100%; border-radius: 8px; margin-bottom: 15px; border: 1px solid #444;">` : '';
+            let formula = `40g of [${targetShadeInput}] + 60g of [${devVol}]`;
 
-            const vipBadge = data.isVIP ? ` <span style="color:#D4AF37; font-size:12px;">[VIP]</span>` : '';
-
-            const card = document.createElement('div');
-            card.className = `card ${statusClass}`;
-            card.id = 'card-' + id;
- 
+            try {
+                const jsPDF = window.jspdf.jsPDF;
+                const doc = new jsPDF();
+                
+                doc.setFillColor(250, 249, 246); doc.rect(0, 0, 210, 297, 'F');
+                doc.setTextColor(17, 17, 17); doc.setFontSize(24); doc.setFont("times", "italic");
+                doc.text("Hairolozy", 105, 25, null, null, "center");
+                
+                doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(100, 100, 100);
+                doc.text("Salon Advisor & Formulation Report", 105, 32, null, null, "center");
+                doc.setDrawColor(200, 200, 20
