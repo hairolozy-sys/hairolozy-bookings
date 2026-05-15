@@ -7,26 +7,23 @@
     <style>
         /* LUXURY DARK THEME */
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #121212; color: #e0e0e0; padding: 15px; margin: 0; }
-        
-        /* Header */
         .header { background: #1a1a1a; color: #D4AF37; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.5); border-bottom: 2px solid #D4AF37; }
         h2 { margin: 0; font-size: 24px; letter-spacing: 2px; font-weight: 600; text-transform: uppercase; }
 
         /* Dashboard Overview */
         .dashboard { display: flex; gap: 15px; margin-top: 15px; }
         .dash-box { background: #1e1e1e; color: #fff; flex: 1; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #333; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .dash-box h3 { margin: 0; font-size: 13px; font-weight: normal; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
+        .dash-box h3 { margin: 0; font-size: 13px; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
         .dash-box p { margin: 10px 0 0; font-size: 28px; font-weight: bold; color: #D4AF37; }
         .dash-box.green p { color: #2ecc71; }
 
         /* Search Bar */
         .search-container { margin: 20px 0; position: sticky; top: 75px; z-index: 99; }
-        .search-bar { width: 100%; padding: 15px 20px; border-radius: 30px; background: #1e1e1e; border: 1px solid #444; color: #fff; font-size: 15px; outline: none; transition: 0.3s; box-sizing: border-box; }
-        .search-bar:focus { border-color: #D4AF37; box-shadow: 0 0 8px rgba(212, 175, 55, 0.3); }
-        .search-bar::placeholder { color: #777; }
+        .search-bar { width: 100%; padding: 15px 20px; border-radius: 30px; background: #1e1e1e; border: 1px solid #444; color: #fff; font-size: 15px; outline: none; box-sizing: border-box; }
+        .search-bar:focus { border-color: #D4AF37; }
 
         /* Client Cards */
-        .card { background: #1e1e1e; margin-bottom: 15px; border-radius: 12px; border-left: 5px solid #D4AF37; box-shadow: 0 4px 10px rgba(0,0,0,0.3); overflow: hidden; transition: 0.3s; border-right: 1px solid #333; border-top: 1px solid #333; border-bottom: 1px solid #333; }
+        .card { background: #1e1e1e; margin-bottom: 15px; border-radius: 12px; border-left: 5px solid #D4AF37; box-shadow: 0 4px 10px rgba(0,0,0,0.3); overflow: hidden; border-right: 1px solid #333; border-top: 1px solid #333; border-bottom: 1px solid #333; }
         .card.done { border-left: 5px solid #27ae60; opacity: 0.8; }
         .card.vip { border-left: 5px solid #D4AF37 !important; box-shadow: 0 0 10px rgba(212, 175, 55, 0.4); }
 
@@ -34,48 +31,38 @@
         .client-info { display: flex; flex-direction: column; gap: 5px; }
         .client-name { font-size: 18px; font-weight: bold; color: #fff; }
         .client-details { font-size: 13px; color: #aaa; }
-
         .time-badge { background: rgba(212, 175, 55, 0.1); color: #D4AF37; border: 1px solid #D4AF37; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; }
         .done .time-badge { background: rgba(39, 174, 96, 0.1); color: #2ecc71; border-color: #2ecc71; text-decoration: line-through; }
         .bill-badge { font-size: 14px; color: #2ecc71; font-weight: bold; margin-top: 5px; }
 
         /* Card Body & Inputs */
         .card-body { padding: 0 15px 15px 15px; display: none; border-top: 1px solid #333; margin-top: 5px; padding-top: 15px; }
-        .formula-box { background: #252525; padding: 15px; border-radius: 8px; border: 1px dashed #555; margin-bottom: 15px; font-size: 14px; color: #ddd; line-height: 1.6; }
-        .formula-box strong { color: #D4AF37; }
-        
+        .formula-box { background: #252525; padding: 15px; border-radius: 8px; border: 1px dashed #555; margin-bottom: 15px; font-size: 14px; color: #ddd; }
         .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
-        .matrix-grid input, .matrix-grid select { background: #2a2a2a; color: #fff; width: 100%; padding: 12px; margin: 0; border-radius: 6px; border: 1px solid #444; font-size: 13px; box-sizing: border-box; outline: none; }
-        .matrix-grid input:focus, .matrix-grid select:focus { border-color: #D4AF37; }
+        .matrix-grid input, .matrix-grid select { background: #2a2a2a; color: #fff; width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #444; font-size: 13px; box-sizing: border-box; outline: none; }
         .full-width { grid-column: span 2; }
         .bill-input { grid-column: span 2; border: 1px solid #2ecc71 !important; color: #2ecc71 !important; font-weight: bold; font-size: 16px !important; }
         .brand-select { border: 1px solid #D4AF37 !important; color: #D4AF37 !important; font-weight: bold; }
 
         /* Buttons */
         .btn-group { display: flex; gap: 10px; margin-top: 15px; }
-        .save-btn { background: #d35400; color: white; flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .done-btn { background: #27ae60; color: white; flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .del-btn { background: transparent; color: #e74c3c; width: 100%; padding: 10px; border: 1px solid #e74c3c; border-radius: 8px; margin-top: 12px; font-size: 13px; cursor: pointer; transition: 0.2s; }
+        .save-btn { background: #d35400; color: white; flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .done-btn { background: #27ae60; color: white; flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .del-btn { background: transparent; color: #e74c3c; width: 100%; padding: 10px; border: 1px solid #e74c3c; border-radius: 8px; margin-top: 12px; cursor: pointer; }
         .upload-btn { background: #2980b9; color: white; width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 8px; }
-        
-        /* Floating Buttons */
-        .fab { position: fixed; bottom: 30px; right: 30px; background: #D4AF37; color: #121212; width: 65px; height: 65px; border-radius: 50%; text-align: center; line-height: 60px; font-size: 35px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); cursor: pointer; z-index: 101; border: none; font-weight: bold; transition: 0.3s; }
-        .fab:hover { transform: scale(1.05); }
 
-        .ai-fab { position: fixed; bottom: 30px; right: 110px; background: #2c3e50; color: #D4AF37; width: 65px; height: 65px; border-radius: 50%; text-align: center; line-height: 60px; font-size: 24px; box-shadow: 0 4px 15px rgba(0,0,0, 0.5); cursor: pointer; z-index: 101; border: 2px solid #D4AF37; font-weight: bold; transition: 0.3s; }
-        .ai-fab:hover { transform: scale(1.05); background: #34495e; }
+        /* Floating Buttons */
+        .fab { position: fixed; bottom: 30px; right: 30px; background: #D4AF37; color: #121212; width: 65px; height: 65px; border-radius: 50%; font-size: 35px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); border: none; font-weight: bold; z-index: 101; }
+        .ai-fab { position: fixed; bottom: 30px; right: 110px; background: #2c3e50; color: #D4AF37; width: 65px; height: 65px; border-radius: 50%; font-size: 24px; box-shadow: 0 4px 15px rgba(0,0,0, 0.5); border: 2px solid #D4AF37; font-weight: bold; z-index: 101; }
 
         /* Modals */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 102; justify-content: center; align-items: center; }
-        .modal-content { background: #1e1e1e; padding: 25px; border-radius: 15px; width: 90%; max-width: 400px; animation: slideUp 0.3s ease; border: 1px solid #333; }
-        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .modal-content { background: #1e1e1e; padding: 25px; border-radius: 15px; width: 90%; max-width: 400px; border: 1px solid #333; }
         .close-btn { float: right; cursor: pointer; font-size: 26px; font-weight: bold; color: #888; margin-top: -15px; }
         .modal-content input, .modal-content select, .modal-content textarea { background: #2a2a2a; color: #fff; width: 100%; padding: 14px; margin: 8px 0; border-radius: 8px; border: 1px solid #444; box-sizing: border-box; font-size: 14px; outline: none; }
-        .modal-content input:focus, .modal-content select:focus, .modal-content textarea:focus { border-color: #D4AF37; }
         .add-btn { background: #D4AF37; color: #121212; width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 15px; }
         
-        /* AI Result Box */
-        #aiResultBox { display: none; background: #252525; padding: 15px; border-radius: 8px; border: 1px dashed #D4AF37; margin-top: 15px; font-size: 14px; color: #ddd; line-height: 1.6; }
+        #aiResultBox { display: none; background: #252525; padding: 15px; border-radius: 8px; border: 1px dashed #D4AF37; margin-top: 15px; font-size: 14px; line-height: 1.6; }
         .pdf-btn { background: #c0392b; color: white; width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 10px; display: none; }
     </style>
 </head>
@@ -119,14 +106,11 @@
         <div class="modal-content" style="max-width: 500px;">
             <span class="close-btn" onclick="closeAIModal()">&times;</span>
             <h3 style="margin-top:0; color:#D4AF37; text-align:center;">🤖 AI Expert Formulator</h3>
-            
             <input type="text" id="aiClientName" placeholder="Client Name (for PDF)">
-            
             <div class="matrix-grid">
                 <input type="text" id="aiCurrentLevel" placeholder="Current Level (e.g. 5)">
                 <input type="text" id="aiTargetShade" placeholder="Target Shade (e.g. 8.1)">
             </div>
-            
             <select id="aiBrandSelect" class="brand-select" style="margin-bottom: 8px;">
                 <option value="" style="color:#aaa;">🎨 Choose Preferred Brand</option>
                 <option value="L'Oréal">L'Oréal (Majirel / INOA)</option>
@@ -135,39 +119,16 @@
                 <option value="Wella">Wella (Koleston Perfect)</option>
                 <option value="Matrix">Matrix (SoColor)</option>
             </select>
-            
             <textarea id="aiSpecialNotes" rows="2" placeholder="Special Condition? (e.g. Stubborn grey, Box dye)"></textarea>
-            
             <button class="add-btn" onclick="generateAIFormula()">✨ Calculate Formulation</button>
-            
             <div id="aiResultBox"></div>
-            
             <button id="aiPdfBtn" class="pdf-btn" onclick="downloadAIPdf()">📄 Download PDF Report</button>
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
     <script>
-        // --- FIREBASE SETUP ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyABGjbHjlLdUIHrbUxhD_Jp2ZScrMegX5A",
-            authDomain: "hairolozy-12bec.firebaseapp.com",
-            projectId: "hairolozy-12bec",
-            storageBucket: "hairolozy-12bec.appspot.com",
-            messagingSenderId: "386170490787",
-            appId: "1:386170490787:web:58b592d8a44d0e3de65416"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        let allBookings = {};
-
-        // --- MODAL CONTROLS ---
         function openModal() { document.getElementById('walkinModal').style.display = 'flex'; }
         function closeModal() { document.getElementById('walkinModal').style.display = 'none'; }
-        
         function openAIModal() { document.getElementById('aiModal').style.display = 'flex'; }
         function closeAIModal() { 
             document.getElementById('aiModal').style.display = 'none'; 
@@ -194,6 +155,68 @@
             }
         }
 
+        let currentAIFormula = {};
+        function generateAIFormula() {
+            const clientName = document.getElementById('aiClientName').value || "Client";
+            const currentLvl = document.getElementById('aiCurrentLevel').value;
+            const targetLvl = document.getElementById('aiTargetShade').value;
+            const brand = document.getElementById('aiBrandSelect').value;
+            const notes = document.getElementById('aiSpecialNotes').value;
+
+            if (!currentLvl || !targetLvl || !brand) {
+                alert("Please fill Current Level, Target, and Brand.");
+                return;
+            }
+
+            const resultBox = document.getElementById('aiResultBox');
+            let devVol = "20 Vol";
+            let instructions = "Standard processing.";
+
+            if (parseInt(targetLvl) > parseInt(currentLvl)) {
+                devVol = (parseInt(targetLvl) - parseInt(currentLvl)) > 2 ? "30 Vol / 40 Vol" : "20 Vol";
+                instructions = "Lifting required. Pre-lighten if lifting more than 3 levels.";
+            } else {
+                devVol = "10 Vol";
+                instructions = "Depositing only.";
+            }
+
+            currentAIFormula = {
+                client: clientName, date: new Date().toLocaleDateString(), brand: brand,
+                current: currentLvl, target: targetLvl, notes: notes,
+                formula: `45g ${targetLvl} + 15g base`, developer: `${devVol} (1:1.5 ratio)`, instructions: instructions
+            };
+
+            resultBox.style.display = 'block';
+            resultBox.innerHTML = `
+                <h4 style="color:#D4AF37; margin-top:0;">Hybrid AI Formula</h4>
+                <strong>Target Brand:</strong> ${brand}<br>
+                <strong>Mix:</strong> ${currentAIFormula.formula}<br>
+                <strong>Developer:</strong> ${currentAIFormula.developer}<br>
+                <strong>Strategy:</strong> ${instructions}<br>
+                <hr style="border: 0.5px solid #444;">
+                <small><i>Note: Based on hybrid rules. Always perform strand test.</i></small>
+            `;
+            document.getElementById('aiPdfBtn').style.display = 'block';
+        }
+    </script>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyABGjbHjlLdUIHrbUxhD_Jp2ZScrMegX5A",
+            authDomain: "hairolozy-12bec.firebaseapp.com",
+            projectId: "hairolozy-12bec",
+            storageBucket: "hairolozy-12bec.appspot.com",
+            messagingSenderId: "386170490787",
+            appId: "1:386170490787:web:58b592d8a44d0e3de65416"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        let allBookings = {};
+
         function updateDashboard() {
             let rev = 0; let clientsCount = 0;
             const now = new Date();
@@ -211,7 +234,6 @@
             document.getElementById('dash-revenue').innerText = "₹" + rev;
         }
 
-        // --- DATABASE SYNC ---
         function startSync() {
             const folders = ["Bookings", "bookings", "clientname", "clients"];
             folders.forEach(folder => {
@@ -246,7 +268,6 @@
             const statusText = data.status === 'done' ? 'Completed' : (data.bookingTime || data.time || 'Walk-in');
             const billDisplay = data.billAmount ? `<div class="bill-badge">💰 Bill: ₹${data.billAmount}</div>` : '';
             const photoDisplay = data.photoUrl ? `<img src="${data.photoUrl}" style="max-width: 100%; border-radius: 8px; margin-bottom: 15px; border: 1px solid #444;">` : '';
-
             const vipBadge = data.isVIP ? ` <span style="color:#D4AF37; font-size:12px;">[VIP]</span>` : '';
 
             const card = document.createElement('div');
@@ -265,9 +286,7 @@
                 
                 <div class="card-body" id="body-${id}">
                     ${photoDisplay}
-                    <div class="formula-box">
-                        <strong>Last Formulation:</strong><br> ${data.history || "No record."}
-                    </div>
+                    <div class="formula-box"><strong>Last Formulation:</strong><br> ${data.history || "No record."}</div>
                     
                     <div class="matrix-grid">
                         <select id="brand-${id}" class="full-width brand-select">
@@ -275,8 +294,6 @@
                             <option value="L'Oréal">L'Oréal</option>
                             <option value="Redken">Redken</option>
                             <option value="Schwarzkopf">Schwarzkopf</option>
-                            <option value="Keune">Keune</option>
-                            <option value="Alfaparf">Alfaparf</option>
                             <option value="Wella">Wella</option>
                             <option value="Matrix">Matrix</option>
                             <option value="Other">Other</option>
@@ -305,19 +322,4 @@
                         <button class="done-btn" onclick="markDone('${path}', '${id}')">✔️ Mark Done</button>
                     </div>
                     <button class="del-btn" onclick="deleteEntry('${path}')">🗑️ Delete Record</button>
-                    
-                    <button onclick="db.doc('${path}').update({isVIP: ${!data.isVIP}})" style="background:transparent; color:#D4AF37; width:100%; padding:10px; border:1px solid #D4AF37; border-radius:8px; margin-top:12px; font-size:13px; cursor:pointer;">${data.isVIP ? 'Remove VIP' : 'Mark as VIP'}</button>
-                </div>
-            `;
-            listDiv.insertBefore(card, listDiv.firstChild);
-        }
-
-        function addDirectClient() {
-            const name = document.getElementById('new-name').value;
-            const phone = document.getElementById('new-phone').value;
-            const service = document.getElementById('new-service').value;
-            const formula = document.getElementById('new-formula').value;
-            if(!name) return alert("Name zaroori hai!");
-            
-            if(new Date().getDay() === 4) {
-                if(!confirm("Aaj Thursday (Weekly Off) hai!
+                    <button onclick="db.doc('${path}').update({isVIP: ${!data.isVIP}})" style="background:transparent
