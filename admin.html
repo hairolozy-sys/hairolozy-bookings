@@ -3,347 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hairolozy Admin</title>
+    <title>Hairolozy Premium Admin</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #DCE9DF;
-            color: #1a2e1e;
-            padding: 15px;
-        }
-
+        /* LUXURY DARK THEME BASED ON YOUR IMAGE */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #121212; color: #e0e0e0; padding: 15px; margin: 0; }
+        
         /* Header */
-        .header {
-            background-color: #2E6E47;
-            color: #ffffff;
-            padding: 15px;
-            text-align: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 10px rgba(46, 110, 71, 0.3);
-            border-bottom: 2px solid #1a4a2e;
-        }
-        h2 {
-            margin: 0;
-            font-size: 24px;
-            letter-spacing: 2px;
-            font-weight: 600;
-            text-transform: uppercase;
-            color: #ffffff;
-        }
+        .header { background: #1a1a1a; color: #D4AF37; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.5); border-bottom: 2px solid #D4AF37; }
+        h2 { margin: 0; font-size: 24px; letter-spacing: 2px; font-weight: 600; text-transform: uppercase; }
 
-        /* Dashboard */
+        /* Dashboard Overview */
         .dashboard { display: flex; gap: 15px; margin-top: 15px; }
-        .dash-box {
-            background-color: #ffffff;
-            flex: 1;
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            border: 1px solid #adc8b5;
-            box-shadow: 0 4px 10px rgba(46, 110, 71, 0.1);
-        }
-        .dash-box h3 {
-            margin: 0;
-            font-size: 13px;
-            font-weight: normal;
-            color: #5a8068;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .dash-box p {
-            margin: 10px 0 0;
-            font-size: 28px;
-            font-weight: bold;
-            color: #2E6E47;
-        }
-        .dash-box.green p { color: #27ae60; }
+        .dash-box { background: #1e1e1e; color: #fff; flex: 1; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #333; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .dash-box h3 { margin: 0; font-size: 13px; font-weight: normal; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
+        .dash-box p { margin: 10px 0 0; font-size: 28px; font-weight: bold; color: #D4AF37; }
+        .dash-box.green p { color: #2ecc71; }
 
         /* Search Bar */
-        .search-container {
-            margin: 20px 0;
-            position: sticky;
-            top: 75px;
-            z-index: 99;
-        }
-        .search-bar {
-            width: 100%;
-            padding: 15px 20px;
-            border-radius: 30px;
-            background-color: #ffffff;
-            border: 1.5px solid #adc8b5;
-            color: #1a2e1e;
-            font-size: 15px;
-            outline: none;
-            transition: 0.3s;
-        }
-        .search-bar:focus {
-            border-color: #2E6E47;
-            box-shadow: 0 0 8px rgba(46, 110, 71, 0.2);
-        }
-        .search-bar::placeholder { color: #6a9a78; }
+        .search-container { margin: 20px 0; position: sticky; top: 75px; z-index: 99; }
+        .search-bar { width: 100%; padding: 15px 20px; border-radius: 30px; background: #1e1e1e; border: 1px solid #444; color: #fff; font-size: 15px; outline: none; transition: 0.3s; }
+        .search-bar:focus { border-color: #D4AF37; box-shadow: 0 0 8px rgba(212, 175, 55, 0.3); }
+        .search-bar::placeholder { color: #777; }
 
         /* Client Cards */
-        .card {
-            background-color: #ffffff;
-            margin-bottom: 15px;
-            border-radius: 12px;
-            border-left: 5px solid #2E6E47;
-            box-shadow: 0 4px 10px rgba(46, 110, 71, 0.1);
-            overflow: hidden;
-            transition: 0.3s;
-            border-right: 1px solid #adc8b5;
-            border-top: 1px solid #adc8b5;
-            border-bottom: 1px solid #adc8b5;
-        }
-        .card.done {
-            border-left: 5px solid #27ae60;
-            opacity: 0.85;
-        }
-        .card.vip {
-            border-left: 5px solid #2E6E47 !important;
-            box-shadow: 0 0 10px rgba(46, 110, 71, 0.3);
-        }
+        .card { background: #1e1e1e; margin-bottom: 15px; border-radius: 12px; border-left: 5px solid #D4AF37; box-shadow: 0 4px 10px rgba(0,0,0,0.3); overflow: hidden; transition: 0.3s; border-right: 1px solid #333; border-top: 1px solid #333; border-bottom: 1px solid #333; }
+        .card.done { border-left: 5px solid #27ae60; opacity: 0.8; }
+        .card.vip { border-left: 5px solid #D4AF37 !important; box-shadow: 0 0 10px rgba(212, 175, 55, 0.4); }
 
-        .card-header {
-            padding: 15px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        .card-header { padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         .client-info { display: flex; flex-direction: column; gap: 5px; }
-        .client-name { font-size: 18px; font-weight: bold; color: #1a2e1e; }
-        .client-details { font-size: 13px; color: #5a8068; }
+        .client-name { font-size: 18px; font-weight: bold; color: #fff; }
+        .client-details { font-size: 13px; color: #aaa; }
 
-        .time-badge {
-            background-color: #EBF4EE;
-            color: #2E6E47;
-            border: 1px solid #adc8b5;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-        .done .time-badge {
-            background-color: rgba(39, 174, 96, 0.1);
-            color: #27ae60;
-            border-color: #27ae60;
-            text-decoration: line-through;
-        }
-        .bill-badge { font-size: 14px; color: #27ae60; font-weight: bold; margin-top: 5px; }
+        .time-badge { background: rgba(212, 175, 55, 0.1); color: #D4AF37; border: 1px solid #D4AF37; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .done .time-badge { background: rgba(39, 174, 96, 0.1); color: #2ecc71; border-color: #2ecc71; text-decoration: line-through; }
+        .bill-badge { font-size: 14px; color: #2ecc71; font-weight: bold; margin-top: 5px; }
 
-        /* Card Body */
-        .card-body {
-            padding: 0 15px 15px 15px;
-            display: none;
-            border-top: 1px solid #C8DDD0;
-            margin-top: 5px;
-            padding-top: 15px;
-        }
-        .formula-box {
-            background-color: #EBF4EE;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px dashed #adc8b5;
-            margin-bottom: 15px;
-            font-size: 14px;
-            color: #1a2e1e;
-            line-height: 1.6;
-        }
-        .formula-box strong { color: #2E6E47; }
-
-        .matrix-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 15px;
-        }
-        .matrix-grid input, .matrix-grid select {
-            background-color: #F2F8F4;
-            color: #1a2e1e;
-            width: 100%;
-            padding: 12px;
-            margin: 0;
-            border-radius: 6px;
-            border: 1.5px solid #adc8b5;
-            font-size: 13px;
-            outline: none;
-        }
-        .matrix-grid input:focus, .matrix-grid select:focus { border-color: #2E6E47; }
-        .matrix-grid input::placeholder { color: #6a9a78; }
+        /* Card Body & Inputs */
+        .card-body { padding: 0 15px 15px 15px; display: none; border-top: 1px solid #333; margin-top: 5px; padding-top: 15px; }
+        .formula-box { background: #252525; padding: 15px; border-radius: 8px; border: 1px dashed #555; margin-bottom: 15px; font-size: 14px; color: #ddd; line-height: 1.6; }
+        .formula-box strong { color: #D4AF37; }
+        
+        .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
+        .matrix-grid input, .matrix-grid select { background: #2a2a2a; color: #fff; width: 100%; padding: 12px; margin: 0; border-radius: 6px; border: 1px solid #444; font-size: 13px; box-sizing: border-box; outline: none; }
+        .matrix-grid input:focus, .matrix-grid select:focus { border-color: #D4AF37; }
         .full-width { grid-column: span 2; }
-        .bill-input {
-            grid-column: span 2;
-            border: 1.5px solid #27ae60 !important;
-            color: #27ae60 !important;
-            font-weight: bold;
-            font-size: 16px !important;
-        }
-        .brand-select {
-            border: 1.5px solid #2E6E47 !important;
-            color: #2E6E47 !important;
-            font-weight: bold;
-        }
+        .bill-input { grid-column: span 2; border: 1px solid #2ecc71 !important; color: #2ecc71 !important; font-weight: bold; font-size: 16px !important; }
+        .brand-select { border: 1px solid #D4AF37 !important; color: #D4AF37 !important; font-weight: bold; }
 
         /* Buttons */
         .btn-group { display: flex; gap: 10px; margin-top: 15px; }
-        .save-btn {
-            background-color: #d35400;
-            color: white;
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .done-btn {
-            background-color: #27ae60;
-            color: white;
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .del-btn {
-            background: transparent;
-            color: #e74c3c;
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #e74c3c;
-            border-radius: 8px;
-            margin-top: 12px;
-            font-size: 13px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .upload-btn {
-            background-color: #2980b9;
-            color: white;
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 8px;
-        }
-        .vip-btn {
-            background: transparent;
-            color: #2E6E47;
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #2E6E47;
-            border-radius: 8px;
-            margin-top: 12px;
-            font-size: 13px;
-            cursor: pointer;
-        }
+        .save-btn { background: #d35400; color: white; flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .done-btn { background: #27ae60; color: white; flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .del-btn { background: transparent; color: #e74c3c; width: 100%; padding: 10px; border: 1px solid #e74c3c; border-radius: 8px; margin-top: 12px; font-size: 13px; cursor: pointer; transition: 0.2s; }
+        .upload-btn { background: #2980b9; color: white; width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 8px; }
+        
+        .save-btn:hover { background: #e67e22; } .done-btn:hover { background: #2ecc71; } .del-btn:hover { background: #e74c3c; color: white; }
 
-        .save-btn:hover { background-color: #e67e22; }
-        .done-btn:hover { background-color: #2ecc71; }
-        .del-btn:hover { background-color: #e74c3c; color: white; }
-
-        /* FAB & Modal */
-        .fab {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background-color: #2E6E47;
-            color: #ffffff;
-            width: 65px;
-            height: 65px;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 60px;
-            font-size: 35px;
-            box-shadow: 0 4px 15px rgba(46, 110, 71, 0.4);
-            cursor: pointer;
-            z-index: 101;
-            border: none;
-            font-weight: bold;
-            transition: 0.3s;
-        }
+        /* Floating Button & Modal */
+        .fab { position: fixed; bottom: 30px; right: 30px; background: #D4AF37; color: #121212; width: 65px; height: 65px; border-radius: 50%; text-align: center; line-height: 60px; font-size: 35px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); cursor: pointer; z-index: 101; border: none; font-weight: bold; transition: 0.3s; }
         .fab:hover { transform: scale(1.05); }
 
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0, 30, 10, 0.6);
-            z-index: 102;
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            background-color: #ffffff;
-            padding: 25px;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 400px;
-            animation: slideUp 0.3s ease;
-            border: 1px solid #adc8b5;
-        }
-        @keyframes slideUp {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        .close-btn {
-            float: right;
-            cursor: pointer;
-            font-size: 26px;
-            font-weight: bold;
-            color: #5a8068;
-            margin-top: -15px;
-        }
-        .modal-content input {
-            background-color: #F2F8F4;
-            color: #1a2e1e;
-            width: 100%;
-            padding: 14px;
-            margin: 8px 0;
-            border-radius: 8px;
-            border: 1.5px solid #adc8b5;
-            font-size: 14px;
-            outline: none;
-        }
-        .modal-content input:focus { border-color: #2E6E47; }
-        .modal-content input::placeholder { color: #6a9a78; }
-        .add-btn {
-            background: linear-gradient(135deg, #2E6E47, #1a4a2e);
-            color: #ffffff;
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 15px;
-            cursor: pointer;
-            margin-top: 15px;
-        }
-
-        .photo-box {
-            background-color: #EBF4EE;
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 10px;
-            border: 1px dashed #adc8b5;
-        }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 102; justify-content: center; align-items: center; }
+        .modal-content { background: #1e1e1e; padding: 25px; border-radius: 15px; width: 90%; max-width: 400px; animation: slideUp 0.3s ease; border: 1px solid #333; }
+        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .close-btn { float: right; cursor: pointer; font-size: 26px; font-weight: bold; color: #888; margin-top: -15px; }
+        .modal-content input { background: #2a2a2a; color: #fff; width: 100%; padding: 14px; margin: 8px 0; border-radius: 8px; border: 1px solid #444; box-sizing: border-box; font-size: 14px; outline: none; }
+        .modal-content input:focus { border-color: #D4AF37; }
+        .add-btn { background: #D4AF37; color: #121212; width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 15px; }
     </style>
 </head>
 <body>
-
-    <div class="header"><h2>Hairolozy Admin</h2></div>
-
+    <div class="header"><h2>Hairolozy</h2></div>
+    
     <div style="padding: 15px;">
         <div class="dashboard">
             <div class="dash-box">
@@ -359,8 +91,7 @@
         <div class="search-container">
             <input type="text" id="searchInput" class="search-bar" placeholder="🔍 Search Client or Phone..." onkeyup="filterList()">
         </div>
-
-        <div id="list">Loading...</div>
+        <div id="list">Loading Luxury Experience...</div>
     </div>
 
     <button class="fab" onclick="openModal()">+</button>
@@ -368,7 +99,7 @@
     <div id="walkinModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h3 style="margin-top:0; color:#2E6E47; text-align:center;">New Walk-in</h3>
+            <h3 style="margin-top:0; color:#D4AF37; text-align:center;">New Walk-in</h3>
             <input type="text" id="new-name" placeholder="Client Name">
             <input type="tel" id="new-phone" placeholder="Phone Number">
             <input type="text" id="new-service" placeholder="Service (e.g. Color Correction)">
@@ -414,8 +145,9 @@
         function updateDashboard() {
             let rev = 0; let clientsCount = 0;
             const now = new Date();
-            const format1 = now.toLocaleDateString();
-            const format2 = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+            const format1 = now.toLocaleDateString(); 
+            const format2 = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`; 
+
             for (let id in allBookings) {
                 let b = allBookings[id];
                 if (b.date === format1 || b.date === format2) {
@@ -448,9 +180,9 @@
             if (!data.clientName && !data.name) return;
             const id = doc.id;
             const path = doc.ref.path;
-
+            
             let existingCard = document.getElementById('card-' + id);
-            if (existingCard) existingCard.remove();
+            if (existingCard) { existingCard.remove(); }
 
             const listDiv = document.getElementById("list");
             if (listDiv.innerHTML.includes("Loading")) listDiv.innerHTML = "";
@@ -460,13 +192,14 @@
 
             const statusText = data.status === 'done' ? 'Completed' : (data.bookingTime || data.time || 'Walk-in');
             const billDisplay = data.billAmount ? `<div class="bill-badge">💰 Bill: ₹${data.billAmount}</div>` : '';
-            const photoDisplay = data.photoUrl ? `<img src="${data.photoUrl}" style="max-width:100%; border-radius:8px; margin-bottom:15px; border:1px solid #adc8b5;">` : '';
-            const vipBadge = data.isVIP ? ` <span style="color:#2E6E47; font-size:12px;">[VIP]</span>` : '';
+            const photoDisplay = data.photoUrl ? `<img src="${data.photoUrl}" style="max-width: 100%; border-radius: 8px; margin-bottom: 15px; border: 1px solid #444;">` : '';
+
+            const vipBadge = data.isVIP ? ` <span style="color:#D4AF37; font-size:12px;">[VIP]</span>` : '';
 
             const card = document.createElement('div');
             card.className = `card ${statusClass}`;
             card.id = 'card-' + id;
-
+            
             card.innerHTML = `
                 <div class="card-header" onclick="toggleCard('${id}')">
                     <div class="client-info">
@@ -476,16 +209,16 @@
                     </div>
                     <div class="time-badge">🕒 ${statusText}</div>
                 </div>
-
+                
                 <div class="card-body" id="body-${id}">
                     ${photoDisplay}
                     <div class="formula-box">
                         <strong>Last Formulation:</strong><br> ${data.history || "No record."}
                     </div>
-
+                    
                     <div class="matrix-grid">
                         <select id="brand-${id}" class="full-width brand-select">
-                            <option value="">🎨 Select Color Brand</option>
+                            <option value="" style="color:#aaa;">🎨 Select Color Brand</option>
                             <option value="L'Oréal">L'Oréal</option>
                             <option value="Redken">Redken</option>
                             <option value="Schwarzkopf">Schwarzkopf</option>
@@ -498,7 +231,7 @@
                         <input type="text" id="base-${id}" placeholder="Base Color / Roots">
                         <input type="text" id="target-${id}" placeholder="Target Tone">
                         <select id="vol-${id}">
-                            <option value="">Developer Volume</option>
+                            <option value="" style="color:#aaa;">Developer Volume</option>
                             <option value="10V">10 Vol (3%)</option>
                             <option value="20V">20 Vol (6%)</option>
                             <option value="30V">30 Vol (9%)</option>
@@ -509,8 +242,8 @@
                         <input type="number" id="bill-${id}" class="bill-input" placeholder="Total Bill (₹)" value="${data.billAmount || ''}">
                     </div>
 
-                    <div class="photo-box">
-                        <input type="file" id="img-${id}" accept="image/*" style="font-size:13px; width:100%; border:none; padding:0;">
+                    <div style="background: #252525; padding: 12px; border-radius: 8px; margin-top: 10px; border: 1px dashed #444;">
+                        <input type="file" id="img-${id}" accept="image/*" style="font-size: 13px; width: 100%; border: none; padding: 0;">
                         <button class="upload-btn" onclick="uploadPhoto('${path}', '${id}')">📸 Upload Result Photo</button>
                     </div>
 
@@ -519,7 +252,8 @@
                         <button class="done-btn" onclick="markDone('${path}', '${id}')">✔️ Mark Done</button>
                     </div>
                     <button class="del-btn" onclick="deleteEntry('${path}')">🗑️ Delete Record</button>
-                    <button class="vip-btn" onclick="db.doc('${path}').update({isVIP: ${!data.isVIP}})">${data.isVIP ? '⭐ Remove VIP' : '⭐ Mark as VIP'}</button>
+                    
+                    <button onclick="db.doc('${path}').update({isVIP: ${!data.isVIP}})" style="background:transparent; color:#D4AF37; width:100%; padding:10px; border:1px solid #D4AF37; border-radius:8px; margin-top:12px; font-size:13px; cursor:pointer;">${data.isVIP ? 'Remove VIP' : 'Mark as VIP'}</button>
                 </div>
             `;
             listDiv.insertBefore(card, listDiv.firstChild);
@@ -530,8 +264,50 @@
             const phone = document.getElementById('new-phone').value;
             const service = document.getElementById('new-service').value;
             const formula = document.getElementById('new-formula').value;
-            if (!name) return alert("Name zaroori hai!");
-            if (new Date().getDay() === 4) {
-                if (!confirm("Aaj Thursday (Weekly Off) hai! Phir bhi entry karni hai?")) return;
+            if(!name) return alert("Name zaroori hai!");
+            
+            // Checking Thursday (Day 4) for Walk-in Alert
+            if(new Date().getDay() === 4) {
+                if(!confirm("Aaj Thursday (Weekly Off) hai! Phir bhi entry karni hai?")) return;
             }
-            con
+
+            const todayFormatted = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate()).padStart(2, '0')}`;
+            db.collection("clients").add({ clientName: name, clientPhone: phone, serviceName: service, history: formula, bookingDate: todayFormatted, bookingTime: "Walk-in", status: 'pending' }).then(() => { closeModal(); document.getElementById('new-name').value = ""; document.getElementById('new-formula').value = ""; });
+        }
+
+        function getMatrixData(id) {
+            const brand = document.getElementById('brand-' + id).value; const base = document.getElementById('base-' + id).value; const target = document.getElementById('target-' + id).value; const vol = document.getElementById('vol-' + id).value; const time = document.getElementById('time-' + id).value; const ph = document.getElementById('ph-' + id).value;
+            return `<b>Brand:</b> <span style="color:#D4AF37">${brand || '-'}</span> <br><b>Base:</b> ${base || '-'} | <b>Target:</b> ${target || '-'} <br><b>Dev:</b> ${vol || '-'} | <b>Time:</b> ${time || '-'} <br><b>Treatments:</b> ${ph || '-'}`;
+        }
+
+        function updateFormula(fullPath, id) { db.doc(fullPath).update({ history: getMatrixData(id) }).then(() => alert("Formulation Matrix Saved!")); }
+        function markDone(fullPath, id) {
+            const bill = document.getElementById('bill-' + id).value;
+            if(!bill && !confirm("Aapne Bill Amount nahi dala hai. Bina bill ke 'Done' karein?")) return;
+            db.doc(fullPath).update({ status: 'done', billAmount: bill || "0", history: getMatrixData(id) });
+        }
+
+        function uploadPhoto(fullPath, id) {
+            const fileInput = document.getElementById('img-' + id);
+            const file = fileInput.files[0];
+            if (!file) return alert("Pehle 'Choose File' par click karke photo select karein!");
+            const btn = fileInput.nextElementSibling;
+            btn.innerText = "⏳ Uploading... Please wait"; btn.disabled = true;
+
+            const formData = new FormData(); formData.append('image', file);
+            const apiKey = '784a2cd72d9a44a6df0073527b1eee04'; 
+
+            fetch('https://api.imgbb.com/1/upload?key=' + apiKey, { method: 'POST', body: formData })
+            .then(res => res.json())
+            .then(result => {
+                if(result.success) {
+                    db.doc(fullPath).update({ photoUrl: result.data.url }).then(() => { alert("Photo Upload Ho Gayi!"); btn.innerText = "📸 Upload Result Photo"; btn.disabled = false; });
+                } else { alert("Upload Failed."); btn.innerText = "📸 Upload Result Photo"; btn.disabled = false; }
+            }).catch(err => { alert("Upload Failed."); btn.innerText = "📸 Upload Result Photo"; btn.disabled = false; });
+        }
+        function deleteEntry(fullPath) { if(confirm("Are you sure?")) db.doc(fullPath).delete(); }
+
+        startSync();
+    </script>
+</body>
+</html>
