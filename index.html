@@ -5,46 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Appointment | Hairolozy Luxury Salon</title>
     <style>
-        /* PURE SAGE GREEN & WHITE THEME */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #DDE8DF; color: #1a2e1e; margin: 0; padding: 20px; display: flex; justify-content: center; }
-
-        .container { width: 100%; max-width: 500px; background: #FFFFFF; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(50, 100, 65, 0.18); border: 1px solid #B0CCBA; border-top: 4px solid #3D7050; }
-
+        /* LUXURY DARK THEME STYLING */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #121212; color: #e0e0e0; margin: 0; padding: 20px; display: flex; justify-content: center; }
+        
+        .container { width: 100%; max-width: 500px; background: #1e1e1e; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid #333; border-top: 4px solid #D4AF37; }
+        
         .header { text-align: center; margin-bottom: 30px; }
-        .header h1 { color: #3D7050; margin: 0; font-size: 32px; letter-spacing: 3px; text-transform: uppercase; }
-        .header p { color: #6b8f74; font-size: 14px; margin-top: 5px; }
+        .header h1 { color: #D4AF37; margin: 0; font-size: 32px; letter-spacing: 3px; text-transform: uppercase; }
+        .header p { color: #aaa; font-size: 14px; margin-top: 5px; }
 
-        /* SERVICE CARDS GRID */
+        /* SERVICE CARDS GRID - 18 SERVICES */
         .service-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 25px; }
-        .service-card { background: #EEF5F0; border: 1.5px solid #B0CCBA; padding: 15px 10px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
-        .service-card:hover { border-color: #3D7050; background: #D2E8D9; box-shadow: 0 3px 10px rgba(61, 112, 80, 0.18); }
-
-        .service-card.selected { border-color: #3D7050; background: rgba(61, 112, 80, 0.13); box-shadow: 0 0 12px rgba(61, 112, 80, 0.2); }
+        .service-card { background: #252525; border: 1px solid #444; padding: 15px 10px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+        .service-card:hover { border-color: #D4AF37; background: #2a2a2a; }
+        
+        /* Multiple Selection Styling */
+        .service-card.selected { border-color: #D4AF37; background: rgba(212, 175, 55, 0.15); box-shadow: 0 0 15px rgba(212, 175, 55, 0.2); }
         .service-card.selected::after { content: '✔️'; position: absolute; top: 5px; right: 8px; font-size: 12px; }
 
         .service-card span { font-size: 22px; margin-bottom: 5px; }
-        .service-card p { margin: 0; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; color: #1a2e1e; }
+        .service-card p { margin: 0; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; color: #fff; }
 
         /* FORM STYLING */
         .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; color: #3D7050; font-size: 13px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; }
+        .form-group label { display: block; margin-bottom: 8px; color: #D4AF37; font-size: 13px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; }
+        
+        input, textarea { width: 100%; background: #2a2a2a; color: #fff; border: 1px solid #444; padding: 14px; border-radius: 8px; box-sizing: border-box; font-size: 14px; outline: none; transition: 0.3s; }
+        input:focus, textarea:focus { border-color: #D4AF37; }
+        
+        ::-webkit-calendar-picker-indicator { filter: invert(1) sepia(1) saturate(5) hue-rotate(10deg); cursor: pointer; }
 
-        input, textarea { width: 100%; background: #F4F9F5; color: #1a2e1e; border: 1.5px solid #B0CCBA; padding: 14px; border-radius: 8px; box-sizing: border-box; font-size: 14px; outline: none; transition: 0.3s; }
-        input:focus, textarea:focus { border-color: #3D7050; box-shadow: 0 0 0 3px rgba(61, 112, 80, 0.1); }
-        input::placeholder, textarea::placeholder { color: #7aA082; }
+        .book-btn { background: linear-gradient(135deg, #D4AF37, #b5952f); color: #121212; width: 100%; padding: 18px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        .book-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4); }
 
-        ::-webkit-calendar-picker-indicator { cursor: pointer; opacity: 0.6; }
+        /* SUCCESS MESSAGE */
+        #successMsg { display: none; text-align: center; background: #1e1e1e; padding: 30px 15px; border-radius: 12px; border: 1px solid #333; }
+        .booking-id-badge { background: rgba(212, 175, 55, 0.1); color: #D4AF37; border: 1px dashed #D4AF37; padding: 10px 20px; border-radius: 30px; display: inline-block; margin: 20px 0; font-size: 22px; font-weight: bold; }
 
-        .book-btn { background: linear-gradient(135deg, #3D7050, #265238); color: #fff; width: 100%; padding: 18px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; cursor: pointer; transition: 0.3s; margin-top: 10px; }
-        .book-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(61, 112, 80, 0.38); }
-
-        .services-label { text-align: center; display: block; margin-bottom: 5px; color: #3D7050; font-size: 13px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; }
-        .services-hint { text-align: center; font-size: 11px; color: #6b8f74; margin-top: 0; margin-bottom: 15px; }
-
-        #successMsg { display: none; text-align: center; background: #FFFFFF; padding: 30px 15px; border-radius: 12px; border: 1px solid #B0CCBA; }
-        .booking-id-badge { background: rgba(61, 112, 80, 0.08); color: #3D7050; border: 1px dashed #3D7050; padding: 10px 20px; border-radius: 30px; display: inline-block; margin: 20px 0; font-size: 22px; font-weight: bold; }
-
-        /* Floating WhatsApp Button */
+        /* START: Floating WhatsApp Button CSS */
         .wa-float {
             position: fixed;
             bottom: 25px;
@@ -56,7 +54,7 @@
             border-radius: 50px;
             text-align: center;
             font-size: 30px;
-            box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
             z-index: 9999;
             display: flex;
             align-items: center;
@@ -68,6 +66,7 @@
             background-color: #128c7e;
             transform: scale(1.1);
         }
+        /* END: Floating WhatsApp Button CSS */
     </style>
 </head>
 <body>
@@ -79,8 +78,8 @@
         </div>
 
         <div id="bookingForm">
-            <label class="services-label">Choose Services</label>
-            <p class="services-hint">(You can select multiple options)</p>
+            <label style="text-align: center; display: block; margin-bottom: 5px;">Choose Services</label>
+            <p style="text-align: center; font-size: 11px; color: #aaa; margin-top: 0; margin-bottom: 15px;">(You can select multiple options)</p>
             
             <!-- MASTER MENU: 18 SERVICES -->
             <div class="service-grid" id="serviceGrid">
@@ -137,12 +136,13 @@
         <div id="successMsg"></div>
     </div>
 
-    <!-- Floating WhatsApp Button -->
+    <!-- START: Floating WhatsApp Button HTML -->
     <a href="https://wa.me/918860504808?text=Hello,%20mujhe%20appointment%20book%20karna%20hai" class="wa-float" target="_blank">
         <svg width="35" height="35" viewBox="0 0 24 24" fill="white">
             <path d="M12.031 6.172c-3.23 0-5.859 2.628-5.859 5.859 0 1.033.27 2.037.785 2.923l-.834 3.05 3.125-.82c.854.466 1.815.713 2.784.713 3.23 0 5.859-2.628 5.859-5.859 0-3.23-2.629-5.859-5.859-5.859zm0 10.517c-.896 0-1.776-.239-2.546-.689l-1.826.478.487-1.782c-.477-.827-.729-1.776-.729-2.748 0-3.036 2.472-5.508 5.509-5.508 3.036 0 5.508 2.472 5.508 5.508 0 3.036-2.472 5.508-5.508 5.508zm3.018-4.043c-.166-.083-.984-.486-1.136-.541-.152-.055-.264-.083-.375.083-.111.166-.43.541-.527.652-.097.111-.194.125-.36.042-.166-.083-.702-.259-1.337-.827-.494-.44-.828-.984-.925-1.15-.097-.166-.01-.256.073-.339.075-.074.166-.194.25-.291.083-.097.111-.166.166-.277.055-.111.028-.208-.014-.291-.042-.083-.375-.902-.514-1.236-.137-.327-.278-.283-.375-.289-.097-.006-.208-.006-.319-.006-.111 0-.291.042-.444.222-.152.18-.583.57-.583 1.389 0 1.201.896 2.361 1.022 2.527.125.166 1.763 2.708 4.272 3.794.596.257 1.062.411 1.425.527.6.192 1.146.165 1.577.101.481-.072 1.485-.607 1.694-1.192.208-.585.208-1.087.145-1.198-.063-.111-.233-.175-.486-.303z"/>
         </svg>
     </a>
+    <!-- END: Floating WhatsApp Button HTML -->
 
     <!-- Firebase Integration -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -169,12 +169,15 @@
         function selectService(service, el) {
             const index = selectedServicesArray.indexOf(service);
             if (index > -1) {
+                // Agar pehle se selected hai, toh usko remove karo (Deselect)
                 selectedServicesArray.splice(index, 1);
                 el.classList.remove('selected');
             } else {
+                // Agar selected nahi hai, toh usko array mein add karo (Select)
                 selectedServicesArray.push(service);
                 el.classList.add('selected');
             }
+            // Array ko comma (,) laga kar text mein badal do
             document.getElementById('selected-service').value = selectedServicesArray.join(', ');
         }
 
@@ -197,6 +200,7 @@
             if(selectedServicesArray.length === 0) return alert("Please select at least one Service!");
             if(!name || !phone || !date || !time) return alert("Please fill all details!");
 
+            // Format Time 12 hr
             let timeParts = time.split(':');
             let hours = parseInt(timeParts[0]);
             let ampm = hours >= 12 ? 'PM' : 'AM';
@@ -211,14 +215,16 @@
             }).then(() => {
                 document.getElementById('bookingForm').style.display = 'none';
                 
+                // 🛑 YAHAN APNA WHATSAPP NUMBER DAALEIN 🛑
                 const salonNumber = "918860504808"; 
+
                 const msg = `🔔 *New Booking Alert!*\n\n*ID:* ${bookingID}\n*Client:* ${name}\n*Services:* ${service}\n*Date:* ${date}\n*Time:* ${formattedTime}\n*History:* ${history || 'None'}`;
                 const waUrl = `https://wa.me/${salonNumber}?text=${encodeURIComponent(msg)}`;
 
                 document.getElementById('successMsg').innerHTML = `
-                    <h2 style="color:#3D7050; margin-top:0;">Booking Sent! 🎉</h2>
+                    <h2 style="color:#D4AF37; margin-top:0;">Booking Sent!</h2>
                     <div class="booking-id-badge">${bookingID}</div>
-                    <p style="color:#b09aa0; font-size:14px;">Please click the button below to confirm your slot on WhatsApp.</p>
+                    <p style="color:#aaa; font-size:14px;">Please click the button below to confirm your slot on WhatsApp.</p>
                     <a href="${waUrl}" target="_blank" style="background:#25d366; color:white; padding:15px 25px; border-radius:30px; text-decoration:none; font-weight:bold; display:inline-block; margin-top:10px;">📲 Confirm on WhatsApp</a>
                 `;
                 document.getElementById('successMsg').style.display = 'block';
