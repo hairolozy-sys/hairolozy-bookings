@@ -8,19 +8,19 @@
 <style>
   :root { --gold: #c9a96e; --gold-light: #e8d5a3; --cream: #faf6f0; --dark: #1a1410; --text-muted: #8a7968; }
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   body { font-family: 'Josefin Sans', sans-serif; background: var(--dark); color: var(--cream); overflow-x: hidden; }
+
+  /* Hero & Other Styles remain as per your provided layout */
+  .hero { min-height: 100vh; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--dark); }
+  .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(3.5rem, 10vw, 9rem); font-weight: 300; background: linear-gradient(135deg, #e8d5a3 0%, #c9a96e 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
   
-  /* --- HERO & LAYOUT (Restored) --- */
-  .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: var(--dark); position: relative; }
-  .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(3.5rem, 10vw, 9rem); background: linear-gradient(135deg, #e8d5a3 0%, #c9a96e 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  
-  /* --- BOOKING SECTION (Original Frame + Dual API Engine) --- */
   .booking-section { padding: 8rem 5%; background: linear-gradient(135deg, #1f170f 0%, var(--dark) 100%); }
-  .booking-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; }
+  .booking-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; }
   @media (max-width: 768px) { .booking-grid { grid-template-columns: 1fr; } }
   .form-frame { border: 1px solid rgba(201,169,110,0.2); padding: 3rem; background: rgba(255,255,255,0.02); }
   .form-group { margin-bottom: 1.5rem; }
-  .form-input, .form-select, .form-textarea { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(201,169,110,0.25); padding: 0.8rem 0; color: var(--cream); font-family: 'Josefin Sans'; }
+  .form-input, .form-select, .form-textarea { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(201,169,110,0.25); padding: 0.8rem 0; color: var(--cream); }
   .btn-confirm { width: 100%; padding: 1.2rem; background: var(--gold); border: none; color: var(--dark); font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 0.2em; }
   
   .success-overlay { display: none; position: fixed; inset: 0; z-index: 5000; background: rgba(26,20,16,0.95); align-items: center; justify-content: center; flex-direction: column; }
@@ -30,9 +30,8 @@
 <body>
 
 <section class="hero">
-  <p>✦ Luxury Hair Studio ✦</p>
   <h1 class="hero-title">Hair<em>olo</em>zy</h1>
-  <p>by Arman | Where artistry meets chemistry</p>
+  <p>Luxury Hair Studio by Arman</p>
 </section>
 
 <section class="booking-section" id="booking">
@@ -86,12 +85,12 @@
 </section>
 
 <div class="success-overlay" id="successOverlay">
-  <h2>Request Sent Successfully!</h2>
-  <button class="btn-confirm" style="width: 200px; margin-top: 20px;" onclick="location.reload()">Close</button>
+  <h2>Request Sent!</h2>
+  <button class="btn-confirm" style="width:200px; margin-top:20px;" onclick="location.reload()">Close</button>
 </div>
 
 <script>
-  // 1. Generate 10 AM to 8 PM Slots
+  // Time Slots 10 AM to 8 PM
   const timeSelect = document.getElementById('bookingTime');
   const slots = ["10:00 am", "10:30 am", "11:00 am", "11:30 am", "12:00 pm", "12:30 pm", "01:00 pm", "01:30 pm", "02:00 pm", "02:30 pm", "03:00 pm", "03:30 pm", "04:00 pm", "04:30 pm", "05:00 pm", "05:30 pm", "06:00 pm", "06:30 pm", "07:00 pm", "07:30 pm", "08:00 pm"];
   slots.forEach(slot => {
@@ -100,19 +99,21 @@
     timeSelect.appendChild(opt);
   });
 
-  // 2. Dual Submission (Email + Sheet)
   const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz1cf4ZtyQkc4_fiHUxfluMIiSABE0J5wyXiE8lYy93-nDJcSQQRW53hDG8xuUYUiY9/exec';
 
   document.getElementById('bookingForm').addEventListener('submit', function(e) {
     e.preventDefault();
+    document.getElementById('submitBtn').innerText = "SENDING...";
     const data = Object.fromEntries(new FormData(this));
     
-    // Engine 1: Email
+    // Engine 1: Email (Web3Forms)
     fetch('https://api.web3forms.com/submit', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
     
     // Engine 2: Google Sheet
     fetch(GOOGLE_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) })
-    .then(() => { document.getElementById('successOverlay').classList.add('show'); });
+    .then(() => { 
+        document.getElementById('successOverlay').classList.add('show'); 
+    });
   });
 </script>
 </body>
