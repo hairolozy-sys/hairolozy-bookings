@@ -174,9 +174,15 @@
   .form-input::placeholder, .form-textarea::placeholder { color: rgba(138,121,104,0.5); font-size: 0.75rem; }
   
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-  @media (max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
   
-  .btn-submit { width: 100%; padding: 1.1rem; background: var(--gold); border: none; color: var(--dark); font-family: 'Josefin Sans', sans-serif; font-size: 0.7rem; letter-spacing: 0.4em; text-transform: uppercase; cursor: pointer; margin-top: 1.5rem; transition: background 0.3s ease, transform 0.2s ease;}
+  /* MOBILE SPACING OPTIMIZATION (Yeh form ko chota rakhega taaki button easily dikhe) */
+  @media (max-width: 500px) { 
+    .form-row { grid-template-columns: 1fr; gap: 1rem; } 
+    .form-frame { padding: 1.5rem; }
+    .form-group { margin-bottom: 1rem; }
+  }
+  
+  .btn-submit { width: 100%; padding: 1.1rem; background: var(--gold); border: none; color: var(--dark); font-family: 'Josefin Sans', sans-serif; font-size: 0.7rem; letter-spacing: 0.4em; text-transform: uppercase; cursor: pointer; margin-top: 1rem; transition: background 0.3s ease, transform 0.2s ease;}
   .btn-submit:hover:not(:disabled) { background: var(--gold-light); transform: translateY(-2px); }
 
   .success-overlay {
@@ -311,7 +317,6 @@
       
       <form id="bookingForm">
         <input type="hidden" name="access_key" value="35460aac-0267-4045-b24f-0bed6ab32101">
-        
         <input type="hidden" name="subject" value="New Appointment Request - Hairolozy">
         <input type="hidden" name="from_name" value="Hairolozy Bookings">
 
@@ -357,8 +362,4 @@
             <select name="booking_time" class="form-select" id="bookingTime" required>
               <option value="" disabled selected>Select a Time Slot</option>
               <option value="10:00">10:00 AM</option>
-              <option value="10:30">10:30 AM</option>
-              <option value="11:00">11:00 AM</option>
-              <option value="11:30">11:30 AM</option>
-              <option value="12:00">12:00 PM</option>
-             
+              <option value="10:30">10:30 AM</opti
