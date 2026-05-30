@@ -174,14 +174,14 @@
   .form-group { margin-bottom: 1.5rem; }
   .form-label { display: block; font-size: 0.6rem; letter-spacing: 0.3em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.6rem; }
   
-  /* Form Inputs */
+  /* Restored Form Inputs & Textarea */
   .form-input, .form-select, .form-textarea { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(201,169,110,0.25); padding: 0.8rem 0; color: var(--cream); font-family: 'Josefin Sans', sans-serif; font-size: 0.8rem; outline: none; transition: border-color 0.3s ease; }
   .form-select option { background: #1a1410; color: var(--cream); }
   .form-textarea { resize: none; height: 80px; padding-top: 0.5rem; }
   .form-input:focus, .form-select:focus, .form-textarea:focus { border-bottom-color: var(--gold); }
   .form-input::placeholder, .form-textarea::placeholder { color: rgba(138,121,104,0.5); font-size: 0.75rem; }
   
-  /* Form Row for Date & Time */
+  /* Restored Form Row for Date & Time */
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
   @media (max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
   
@@ -254,10 +254,9 @@
     <span class="strip-item">✦ Global Color</span>
     <span class="strip-item">✦ Keratin Treatment</span>
     <span class="strip-item">✦ Hair Botox</span>
-    <span class="strip-item">✦ Smoothening</span>
     <span class="strip-item">✦ Nanoplastia</span>
-    <span class="strip-item">✦ Scalp Treatment</span>
     <span class="strip-item">✦ Olaplex Treatment</span>
+    <span class="strip-item">✦ Trichology Science</span>
   </div>
 </div>
 
@@ -338,7 +337,7 @@
           <div class="form-group">
             <label class="form-label">Preferred Date</label>
             <input type="date" class="form-input" id="bookingDate" required>
-            <small id="dateMessage" style="color: var(--gold-light); font-size: 0.6rem; display: none; margin-top: 0.5rem; letter-spacing: 0.05em;"></small>
+            <small id="dateMessage" style="color: var(--gold-light); font-size: 0.65rem; display: none; margin-top: 0.5rem; letter-spacing: 0.05em;"></small>
           </div>
           <div class="form-group">
             <label class="form-label">Preferred Time</label>
@@ -348,7 +347,7 @@
 
         <div class="form-group">
           <label class="form-label">Specific Request / Client Notes</label>
-          <textarea class="form-textarea" placeholder="Any specific hair history, past colors, or treatments?"></textarea>
+          <textarea class="form-textarea" placeholder="Any specific hair history, past colors (e.g. 5.35), or treatments?"></textarea>
         </div>
 
         <button type="submit" class="btn-submit">Request Appointment</button>
@@ -392,4 +391,4 @@
   const reveals = document.querySelectorAll('.reveal');
   function revealOnScroll() {
     const windowHeight = window.innerHeight;
-  
+    c
