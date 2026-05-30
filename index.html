@@ -113,14 +113,15 @@
   .btn-gold span { position: relative; z-index: 1; }
   .btn-gold:disabled { opacity: 0.5; cursor: not-allowed; }
 
-  /* BADA BOOKING BUTTON */
+  /* HARDENED CONFIRM BUTTON VISIBILITY */
   .btn-confirm {
     width: 100%; padding: 1.2rem; background: var(--gold); border: none; 
     color: var(--dark); font-family: 'Josefin Sans', sans-serif; 
-    font-size: 0.9rem; font-weight: 600; letter-spacing: 0.2em; 
-    text-transform: uppercase; cursor: pointer; margin-top: 2rem; 
+    font-size: 0.95rem; font-weight: 600; letter-spacing: 0.25em; 
+    text-transform: uppercase; cursor: pointer; margin-top: 1.5rem; 
+    display: block; visibility: visible !important; opacity: 1 !important;
     transition: background 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 4px 15px rgba(201, 169, 110, 0.2);
+    box-shadow: 0 4px 15px rgba(201, 169, 110, 0.3);
   }
   .btn-confirm:hover:not(:disabled) { background: var(--gold-light); transform: translateY(-2px); }
 
@@ -139,9 +140,9 @@
   .strip-inner { display: flex; gap: 4rem; animation: marquee 20s linear infinite; white-space: nowrap; }
   .strip-item { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-style: italic; color: var(--dark); flex-shrink: 0; }
 
-  .section { padding: 8rem 5% 6rem; position: relative; }
+  .section { padding: 6rem 5% 4rem; position: relative; }
   .section-label { font-size: 0.65rem; letter-spacing: 0.5em; color: var(--gold); text-transform: uppercase; margin-bottom: 1rem; }
-  .section-heading { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 300; line-height: 1.05; color: var(--cream); margin-bottom: 4rem; }
+  .section-heading { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 300; line-height: 1.05; color: var(--cream); margin-bottom: 3rem; }
   .section-heading em { color: var(--gold); font-style: italic; }
 
   .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1px; background: rgba(201,169,110,0.15); }
@@ -154,9 +155,9 @@
   .service-name { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 400; color: var(--cream); margin-bottom: 0.75rem; }
   .service-desc { font-size: 0.72rem; color: var(--text-muted); letter-spacing: 0.05em; line-height: 1.8; margin-bottom: 1.5rem; }
 
-  .about-section { padding: 8rem 5%; display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
+  .about-section { padding: 6rem 5%; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
   @media (max-width: 768px) { .about-section { grid-template-columns: 1fr; gap: 3rem; } }
-  .about-visual { position: relative; height: 500px; }
+  .about-visual { position: relative; height: 450px; }
   .about-box { position: absolute; border: 1px solid rgba(201,169,110,0.25); display: flex; align-items: center; justify-content: center; overflow: hidden; font-family: 'Cormorant Garamond', serif; font-style: italic; color: rgba(201,169,110,0.3); }
   .about-box-1 { top: 0; left: 0; width: 70%; height: 70%; background: radial-gradient(ellipse at 30% 30%, rgba(201,169,110,0.08), rgba(26,20,16,0.8)); font-size: 5rem; }
   .about-box-2 { bottom: 0; right: 0; width: 55%; height: 50%; background: radial-gradient(ellipse at 70% 70%, rgba(139,94,60,0.12), rgba(26,20,16,0.8)); font-size: 3rem; }
@@ -166,26 +167,31 @@
   .about-info h2 em { color: var(--gold); font-style: italic; }
   .about-info p { font-size: 0.75rem; color: var(--text-muted); line-height: 1.9; letter-spacing: 0.05em; margin-bottom: 1.5rem; }
 
-  .booking-section { background: linear-gradient(135deg, #1f170f 0%, var(--dark) 50%, #150f0a 100%); padding: 8rem 5%; position: relative; overflow: hidden; }
-  .booking-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start; position: relative; }
-  @media (max-width: 768px) { .booking-grid { grid-template-columns: 1fr; gap: 3rem; } }
+  .booking-section { background: linear-gradient(135deg, #1f170f 0%, var(--dark) 50%, #150f0a 100%); padding: 6rem 5%; position: relative; overflow: hidden; }
+  .booking-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; position: relative; }
+  @media (max-width: 768px) { .booking-grid { grid-template-columns: 1fr; gap: 2.5rem; } }
   .booking-info h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 300; line-height: 1.1; color: var(--cream); margin-bottom: 1.5rem; }
   .booking-info h2 em { color: var(--gold); font-style: italic; }
   .booking-info p { font-size: 0.75rem; color: var(--text-muted); line-height: 1.9; margin-bottom: 2.5rem; max-width: 420px; }
   
-  .form-frame { border: 1px solid rgba(201,169,110,0.2); padding: 3rem; position: relative; background: rgba(255,255,255,0.02); }
+  .form-frame { border: 1px solid rgba(201,169,110,0.2); padding: 2.5rem; position: relative; background: rgba(255,255,255,0.02); }
   .form-title { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 300; color: var(--gold); margin-bottom: 2rem; font-style: italic; }
-  .form-group { margin-bottom: 1.5rem; }
-  .form-label { display: block; font-size: 0.6rem; letter-spacing: 0.3em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.6rem; }
+  .form-group { margin-bottom: 1.2rem; }
+  .form-label { display: block; font-size: 0.6rem; letter-spacing: 0.3em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem; }
   
-  .form-input, .form-select, .form-textarea { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(201,169,110,0.25); padding: 0.8rem 0; color: var(--cream); font-family: 'Josefin Sans', sans-serif; font-size: 0.8rem; outline: none; transition: border-color 0.3s ease; }
+  .form-input, .form-select, .form-textarea { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(201,169,110,0.25); padding: 0.6rem 0; color: var(--cream); font-family: 'Josefin Sans', sans-serif; font-size: 0.85rem; outline: none; transition: border-color 0.3s ease; }
   .form-select option { background: #1a1410; color: var(--cream); }
-  .form-textarea { resize: none; height: 80px; padding-top: 0.5rem; }
+  .form-textarea { resize: none; height: 70px; padding-top: 0.5rem; }
   .form-input:focus, .form-select:focus, .form-textarea:focus { border-bottom-color: var(--gold); }
-  .form-input::placeholder, .form-textarea::placeholder { color: rgba(138,121,104,0.5); font-size: 0.75rem; }
+  .form-input::placeholder, .form-textarea::placeholder { color: rgba(138,121,104,0.4); font-size: 0.75rem; }
   
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-  @media (max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
+  
+  @media (max-width: 500px) { 
+    .form-row { grid-template-columns: 1fr; gap: 1rem; } 
+    .form-frame { padding: 1.5rem; }
+    .form-group { margin-bottom: 1rem; }
+  }
 
   .success-overlay {
     display: none; position: fixed; inset: 0; z-index: 5000;
@@ -209,10 +215,7 @@
   .nav-links a { font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; }
   @media (max-width: 600px) { .nav-links { display: none; } }
 
-  @keyframes fadeUp { 
-    0% { opacity: 0; transform: translateY(30px); } 
-    100% { opacity: 1; transform: translateY(0); } 
-  }
+  @keyframes fadeUp { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
   @keyframes scrollAnim { 0%, 100% { opacity: 0; transform: scaleY(0); transform-origin: top; } 50% { opacity: 1; transform: scaleY(1); } }
   @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
   @keyframes rotateBadge { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
@@ -362,8 +365,4 @@
           <div class="form-group">
             <label class="form-label">Preferred Time Slot</label>
             <select name="booking_time" class="form-select" id="bookingTime" required>
-              <option value="" disabled selected>Select a Time Slot</option>
-              <option value="10:00">10:00 am</option>
-              <option value="10:30">10:30 am</option>
-              <option value="11:00">11:00 am</option>
-      
+              <option value="" disabled selected>Select a T
