@@ -113,6 +113,17 @@
   .btn-gold span { position: relative; z-index: 1; }
   .btn-gold:disabled { opacity: 0.5; cursor: not-allowed; }
 
+  /* BADA BOOKING BUTTON */
+  .btn-confirm {
+    width: 100%; padding: 1.2rem; background: var(--gold); border: none; 
+    color: var(--dark); font-family: 'Josefin Sans', sans-serif; 
+    font-size: 0.9rem; font-weight: 600; letter-spacing: 0.2em; 
+    text-transform: uppercase; cursor: pointer; margin-top: 2rem; 
+    transition: background 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 15px rgba(201, 169, 110, 0.2);
+  }
+  .btn-confirm:hover:not(:disabled) { background: var(--gold-light); transform: translateY(-2px); }
+
   .scroll-hint {
     position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
     display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
@@ -174,16 +185,7 @@
   .form-input::placeholder, .form-textarea::placeholder { color: rgba(138,121,104,0.5); font-size: 0.75rem; }
   
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-  
-  /* MOBILE SPACING OPTIMIZATION (Yeh form ko chota rakhega taaki button easily dikhe) */
-  @media (max-width: 500px) { 
-    .form-row { grid-template-columns: 1fr; gap: 1rem; } 
-    .form-frame { padding: 1.5rem; }
-    .form-group { margin-bottom: 1rem; }
-  }
-  
-  .btn-submit { width: 100%; padding: 1.1rem; background: var(--gold); border: none; color: var(--dark); font-family: 'Josefin Sans', sans-serif; font-size: 0.7rem; letter-spacing: 0.4em; text-transform: uppercase; cursor: pointer; margin-top: 1rem; transition: background 0.3s ease, transform 0.2s ease;}
-  .btn-submit:hover:not(:disabled) { background: var(--gold-light); transform: translateY(-2px); }
+  @media (max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
 
   .success-overlay {
     display: none; position: fixed; inset: 0; z-index: 5000;
@@ -361,5 +363,7 @@
             <label class="form-label">Preferred Time Slot</label>
             <select name="booking_time" class="form-select" id="bookingTime" required>
               <option value="" disabled selected>Select a Time Slot</option>
-              <option value="10:00">10:00 AM</option>
-              <option value="10:30">10:30 AM</opti
+              <option value="10:00">10:00 am</option>
+              <option value="10:30">10:30 am</option>
+              <option value="11:00">11:00 am</option>
+      
