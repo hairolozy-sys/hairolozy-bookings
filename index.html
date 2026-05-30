@@ -28,13 +28,11 @@
     cursor: none;
   }
 
-  /* Mobile Fix: Disable Custom Cursor on Phones */
   @media (pointer: coarse) {
     .cursor, .cursor-ring { display: none !important; }
     body { cursor: auto; }
   }
 
-  /* Custom Cursor */
   .cursor {
     width: 8px; height: 8px; background: var(--gold);
     border-radius: 50%; position: fixed; top: 0; left: 0;
@@ -47,7 +45,6 @@
     transition: transform 0.15s ease, width 0.2s, height 0.2s;
   }
 
-  /* HERO */
   .hero {
     min-height: 100vh; position: relative; display: flex; flex-direction: column;
     align-items: center; justify-content: center; overflow: hidden; background: var(--dark);
@@ -65,7 +62,6 @@
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
   }
 
-  /* HERO ANIMATIONS FIXED */
   .hero-content {
     position: relative; z-index: 2; text-align: center; padding: 2rem;
     animation: fadeUp 1.2s cubic-bezier(0.16,1,0.3,1) both;
@@ -115,8 +111,8 @@
   .btn-gold:hover::before { transform: translateX(0); }
   .btn-gold:hover { color: var(--dark); }
   .btn-gold span { position: relative; z-index: 1; }
+  .btn-gold:disabled { opacity: 0.5; cursor: not-allowed; }
 
-  /* SCROLL INDICATOR */
   .scroll-hint {
     position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
     display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
@@ -128,12 +124,10 @@
     animation: scrollAnim 2s ease infinite;
   }
 
-  /* ABOUT STRIP */
   .strip { background: var(--gold); padding: 1rem; overflow: hidden; }
   .strip-inner { display: flex; gap: 4rem; animation: marquee 20s linear infinite; white-space: nowrap; }
   .strip-item { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-style: italic; color: var(--dark); flex-shrink: 0; }
 
-  /* SERVICES SECTION */
   .section { padding: 8rem 5% 6rem; position: relative; }
   .section-label { font-size: 0.65rem; letter-spacing: 0.5em; color: var(--gold); text-transform: uppercase; margin-bottom: 1rem; }
   .section-heading { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 300; line-height: 1.05; color: var(--cream); margin-bottom: 4rem; }
@@ -149,7 +143,6 @@
   .service-name { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 400; color: var(--cream); margin-bottom: 0.75rem; }
   .service-desc { font-size: 0.72rem; color: var(--text-muted); letter-spacing: 0.05em; line-height: 1.8; margin-bottom: 1.5rem; }
 
-  /* ABOUT SECTION */
   .about-section { padding: 8rem 5%; display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
   @media (max-width: 768px) { .about-section { grid-template-columns: 1fr; gap: 3rem; } }
   .about-visual { position: relative; height: 500px; }
@@ -162,7 +155,6 @@
   .about-info h2 em { color: var(--gold); font-style: italic; }
   .about-info p { font-size: 0.75rem; color: var(--text-muted); line-height: 1.9; letter-spacing: 0.05em; margin-bottom: 1.5rem; }
 
-  /* BOOKING SECTION */
   .booking-section { background: linear-gradient(135deg, #1f170f 0%, var(--dark) 50%, #150f0a 100%); padding: 8rem 5%; position: relative; overflow: hidden; }
   .booking-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start; position: relative; }
   @media (max-width: 768px) { .booking-grid { grid-template-columns: 1fr; gap: 3rem; } }
@@ -175,7 +167,6 @@
   .form-group { margin-bottom: 1.5rem; }
   .form-label { display: block; font-size: 0.6rem; letter-spacing: 0.3em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.6rem; }
   
-  /* Form Inputs & Textarea */
   .form-input, .form-select, .form-textarea { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(201,169,110,0.25); padding: 0.8rem 0; color: var(--cream); font-family: 'Josefin Sans', sans-serif; font-size: 0.8rem; outline: none; transition: border-color 0.3s ease; }
   .form-select option { background: #1a1410; color: var(--cream); }
   .form-textarea { resize: none; height: 80px; padding-top: 0.5rem; }
@@ -186,9 +177,8 @@
   @media (max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
   
   .btn-submit { width: 100%; padding: 1.1rem; background: var(--gold); border: none; color: var(--dark); font-family: 'Josefin Sans', sans-serif; font-size: 0.7rem; letter-spacing: 0.4em; text-transform: uppercase; cursor: pointer; margin-top: 1.5rem; transition: background 0.3s ease, transform 0.2s ease;}
-  .btn-submit:hover { background: var(--gold-light); transform: translateY(-2px); }
+  .btn-submit:hover:not(:disabled) { background: var(--gold-light); transform: translateY(-2px); }
 
-  /* SUCCESS OVERLAY POPUP (RESTORED FROM YOUR ORIGINAL CODE) */
   .success-overlay {
     display: none; position: fixed; inset: 0; z-index: 5000;
     background: rgba(26,20,16,0.95); align-items: center; justify-content: center;
@@ -200,12 +190,10 @@
   .success-msg { font-size: 0.85rem; color: var(--text-muted); letter-spacing: 0.1em; animation: fadeUp 0.5s 0.4s both; max-width: 300px; line-height: 1.6;}
   .success-close { margin-top: 1rem; animation: fadeUp 0.5s 0.6s both; }
 
-  /* FOOTER */
   footer { background: #0e0b08; padding: 4rem 5% 2rem; border-top: 1px solid rgba(201,169,110,0.1); }
   .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; color: var(--gold); }
   .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 2rem; border-top: 1px solid rgba(201,169,110,0.08); font-size: 0.6rem; color: var(--text-muted); letter-spacing: 0.1em; margin-top: 2rem;}
 
-  /* FLOATING NAV */
   .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.5rem 5%; display: flex; justify-content: space-between; align-items: center; transition: background 0.4s ease, padding 0.4s ease; }
   .nav.scrolled { background: rgba(14,11,8,0.95); backdrop-filter: blur(20px); padding: 1rem 5%; border-bottom: 1px solid rgba(201,169,110,0.1); }
   .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 300; color: var(--gold); letter-spacing: 0.05em; }
@@ -213,7 +201,6 @@
   .nav-links a { font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; }
   @media (max-width: 600px) { .nav-links { display: none; } }
 
-  /* ANIMATIONS */
   @keyframes fadeUp { 
     0% { opacity: 0; transform: translateY(30px); } 
     100% { opacity: 1; transform: translateY(0); } 
@@ -323,7 +310,11 @@
       <h3 class="form-title">Appointment Request</h3>
       
       <form id="bookingForm">
+        <input type="hidden" name="access_key" value="35460aac-0267-4045-b24f-0bed6ab32101">
         
+        <input type="hidden" name="subject" value="New Appointment Request - Hairolozy">
+        <input type="hidden" name="from_name" value="Hairolozy Bookings">
+
         <div class="form-group">
           <label class="form-label">Full Name</label>
           <input type="text" name="client_name" class="form-input" placeholder="Enter your name" required>
@@ -369,4 +360,5 @@
               <option value="10:30">10:30 AM</option>
               <option value="11:00">11:00 AM</option>
               <option value="11:30">11:30 AM</option>
-              <
+              <option value="12:00">12:00 PM</option>
+             
