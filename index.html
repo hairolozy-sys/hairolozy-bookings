@@ -174,14 +174,14 @@
   .form-group { margin-bottom: 1.5rem; }
   .form-label { display: block; font-size: 0.6rem; letter-spacing: 0.3em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.6rem; }
   
-  /* Restored Form Inputs & Textarea */
+  /* Form Inputs & Textarea */
   .form-input, .form-select, .form-textarea { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(201,169,110,0.25); padding: 0.8rem 0; color: var(--cream); font-family: 'Josefin Sans', sans-serif; font-size: 0.8rem; outline: none; transition: border-color 0.3s ease; }
   .form-select option { background: #1a1410; color: var(--cream); }
   .form-textarea { resize: none; height: 80px; padding-top: 0.5rem; }
   .form-input:focus, .form-select:focus, .form-textarea:focus { border-bottom-color: var(--gold); }
   .form-input::placeholder, .form-textarea::placeholder { color: rgba(138,121,104,0.5); font-size: 0.75rem; }
   
-  /* Restored Form Row for Date & Time */
+  /* Form Row for Date & Time */
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
   @media (max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
   
@@ -338,9 +338,31 @@
             <small id="dateMessage" style="color: var(--gold-light); font-size: 0.65rem; display: none; margin-top: 0.5rem; letter-spacing: 0.05em;"></small>
           </div>
           <div class="form-group">
-            <label class="form-label">Preferred Time</label>
-            <input type="time" class="form-input" id="bookingTime" max="20:00" required>
-            <small id="timeMessage" style="color: #ff6b6b; font-size: 0.65rem; display: none; margin-top: 0.5rem; letter-spacing: 0.05em;"></small>
+            <label class="form-label">Preferred Time Slot</label>
+            <select class="form-select" id="bookingTime" required>
+              <option value="" disabled selected>Select a Time Slot</option>
+              <option value="10:00">10:00 AM</option>
+              <option value="10:30">10:30 AM</option>
+              <option value="11:00">11:00 AM</option>
+              <option value="11:30">11:30 AM</option>
+              <option value="12:00">12:00 PM</option>
+              <option value="12:30">12:30 PM</option>
+              <option value="13:00">01:00 PM</option>
+              <option value="13:30">01:30 PM</option>
+              <option value="14:00">02:00 PM</option>
+              <option value="14:30">02:30 PM</option>
+              <option value="15:00">03:00 PM</option>
+              <option value="15:30">03:30 PM</option>
+              <option value="16:00">04:00 PM</option>
+              <option value="16:30">04:30 PM</option>
+              <option value="17:00">05:00 PM</option>
+              <option value="17:30">05:30 PM</option>
+              <option value="18:00">06:00 PM</option>
+              <option value="18:30">06:30 PM</option>
+              <option value="19:00">07:00 PM</option>
+              <option value="19:30">07:30 PM</option>
+              <option value="20:00">08:00 PM</option>
+            </select>
           </div>
         </div>
 
@@ -363,35 +385,4 @@
   </div>
 </footer>
 
-<script>
-  // Custom Cursor
-  const cursor = document.getElementById('cursor');
-  const cursorRing = document.getElementById('cursorRing');
-
-  if (window.matchMedia("(pointer: fine)").matches) {
-    document.addEventListener('mousemove', (e) => {
-      cursor.style.transform = `translate(${e.clientX - 4}px, ${e.clientY - 4}px)`;
-      cursorRing.style.transform = `translate(${e.clientX - 18}px, ${e.clientY - 18}px)`;
-    });
-  }
-
-  // Sticky Nav Background
-  const nav = document.getElementById('nav');
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-      nav.classList.add('scrolled');
-    } else {
-      nav.classList.remove('scrolled');
-    }
-  });
-
-  // DATE & TIME RESTRICTION LOGIC
-  const dateInput = document.getElementById('bookingDate');
-  const timeInput = document.getElementById('bookingTime');
-  const dateMessage = document.getElementById('dateMessage');
-  const timeMessage = document.getElementById('timeMessage');
-  
-  const today = new Date();
-  const currentHour = today.getHours();
-
-  // Helper funct
+<sc
