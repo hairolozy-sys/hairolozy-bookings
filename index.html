@@ -1,122 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hairolozy — by Arman | Luxury Hair Studio</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@100;300;400&display=swap" rel="stylesheet">
-<style>
-  :root { --gold: #c9a96e; --gold-light: #e8d5a3; --cream: #faf6f0; --dark: #1a1410; --text-muted: #8a7968; }
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Josefin Sans', sans-serif; background: var(--dark); color: var(--cream); overflow-x: hidden; }
-
-  /* HERO */
-  .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: var(--dark); }
-  .hero-tag { font-size: 0.7rem; letter-spacing: 0.4em; color: var(--gold); text-transform: uppercase; margin-bottom: 1rem; }
-  .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(4rem, 12vw, 10rem); font-weight: 300; background: linear-gradient(135deg, #e8d5a3 0%, #c9a96e 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  
-  /* BOOKING */
-  .booking-section { padding: 8rem 5%; background: linear-gradient(135deg, #1f170f 0%, var(--dark) 100%); }
-  .booking-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; max-width: 1200px; margin: 0 auto; }
-  @media (max-width: 768px) { .booking-grid { grid-template-columns: 1fr; } }
-  .form-frame { border: 1px solid rgba(201,169,110,0.2); padding: 3rem; background: rgba(255,255,255,0.02); }
-  .form-group { margin-bottom: 1.5rem; }
-  .form-input, .form-select { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(201,169,110,0.25); padding: 0.8rem 0; color: var(--cream); }
-  .btn-confirm { width: 100%; padding: 1.2rem; background: var(--gold); border: none; color: var(--dark); font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 0.2em; }
-  
-  .success-overlay { display: none; position: fixed; inset: 0; z-index: 5000; background: rgba(26,20,16,0.95); align-items: center; justify-content: center; flex-direction: column; }
-  .success-overlay.show { display: flex; }
-</style>
-</head>
-<body>
-
-<section class="hero">
-  <p class="hero-tag">✦ Luxury Hair Studio ✦ by Arman</p>
-  <h1 class="hero-title">Hairolozy</h1>
-  <p>Where artistry meets chemistry</p>
-</section>
-
-<section class="booking-section" id="booking">
-  <div class="booking-grid">
-    <div class="booking-info">
-      <h2>Book Your Experience</h2>
-      <p>Select your service, date and time to secure your spot.</p>
-    </div>
-    <div class="form-frame">
-      <form id="bookingForm">
-        <input type="hidden" name="access_key" value="35460aac-0267-4045-b24f-0bed6ab32101">
-        
-        <div class="form-group">
-          <label>Full Name</label>
-          <input type="text" name="client_name" class="form-input" required>
-        </div>
-        <div class="form-group">
-          <label>Phone Number</label>
-          <input type="tel" name="client_phone" class="form-input" required>
-        </div>
-        <div class="form-group">
-          <label>Service Required</label>
-          <select name="service_required" class="form-select" required>
-            <option value="Hair Cut">Hair Cut</option>
-            <option value="Hair Styling">Hair Styling</option>
-            <option value="Hair Color">Hair Color</option>
-            <option value="Global Color">Global Color</option>
-            <option value="Highlights">Highlights</option>
-            <option value="Balayage">Balayage</option>
-            <option value="Keratin Treatment">Keratin Treatment</option>
-            <option value="Hair Botox">Hair Botox</option>
-            <option value="Smoothening">Smoothening</option>
-            <option value="Nanoplastia">Nanoplastia</option>
-            <option value="Scalp Treatment">Scalp Treatment</option>
-            <option value="Olaplex Treatment">Olaplex Treatment</option>
-            <option value="Trichology Consultation">Trichology Consultation</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Date</label>
-          <input type="date" name="booking_date" class="form-input" required>
-        </div>
-        <div class="form-group">
-          <label>Time Slot</label>
-          <select name="booking_time" id="bookingTime" class="form-select" required></select>
-        </div>
-        <button type="submit" class="btn-confirm" id="submitBtn">CONFIRM BOOKING</button>
-      </form>
-    </div>
-  </div>
-</section>
-
-<div class="success-overlay" id="successOverlay">
-  <h2>Request Sent Successfully!</h2>
-  <button class="btn-confirm" style="width:200px; margin-top:20px;" onclick="location.reload()">Close</button>
-</div>
+<!-- Yahan par aapka form hai (already existing), bas <script> tag ko update kar dijiye -->
 
 <script>
-  // Time Slots 10 AM to 8 PM
-  const timeSelect = document.getElementById('bookingTime');
-  const slots = ["10:00 am", "10:30 am", "11:00 am", "11:30 am", "12:00 pm", "12:30 pm", "01:00 pm", "01:30 pm", "02:00 pm", "02:30 pm", "03:00 pm", "03:30 pm", "04:00 pm", "04:30 pm", "05:00 pm", "05:30 pm", "06:00 pm", "06:30 pm", "07:00 pm", "07:30 pm", "08:00 pm"];
-  slots.forEach(slot => {
-    let opt = document.createElement('option');
-    opt.value = slot; opt.textContent = slot;
-    timeSelect.appendChild(opt);
-  });
+  // DUAL ENGINE INITIALIZATION
+  const FORM_ENDPOINT_1 = "https://formspree.io/f/YOUR_FORM_ID"; // Primary: Email/Dashboard
+  const FORM_ENDPOINT_2 = "https://your-custom-backend.com/api/track"; // Secondary: Custom/Analytics
 
-  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz1cf4ZtyQkc4_fiHUxfluMIiSABE0J5wyXiE8lYy93-nDJcSQQRW53hDG8xuUYUiY9/exec';
+  const bookingForm = document.getElementById('bookingForm');
+  const successOverlay = document.getElementById('successOverlay');
 
-  document.getElementById('bookingForm').addEventListener('submit', function(e) {
+  bookingForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    document.getElementById('submitBtn').innerText = "SENDING...";
-    const data = Object.fromEntries(new FormData(this));
     
-    // Engine 1: Email
-    fetch('https://api.web3forms.com/submit', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
-    
-    // Engine 2: Google Sheet
-    fetch(GOOGLE_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) })
-    .then(() => { 
-        document.getElementById('successOverlay').classList.add('show'); 
-    });
+    const formData = new FormData(bookingForm);
+    const data = Object.fromEntries(formData.entries());
+
+    // START DUAL ENGINE
+    try {
+      // Engine 1: Primary Delivery
+      const engine1 = fetch(FORM_ENDPOINT_1, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
+      });
+
+      // Engine 2: Data Logging / CRM Sync
+      const engine2 = fetch(FORM_ENDPOINT_2, {
+        method: "POST",
+        body: JSON.stringify({ ...data, timestamp: new Date().toISOString() }),
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      // Dono engines ka wait karenge
+      await Promise.allSettled([engine1, engine2]);
+      
+      // Success State
+      successOverlay.classList.add('show');
+      bookingForm.reset();
+      
+    } catch (error) {
+      console.error("Engine Sync Error:", error);
+      alert("Something went wrong with the engines. Please try again.");
+    }
   });
+
+  // Cursor and Scroll interactions remain same...
 </script>
-</body>
-</html>
