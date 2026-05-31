@@ -1,65 +1,43 @@
-import React, { useState } from 'react';
-import emailjs from 'emailjs-com';
-import { db } from './firebaseConfig'; // Aapka firebase config file
-import { collection, addDoc } from 'firebase/firestore';
+<script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
 
-const BookingForm = () => {
-  const [formData, setFormData] = useState({
-    name: '', phone: '', date: '', time: '', services: [], specs: ''
-  });
-  const [loading, setLoading] = useState(false);
+<div class="form-group" style="border: 1px solid #D4AF37; padding: 15px; border-radius: 10px;">
+    <label>Select Booking Engine</label>
+    <select id="engine-select" style="background:#121212; color:#D4AF37;">
+        <option value="web2">Standard Booking (Firebase)</option>
+        <option value="web3">Web3 Booking (Crypto Wallet)</option>
+    </select>
+</div>
 
-  const servicesList = [
-    "Haircut", "Hair Spa", "Hair Color", "Keratin", "Hair Wash", 
-    "Blow Dry", "Styling", "Massage", "Botox", "Root Touch-up", 
-    "Highlights", "Hair Texture"
-  ];
+<button class="book-btn" onclick="processBooking()">Confirm Appointment</button>
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+<script>
+    // WEB3 ENGINE CONFIG
+    let provider, signer;
+    const contractAddress = "0xYourContractAddressHere"; // Yahan apna Smart Contract Address dalein
 
-    try {
-      // 1. Firebase mein Data save karein (Admin App ke liye)
-      await addDoc(collection(db, "bookings"), { ...formData, timestamp: new Date() });
-
-      // 2. Email bhejein (Aapki Gmail ke liye)
-      await emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', formData, 'YOUR_PUBLIC_KEY');
-
-      alert("Booking Confirmed! Check your mail.");
-      setFormData({ name: '', phone: '', date: '', time: '', services: [], specs: '' });
-    } catch (error) {
-      alert("Error in booking, please try again.");
+    async function connectWallet() {
+        if (!window.ethereum) return alert("Please install MetaMask!");
+        provider = new ethers.providers.Web3Provider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
+        signer = provider.getSigner();
+        const address = await signer.getAddress();
+        alert("Connected: " + address);
     }
-    setLoading(false);
-  };
 
-  return (
-    <div className="booking-card">
-      <h2>Book Your Hair Session</h2>
-      <form onSubmit={handleSubmit}>
-        <input type="text" placeholder="Client Name" required onChange={(e) => setFormData({...formData, name: e.target.value})} />
-        <input type="tel" placeholder="Phone Number" required onChange={(e) => setFormData({...formData, phone: e.target.value})} />
-        <input type="date" required onChange={(e) => setFormData({...formData, date: e.target.value})} />
+    async function processBooking() {
+        const engine = document.getElementById('engine-select').value;
         
-        <select onChange={(e) => setFormData({...formData, time: e.target.value})}>
-          {["10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM", "06:00 PM", "07:00 PM", "08:00 PM"].map(t => <option value={t}>{t}</option>)}
-        </select>
+        if (engine === 'web3') {
+            // WEB3 ENGINE LOGIC
+            if(!signer) await connectWallet();
+            console.log("Processing via Blockchain Engine...");
+            // Yahan Smart Contract call hoga
+            alert("Web3 Engine: Transaction initiated on Blockchain!");
+        } else {
+            // WEB2 ENGINE LOGIC (Aapka purana Firebase logic)
+            submitBooking(); 
+        }
+    }
 
-        <div className="services-grid">
-          {servicesList.map(s => (
-            <label key={s}><input type="checkbox" onChange={(e) => {
-              const list = e.target.checked ? [...formData.services, s] : formData.services.filter(x => x !== s);
-              setFormData({...formData, services: list});
-            }} /> {s}</label>
-          ))}
-        </div>
-
-        <textarea placeholder="Client Specifications/Notes" onChange={(e) => setFormData({...formData, specs: e.target.value})} />
-        
-        <button type="submit" disabled={loading}>{loading ? "Confirming..." : "Confirm Booking"}</button>
-      </form>
-    </div>
-  );
-};
-            
+    // Baaki purana submitBooking() function waise hi rahega...
+</script>
