@@ -68,6 +68,14 @@
         }
         /* END: Floating WhatsApp Button CSS */
     </style>
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            // Initialize EmailJS with your Public Key
+            emailjs.init("wYQhSFbS1PyHV1lI0");
+        })();
+    </script>
 </head>
 <body>
 
@@ -142,14 +150,6 @@
     </a>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script type="text/javascript">
-       (function(){
-          // Yahan apni EmailJS Public Key daaliye
-          emailjs.init("YOUR_EMAILJS_PUBLIC_KEY"); 
-       })();
-    </script>
 
     <script>
         const firebaseConfig = { 
@@ -196,9 +196,14 @@
             const history = document.getElementById('hair-history').value;
             const date = document.getElementById('client-date').value;
             let time = document.getElementById('client-time').value;
+            const btn = document.querySelector('.book-btn');
 
             if(selectedServicesArray.length === 0) return alert("Please select at least one Service!");
             if(!name || !phone || !date || !time) return alert("Please fill all details!");
+
+            // Change button state while processing
+            btn.innerHTML = "Processing...";
+            btn.disabled = true;
 
             // Format Time 12 hr
             let timeParts = time.split(':');
@@ -209,37 +214,42 @@
 
             const bookingID = "HLZ-" + Math.floor(1000 + Math.random() * 9000);
             
-            // ENGINE 1: FIREBASE FIRESTORE
+            // 1. Save to Firebase
             db.collection("clients").add({
                 bookingID, clientName: name, clientPhone: phone, serviceName: service, 
                 history: "History: " + (history || "None"), bookingDate: date, bookingTime: formattedTime, status: 'pending'
             }).then(() => {
                 
-                // ENGINE 2: EMAILJS EMAIL NOTIFICATION
-                // Yahan apne EmailJS ke Service ID aur Template ID replace karein
-                emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
-                    to_name: "Arman (Admin)",
+                // 2. Setup EmailJS Parameters
+                const templateParams = {
+                    booking_id: bookingID,
                     client_name: name,
                     client_phone: phone,
-                    service: service,
-                    date: date,
-                    time: formattedTime,
-                    history: history || "None",
-                    booking_id: bookingID
-                }).then(function(response) {
-                    console.log('Dual Engine: Email successfully sent!', response.status, response.text);
-                }, function(error) {
-                    console.log('Dual Engine: Email sending failed...', error);
-                });
+                    service_name: service,
+                    hair_history: history || "None",
+                    booking_date: date,
+                    booking_time: formattedTime
+                };
 
-                // HIDE FORM AND SHOW SUCCESS UI
+                // 3. Send Email using EmailJS
+                emailjs.send("Service_kjhk4rg", "template_fbaow2p", templateParams)
+                    .then(function(response) {
+                        console.log('Email sent successfully!', response.status, response.text);
+                    }, function(error) {
+                        console.log('Failed to send email...', error);
+                    });
+
+                // Hide Form
                 document.getElementById('bookingForm').style.display = 'none';
                 
-                // WhatsApp Redirection
+                // 🛑 YAHAN APNA WHATSAPP NUMBER DAALEIN 🛑
                 const salonNumber = "918860504808"; 
+
+                // 4. Generate WhatsApp Link
                 const msg = `🔔 *New Booking Alert!*\n\n*ID:* ${bookingID}\n*Client:* ${name}\n*Services:* ${service}\n*Date:* ${date}\n*Time:* ${formattedTime}\n*History:* ${history || 'None'}`;
                 const waUrl = `https://wa.me/${salonNumber}?text=${encodeURIComponent(msg)}`;
 
+                // Show Success Screen
                 document.getElementById('successMsg').innerHTML = `
                     <h2 style="color:#D4AF37; margin-top:0;">Booking Sent!</h2>
                     <div class="booking-id-badge">${bookingID}</div>
@@ -247,8 +257,12 @@
                     <a href="${waUrl}" target="_blank" style="background:#25d366; color:white; padding:15px 25px; border-radius:30px; text-decoration:none; font-weight:bold; display:inline-block; margin-top:10px;">📲 Confirm on WhatsApp</a>
                 `;
                 document.getElementById('successMsg').style.display = 'block';
+                
             }).catch((error) => {
-                alert("Error saving booking: " + error.message);
+                console.error("Error saving to Firebase: ", error);
+                alert("An error occurred while booking. Please try again.");
+                btn.innerHTML = "Confirm Appointment";
+                btn.disabled = false;
             });
         }
     </script>
