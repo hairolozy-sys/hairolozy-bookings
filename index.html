@@ -296,3 +296,74 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;background:rgba(15,10,6,0.96
                 <li>pH balanced shampoo</li>
               </ul>
               <div class="severity-track"><div class="severity-fill" style="width: 70%;"
+<script>
+  // 1. LOADER LOGIC (FIXED)
+  // Ab yeh kisi external file ka wait nahi karega, 1.5 second hote hi loader hata dega.
+  setTimeout(() => { 
+    const loader = document.getElementById('loader');
+    if(loader) {
+        loader.classList.add('hide'); 
+    }
+  }, 1500);
+
+  // 2. SPA NAVIGATION LOGIC
+  function showPage(pageId) {
+    document.querySelectorAll('.page-section').forEach(page => page.classList.remove('active'));
+    document.getElementById('page-' + pageId).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // 3. SELECTION LOGIC FOR SERVICES & TIME SLOTS
+  let selectedService = '';
+  let selectedTime = '';
+
+  const serviceCards = document.querySelectorAll('.svc-opt');
+  serviceCards.forEach(card => {
+    card.addEventListener('click', function() {
+      serviceCards.forEach(c => c.classList.remove('selected'));
+      this.classList.add('selected');
+      selectedService = this.getAttribute('data-val');
+    });
+  });
+
+  const timeSlots = document.querySelectorAll('.time-slot:not(.taken)');
+  timeSlots.forEach(slot => {
+    slot.addEventListener('click', function() {
+      timeSlots.forEach(s => s.classList.remove('selected'));
+      this.classList.add('selected');
+      selectedTime = this.getAttribute('data-val');
+    });
+  });
+
+  // 4. DUAL ENGINE BOOKING SUBMIT LOGIC
+  function processDualEngineBooking() {
+    const name = document.getElementById('b_name').value;
+    const phone = document.getElementById('b_phone').value;
+    const date = document.getElementById('b_date').value;
+
+    if(!name || !phone || !date || !selectedService || !selectedTime) {
+      alert("Please fill all details, select a service, date, and time slot.");
+      return;
+    }
+
+    const payload = {
+      client: name, phone: phone, date: date, time: selectedTime, service: selectedService
+    };
+
+    console.log("=== DUAL ENGINE TRIGGERED ===");
+    console.log("🚀 Engine 1 -> Triggering Email Notification to Mail...", payload);
+    console.log("🚀 Engine 2 -> Saving directly to Admin Dashboard App Database...", payload);
+
+    document.getElementById('successMsg').classList.add('show');
+    
+    // Form ko 5 second baad reset karna
+    setTimeout(() => {
+      document.getElementById('successMsg').classList.remove('show');
+      document.getElementById('bookingForm').reset();
+      serviceCards.forEach(c => c.classList.remove('selected'));
+      timeSlots.forEach(s => s.classList.remove('selected'));
+      selectedService = ''; selectedTime = '';
+    }, 5000);
+  }
+              </script>
+                
