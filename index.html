@@ -156,7 +156,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; background: rgba
           </div>
 
           <div class="form-group">
-            <label>Select Service</label>
+            <label>Select Service(s) - You can choose multiple</label>
             <div class="service-picker" id="svcPicker">
               <div class="svc-opt" data-val="Balayage"><span class="svc-opt-icon">🎨</span> Balayage & Toning</div>
               <div class="svc-opt" data-val="Global Color"><span class="svc-opt-icon">🖌️</span> Global Color</div>
@@ -224,47 +224,49 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; background: rgba
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  let selectedService = '';
+  // MULTI-SELECT ARRAY
+  let selectedServices = []; 
   let selectedTime = '';
 
-  // 3. SERVICE SELECTION LOGIC
+  // 3. MULTIPLE SERVICE SELECTION LOGIC
   const serviceCards = document.querySelectorAll('.svc-opt');
   serviceCards.forEach(card => {
     card.addEventListener('click', function() {
-      serviceCards.forEach(c => c.classList.remove('selected'));
-      this.classList.add('selected');
-      selectedService = this.getAttribute('data-val');
+      // Toggle the selected class
+      this.classList.toggle('selected');
+      
+      const val = this.getAttribute('data-val');
+      
+      // Update the array based on whether it's selected or deselected
+      if(this.classList.contains('selected')) {
+        selectedServices.push(val);
+      } else {
+        selectedServices = selectedServices.filter(s => s !== val);
+      }
     });
   });
 
-  // --- NAYA DYNAMIC DATE & TIME SLOT LOGIC ---
-  
-  // Dummy Database: Maan lijiye ye dates aur times pehle se hi kisi ne book kar rakhe hain
-  // Test karne ke liye input mein aaj ya kal ki date select karein
+  // --- DYNAMIC DATE & TIME SLOT LOGIC ---
   const bookedDatabase = [
-    { date: "2026-06-02", time: "11:00 AM" }, // Test: 2 June ko 11 am block hoga
-    { date: "2026-06-02", time: "05:00 PM" }, // Test: 2 June ko 5 pm block hoga
-    { date: "2026-06-03", time: "01:00 PM" }  // Test: 3 June ko 1 pm block hoga
+    { date: "2026-06-02", time: "11:00 AM" }, 
+    { date: "2026-06-02", time: "05:00 PM" }, 
+    { date: "2026-06-03", time: "01:00 PM" }  
   ];
 
   const dateInput = document.getElementById('b_date');
   const timeSlots = document.querySelectorAll('.time-slot');
 
-  // Jab Date change ho
   dateInput.addEventListener('change', function() {
     const chosenDate = this.value;
-    selectedTime = ''; // Date badalte hi time selection reset kar do
+    selectedTime = ''; 
 
-    // Saare slots ko reset karo (open kardo)
     timeSlots.forEach(slot => {
       slot.classList.remove('taken', 'selected');
     });
 
-    // Check karo ki is chosenDate ke liye database mein kaunse slots hain
     const todaysBookings = bookedDatabase.filter(booking => booking.date === chosenDate);
     const takenTimes = todaysBookings.map(booking => booking.time);
 
-    // Jo slots booked hain, unpe 'taken' class laga do
     timeSlots.forEach(slot => {
       if (takenTimes.includes(slot.getAttribute('data-val'))) {
         slot.classList.add('taken');
@@ -272,10 +274,8 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; background: rgba
     });
   });
 
-  // Time Slot Selection Click Logic (Updated: taken slot pe click kaam na kare)
   timeSlots.forEach(slot => {
     slot.addEventListener('click', function() {
-      // Agar slot taken hai, toh return kar jao (kuch mat karo)
       if (this.classList.contains('taken')) return;
 
       timeSlots.forEach(s => s.classList.remove('selected'));
@@ -290,17 +290,21 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; background: rgba
     const phone = document.getElementById('b_phone').value;
     const date = document.getElementById('b_date').value;
 
-    if(!name || !phone || !date || !selectedService || !selectedTime) {
-      alert("Please fill all details, select a service, date, and time slot.");
+    // Validation updated for array length
+    if(!name || !phone || !date || selectedServices.length === 0 || !selectedTime) {
+      alert("Please fill all details, select at least one service, date, and a time slot.");
       return;
     }
 
-    const payload = { client: name, phone: phone, date: date, time: selectedTime, service: selectedService };
+    const payload = { 
+      client: name, 
+      phone: phone, 
+      date: date, 
+      time: selectedTime, 
+      services: selectedServices.join(', ') // Backend mein comma-separated string bhejne ke liye
+    };
 
-    // Yahan original Dual Engine API call aayegi jab real backend connect hoga
     console.log("=== DUAL ENGINE PAYLOAD ===", payload);
-    
-    // UI Pop-up dikhana
     document.getElementById('successModal').classList.add('show');
   }
 
@@ -308,9 +312,13 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; background: rgba
   function closeModal() {
     document.getElementById('successModal').classList.remove('show');
     document.getElementById('bookingForm').reset();
+    
+    // UI selections reset
     serviceCards.forEach(c => c.classList.remove('selected'));
     timeSlots.forEach(s => s.classList.remove('selected'));
-    selectedService = ''; 
+    
+    // JS variables reset
+    selectedServices = []; 
     selectedTime = '';
   }
 </script>
