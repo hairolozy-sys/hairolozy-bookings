@@ -48,13 +48,6 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; background: rgba
 .hero-actions { display: flex; gap: 14px; margin-top: 40px; flex-wrap: wrap; justify-content: center; opacity: 0; animation: fadeUp 0.7s 0.9s ease forwards; }
 .btn-gold { background: var(--gold); color: var(--ink); border: none; padding: 14px 34px; border-radius: 8px; font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 0.9rem; letter-spacing: 1px; cursor: pointer; transition: all 0.25s; }
 .btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184,151,58,0.3); }
-.btn-outline { background: transparent; color: var(--cream); border: 1px solid rgba(250,247,242,0.3); padding: 14px 34px; border-radius: 8px; font-family: 'Outfit', sans-serif; font-size: 0.9rem; letter-spacing: 1px; cursor: pointer; transition: all 0.25s; }
-.btn-outline:hover { border-color: var(--gold); color: var(--gold); }
-.hero-stats { display: flex; gap: 48px; margin-top: 64px; opacity: 0; animation: fadeUp 0.7s 1.1s ease forwards; }
-.stat-item { text-align: center; }
-.stat-num { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; color: var(--gold); line-height: 1; }
-.stat-label { font-size: 0.72rem; color: var(--blush); letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; opacity: 0.7; }
-@keyframes fadeUp { from{opacity:0; transform:translateY(24px);} to{opacity:1; transform:translateY(0);} }
 
 /* MAIN WRAPPER & HEADERS */
 .main { max-width: 1300px; margin: auto; padding: 0 40px; }
@@ -67,6 +60,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; background: rgba
 /* TABS */
 .page-section { display: none; padding-top: 88px; padding-bottom: 80px; }
 .page-section.active { display: block; animation: fadeUp 0.4s ease; }
+@keyframes fadeUp { from{opacity:0; transform:translateY(24px);} to{opacity:1; transform:translateY(0);} }
 
 /* APPOINTMENT */
 .appt-layout { display: grid; grid-template-columns: 1fr 420px; gap: 32px; align-items: start; }
@@ -85,9 +79,9 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; background: rgba
 .svc-opt-icon { font-size: 1.2rem; }
 .time-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 8px; }
 .time-slot { padding: 9px; border: 1.5px solid var(--border); border-radius: 8px; text-align: center; font-size: 0.82rem; cursor: pointer; transition: all 0.2s; }
-.time-slot:hover { border-color: var(--gold-light); }
+.time-slot:hover:not(.taken) { border-color: var(--gold-light); }
 .time-slot.selected { background: var(--gold); border-color: var(--gold); color: var(--ink); font-weight: 600; }
-.time-slot.taken { opacity: 0.35; cursor: not-allowed; background: var(--warm); pointer-events: none; }
+.time-slot.taken { opacity: 0.35; cursor: not-allowed; background: var(--warm); pointer-events: none; border-color: var(--border); }
 .appt-summary { background: var(--ink); border-radius: 20px; padding: 32px; color: var(--cream); }
 .appt-summary h4 { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--gold); margin-bottom: 22px; }
 .summary-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.07); font-size: 0.87rem; }
@@ -116,14 +110,12 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; background: rgba
 </head>
 <body>
 
-<!-- LOADER -->
 <div id="loader">
   <div class="loader-logo">Hairolozy</div>
   <div class="loader-sub">Advanced Hair Science Studio</div>
   <div class="loader-bar"><div class="loader-fill"></div></div>
 </div>
 
-<!-- NAV -->
 <nav>
   <div class="nav-inner">
     <div class="nav-logo" onclick="showPage('home')">Hair<span>olozy</span></div>
@@ -134,7 +126,6 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; background: rgba
   </div>
 </nav>
 
-<!-- HOME -->
 <div id="page-home" class="page-section active" style="padding-top:0;">
   <div class="hero">
     <div class="hero-orb orb1"></div>
@@ -148,7 +139,6 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; background: rgba
   </div>
 </div>
 
-<!-- APPOINTMENT -->
 <div id="page-appointment" class="page-section">
   <div class="main">
     <div class="sec-header">
@@ -158,7 +148,6 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; background: rgba
     </div>
     
     <div class="appt-layout">
-      <!-- MAIN BOOKING FORM -->
       <div class="appt-form">
         <form id="bookingForm">
           <div class="form-row-2">
@@ -182,17 +171,21 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; background: rgba
             <div class="time-grid" id="timeGrid">
               <div class="time-slot" data-val="10:00 AM">10:00 AM</div>
               <div class="time-slot" data-val="11:00 AM">11:00 AM</div>
-              <div class="time-slot taken">12:00 PM</div>
+              <div class="time-slot" data-val="12:00 PM">12:00 PM</div>
               <div class="time-slot" data-val="01:00 PM">01:00 PM</div>
+              <div class="time-slot" data-val="02:00 PM">02:00 PM</div>
+              <div class="time-slot" data-val="03:00 PM">03:00 PM</div>
+              <div class="time-slot" data-val="04:00 PM">04:00 PM</div>
+              <div class="time-slot" data-val="05:00 PM">05:00 PM</div>
+              <div class="time-slot" data-val="06:00 PM">06:00 PM</div>
+              <div class="time-slot" data-val="07:00 PM">07:00 PM</div>
             </div>
           </div>
 
-          <!-- SUBMIT BUTTON -->
           <button type="button" class="btn-gold" style="width: 100%; margin-top: 10px;" onclick="processDualEngineBooking()">Confirm Booking (Dual Engine)</button>
         </form>
       </div>
       
-      <!-- STUDIO INFO -->
       <div>
         <div class="appt-summary">
           <h4>Studio Info</h4>
@@ -205,7 +198,6 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; background: rgba
   </div>
 </div>
 
-<!-- ACTUAL MODAL POPUP -->
 <div class="modal-overlay" id="successModal">
   <div class="modal-box">
     <div class="modal-icon">✅</div>
@@ -216,7 +208,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; background: rgba
 </div>
 
 <script>
-  // 1. BULLETPROOF LOADER REMOVAL
+  // 1. LOADER REMOVAL
   setTimeout(() => { 
     const loader = document.getElementById('loader');
     if(loader) {
@@ -232,10 +224,10 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; background: rgba
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // 3. SELECTION LOGIC FOR SERVICES & TIME SLOTS
   let selectedService = '';
   let selectedTime = '';
 
+  // 3. SERVICE SELECTION LOGIC
   const serviceCards = document.querySelectorAll('.svc-opt');
   serviceCards.forEach(card => {
     card.addEventListener('click', function() {
@@ -245,9 +237,47 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; background: rgba
     });
   });
 
-  const timeSlots = document.querySelectorAll('.time-slot:not(.taken)');
+  // --- NAYA DYNAMIC DATE & TIME SLOT LOGIC ---
+  
+  // Dummy Database: Maan lijiye ye dates aur times pehle se hi kisi ne book kar rakhe hain
+  // Test karne ke liye input mein aaj ya kal ki date select karein
+  const bookedDatabase = [
+    { date: "2026-06-02", time: "11:00 AM" }, // Test: 2 June ko 11 am block hoga
+    { date: "2026-06-02", time: "05:00 PM" }, // Test: 2 June ko 5 pm block hoga
+    { date: "2026-06-03", time: "01:00 PM" }  // Test: 3 June ko 1 pm block hoga
+  ];
+
+  const dateInput = document.getElementById('b_date');
+  const timeSlots = document.querySelectorAll('.time-slot');
+
+  // Jab Date change ho
+  dateInput.addEventListener('change', function() {
+    const chosenDate = this.value;
+    selectedTime = ''; // Date badalte hi time selection reset kar do
+
+    // Saare slots ko reset karo (open kardo)
+    timeSlots.forEach(slot => {
+      slot.classList.remove('taken', 'selected');
+    });
+
+    // Check karo ki is chosenDate ke liye database mein kaunse slots hain
+    const todaysBookings = bookedDatabase.filter(booking => booking.date === chosenDate);
+    const takenTimes = todaysBookings.map(booking => booking.time);
+
+    // Jo slots booked hain, unpe 'taken' class laga do
+    timeSlots.forEach(slot => {
+      if (takenTimes.includes(slot.getAttribute('data-val'))) {
+        slot.classList.add('taken');
+      }
+    });
+  });
+
+  // Time Slot Selection Click Logic (Updated: taken slot pe click kaam na kare)
   timeSlots.forEach(slot => {
     slot.addEventListener('click', function() {
+      // Agar slot taken hai, toh return kar jao (kuch mat karo)
+      if (this.classList.contains('taken')) return;
+
       timeSlots.forEach(s => s.classList.remove('selected'));
       this.classList.add('selected');
       selectedTime = this.getAttribute('data-val');
@@ -267,8 +297,8 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; background: rgba
 
     const payload = { client: name, phone: phone, date: date, time: selectedTime, service: selectedService };
 
-    // --- YAHAN ACTUAL BACKEND CODE AAYEGA ---
-    // Example: fetch('YOUR_ADMIN_WEBHOOK_URL', { method: 'POST', body: JSON.stringify(payload) })
+    // Yahan original Dual Engine API call aayegi jab real backend connect hoga
+    console.log("=== DUAL ENGINE PAYLOAD ===", payload);
     
     // UI Pop-up dikhana
     document.getElementById('successModal').classList.add('show');
