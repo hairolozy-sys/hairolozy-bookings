@@ -81,7 +81,6 @@
             <label style="text-align: center; display: block; margin-bottom: 5px;">Choose Services</label>
             <p style="text-align: center; font-size: 11px; color: #aaa; margin-top: 0; margin-bottom: 15px;">(You can select multiple options)</p>
             
-            <!-- MASTER MENU: 18 SERVICES -->
             <div class="service-grid" id="serviceGrid">
                 <div class="service-card" onclick="selectService('Precision Haircut', this)"><span>✂️</span><p>Haircut</p></div>
                 <div class="service-card" onclick="selectService('Root Touch-up', this)"><span>🖌️</span><p>Root Touch-up</p></div>
@@ -136,17 +135,21 @@
         <div id="successMsg"></div>
     </div>
 
-    <!-- START: Floating WhatsApp Button HTML -->
     <a href="https://wa.me/918860504808?text=Hello,%20mujhe%20appointment%20book%20karna%20hai" class="wa-float" target="_blank">
         <svg width="35" height="35" viewBox="0 0 24 24" fill="white">
             <path d="M12.031 6.172c-3.23 0-5.859 2.628-5.859 5.859 0 1.033.27 2.037.785 2.923l-.834 3.05 3.125-.82c.854.466 1.815.713 2.784.713 3.23 0 5.859-2.628 5.859-5.859 0-3.23-2.629-5.859-5.859-5.859zm0 10.517c-.896 0-1.776-.239-2.546-.689l-1.826.478.487-1.782c-.477-.827-.729-1.776-.729-2.748 0-3.036 2.472-5.508 5.509-5.508 3.036 0 5.508 2.472 5.508 5.508 0 3.036-2.472 5.508-5.508 5.508zm3.018-4.043c-.166-.083-.984-.486-1.136-.541-.152-.055-.264-.083-.375.083-.111.166-.43.541-.527.652-.097.111-.194.125-.36.042-.166-.083-.702-.259-1.337-.827-.494-.44-.828-.984-.925-1.15-.097-.166-.01-.256.073-.339.075-.074.166-.194.25-.291.083-.097.111-.166.166-.277.055-.111.028-.208-.014-.291-.042-.083-.375-.902-.514-1.236-.137-.327-.278-.283-.375-.289-.097-.006-.208-.006-.319-.006-.111 0-.291.042-.444.222-.152.18-.583.57-.583 1.389 0 1.201.896 2.361 1.022 2.527.125.166 1.763 2.708 4.272 3.794.596.257 1.062.411 1.425.527.6.192 1.146.165 1.577.101.481-.072 1.485-.607 1.694-1.192.208-.585.208-1.087.145-1.198-.063-.111-.233-.175-.486-.303z"/>
         </svg>
     </a>
-    <!-- END: Floating WhatsApp Button HTML -->
-
-    <!-- Firebase Integration -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+       (function(){
+          // Yahan apni EmailJS Public Key daaliye
+          emailjs.init("YOUR_EMAILJS_PUBLIC_KEY"); 
+       })();
+    </script>
 
     <script>
         const firebaseConfig = { 
@@ -169,15 +172,12 @@
         function selectService(service, el) {
             const index = selectedServicesArray.indexOf(service);
             if (index > -1) {
-                // Agar pehle se selected hai, toh usko remove karo (Deselect)
                 selectedServicesArray.splice(index, 1);
                 el.classList.remove('selected');
             } else {
-                // Agar selected nahi hai, toh usko array mein add karo (Select)
                 selectedServicesArray.push(service);
                 el.classList.add('selected');
             }
-            // Array ko comma (,) laga kar text mein badal do
             document.getElementById('selected-service').value = selectedServicesArray.join(', ');
         }
 
@@ -209,15 +209,34 @@
 
             const bookingID = "HLZ-" + Math.floor(1000 + Math.random() * 9000);
             
+            // ENGINE 1: FIREBASE FIRESTORE
             db.collection("clients").add({
                 bookingID, clientName: name, clientPhone: phone, serviceName: service, 
                 history: "History: " + (history || "None"), bookingDate: date, bookingTime: formattedTime, status: 'pending'
             }).then(() => {
+                
+                // ENGINE 2: EMAILJS EMAIL NOTIFICATION
+                // Yahan apne EmailJS ke Service ID aur Template ID replace karein
+                emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+                    to_name: "Arman (Admin)",
+                    client_name: name,
+                    client_phone: phone,
+                    service: service,
+                    date: date,
+                    time: formattedTime,
+                    history: history || "None",
+                    booking_id: bookingID
+                }).then(function(response) {
+                    console.log('Dual Engine: Email successfully sent!', response.status, response.text);
+                }, function(error) {
+                    console.log('Dual Engine: Email sending failed...', error);
+                });
+
+                // HIDE FORM AND SHOW SUCCESS UI
                 document.getElementById('bookingForm').style.display = 'none';
                 
-                // 🛑 YAHAN APNA WHATSAPP NUMBER DAALEIN 🛑
+                // WhatsApp Redirection
                 const salonNumber = "918860504808"; 
-
                 const msg = `🔔 *New Booking Alert!*\n\n*ID:* ${bookingID}\n*Client:* ${name}\n*Services:* ${service}\n*Date:* ${date}\n*Time:* ${formattedTime}\n*History:* ${history || 'None'}`;
                 const waUrl = `https://wa.me/${salonNumber}?text=${encodeURIComponent(msg)}`;
 
@@ -228,6 +247,8 @@
                     <a href="${waUrl}" target="_blank" style="background:#25d366; color:white; padding:15px 25px; border-radius:30px; text-decoration:none; font-weight:bold; display:inline-block; margin-top:10px;">📲 Confirm on WhatsApp</a>
                 `;
                 document.getElementById('successMsg').style.display = 'block';
+            }).catch((error) => {
+                alert("Error saving booking: " + error.message);
             });
         }
     </script>
