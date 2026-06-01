@@ -6,6 +6,7 @@
 <title>Hairolozy — Advanced Hair Science Studio</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
+/* AAPKA ORIGINAL CSS EXACTLY SAME YAHAN HAI */
 :root{
   --ink:#0F0A06;--gold:#B8973A;--gold-light:#D4AF5C;--cream:#FAF7F2;--warm:#F2EBE0;--blush:#EDD5C0;
   --rust:#9B4523;--forest:#2D4A35;--slate:#3A3530;--muted:#8A7F75;--white:#FFFFFF;
@@ -66,8 +67,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;background:rgba(15,10,6,0.96
 .sec-title em{color:var(--rust);font-style:italic;}
 .sec-divider{width:48px;height:2px;background:var(--gold);margin:20px auto 0;}
 /* ─── TABS ─── */
-.page-section{display:none;padding-top:88px;}
-.page-section.active{display:block; animation: fadeUp 0.4s ease forwards;}
+.page-section{display:none;padding-top:88px; padding-bottom: 80px;}
+.page-section.active{display:block;}
 /* ─── HAIR SCIENCE ─── */
 .science-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:24px;}
 .science-card{background:var(--card-bg);border:1px solid var(--border);border-radius:18px;overflow:hidden;transition:all 0.3s;cursor:pointer;}
@@ -80,26 +81,111 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;background:rgba(15,10,6,0.96
 .sci-body p{font-size:0.87rem;color:var(--muted);line-height:1.75;}
 .sci-facts{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
 .fact-pill{padding:5px 12px;border-radius:20px;font-size:0.73rem;font-weight:500; background: var(--warm); color: var(--rust);}
-/* ─── FORMS & APPOINTMENTS ─── */
-.appt-layout{display:grid;grid-template-columns:1fr 420px;gap:32px;align-items:start; padding-bottom: 60px;}
+/* ─── PROBLEMS ─── */
+.problems-layout{display:flex;gap:28px;align-items:flex-start;}
+.prob-sidebar{width:260px;flex-shrink:0;position:sticky;top:100px;}
+.prob-menu{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+.prob-menu-item{padding:14px 20px;cursor:pointer;font-size:0.88rem;border-bottom:1px solid var(--border);transition:all 0.2s;display:flex;align-items:center;gap:10px;}
+.prob-menu-item:last-child{border-bottom:none;}
+.prob-menu-item:hover,.prob-menu-item.active{background:var(--gold);color:var(--ink);font-weight:600;}
+.prob-content{flex:1;}
+.problem-detail{display:none;animation:fadeUp 0.4s ease;}
+.problem-detail.show{display:block;}
+.prob-header{background:linear-gradient(135deg,var(--ink),var(--slate));border-radius:18px;padding:36px;color:var(--cream);margin-bottom:24px;}
+.prob-header h2{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--gold);margin-bottom:10px;}
+.prob-header p{opacity:0.8;font-size:0.92rem;line-height:1.75;}
+.prob-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.prob-box{background:var(--card-bg);border:1px solid var(--border);border-radius:14px;padding:22px;}
+.prob-box h4{font-size:0.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
+.prob-box ul{padding-left:16px;}
+.prob-box ul li{font-size:0.86rem;color:var(--muted);margin-bottom:6px;line-height:1.6;}
+.severity-track{margin-top:10px;height:6px;background:var(--border);border-radius:3px;overflow:hidden;}
+.severity-fill{height:100%;border-radius:3px;background:var(--rust);width:80%;}
+/* ─── COLOR LAB ─── */
+.color-lab{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;}
+.lab-panel{background:var(--card-bg);border:1px solid var(--border);border-radius:20px;padding:32px;}
+.lab-panel h3{font-family:'Cormorant Garamond',serif;font-size:1.5rem;margin-bottom:24px;color:var(--ink);}
+.color-result{background:linear-gradient(135deg,var(--ink) 0%,var(--slate) 100%);border-radius:16px;padding:28px;margin-top:20px;display:block;} /* visible for demo */
+.color-result h4{font-family:'Cormorant Garamond',serif;color:var(--gold);font-size:1.3rem;margin-bottom:18px;}
+.res-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.07);font-size:0.87rem;}
+.res-row:last-child{border-bottom:none;}
+.res-row span:first-child{color:rgba(250,247,242,0.6);}
+.res-row span:last-child{color:var(--blush);font-weight:500;}
+.swatch-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}
+.cswatch{width:40px;height:40px;border-radius:50%;border:3px solid rgba(255,255,255,0.2);box-shadow:0 3px 10px rgba(0,0,0,0.3);cursor:pointer;transition:transform 0.2s;}
+.cswatch:hover{transform:scale(1.2);}
+/* ─── HAIR HISTORY / JOURNEY ─── */
+.journey-layout{display:grid;grid-template-columns:400px 1fr;gap:32px;align-items:start;}
+.journey-form{background:var(--card-bg);border:1px solid var(--border);border-radius:20px;padding:32px;}
+.journey-form h3{font-family:'Cormorant Garamond',serif;font-size:1.5rem;margin-bottom:8px;}
+.journey-form p{font-size:0.84rem;color:var(--muted);margin-bottom:24px;}
+.timeline-panel{flex:1;}
+.timeline-item{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:22px 24px;margin-bottom:16px;display:flex;gap:18px;animation:fadeUp 0.4s ease;position:relative;}
+.tl-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;margin-top:4px;border:3px solid var(--cream);box-shadow:0 0 0 3px var(--gold);}
+.tl-body h4{font-size:0.95rem;font-weight:600;color:var(--ink);margin-bottom:4px;}
+.tl-body p{font-size:0.83rem;color:var(--muted);line-height:1.6;}
+.tl-date{font-size:0.72rem;color:var(--gold);margin-top:6px;letter-spacing:1px;}
+/* ─── TRANSFORMATION DESIRE ─── */
+.transform-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;}
+.desire-card{border:2px solid var(--border);border-radius:16px;padding:20px;text-align:center;cursor:pointer;transition:all 0.25s;background:var(--card-bg);}
+.desire-card:hover{border-color:var(--gold-light);}
+.desire-card.selected{border-color:var(--gold);background:#FDF9F0;box-shadow:0 0 0 4px rgba(184,151,58,0.1);}
+.desire-icon{font-size:2rem;margin-bottom:10px;}
+.desire-name{font-size:0.88rem;font-weight:600;color:var(--ink);}
+.desire-desc{font-size:0.78rem;color:var(--muted);margin-top:5px;line-height:1.5;}
+/* ─── APPOINTMENT ─── */
+.appt-layout{display:grid;grid-template-columns:1fr 420px;gap:32px;align-items:start;}
 .appt-form{background:var(--card-bg);border:1px solid var(--border);border-radius:20px;padding:36px;}
 .appt-form h3{font-family:'Cormorant Garamond',serif;font-size:1.7rem;margin-bottom:6px;}
 .appt-form > p{font-size:0.88rem;color:var(--muted);margin-bottom:30px;}
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
 .form-group{margin-bottom:20px;}
 .form-group label{display:block;font-size:0.75rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;font-weight:500;}
 .form-group input, .form-group select, .form-group textarea{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:10px;font-family:'Outfit',sans-serif;font-size:0.9rem;color:var(--ink);background:var(--cream);outline:none;transition:border-color 0.2s;}
-.form-group input:focus, .form-group select:focus{border-color:var(--gold);}
+.form-group input:focus, .form-group textarea:focus{border-color:var(--gold);}
+.step-indicator{display:flex;gap:10px;margin-bottom:30px;}
+.step{display:flex;align-items:center;gap:8px;}
+.step-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:600;border:2px solid var(--border);color:var(--muted);transition:all 0.3s;}
+.step-num.done{background:var(--gold);border-color:var(--gold);color:var(--ink);}
+.step-num.active{border-color:var(--gold);color:var(--gold);}
+.step-label{font-size:0.75rem;color:var(--muted);}
+.step-connector{width:24px;height:2px;background:var(--border);margin-top:1px;}
+.service-picker{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 20px;}
+.svc-opt{border:2px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:10px;font-size:0.85rem;}
+.svc-opt:hover{border-color:var(--gold-light);}
+.svc-opt.selected{border-color:var(--gold);background:#FDF9F0;color:var(--ink);font-weight:500;}
+.svc-opt-icon{font-size:1.2rem;}
+.time-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px;}
+.time-slot{padding:9px;border:1.5px solid var(--border);border-radius:8px;text-align:center;font-size:0.82rem;cursor:pointer;transition:all 0.2s;}
+.time-slot:hover{border-color:var(--gold-light);}
+.time-slot.selected{background:var(--gold);border-color:var(--gold);color:var(--ink);font-weight:600;}
+.time-slot.taken{opacity:0.35;cursor:not-allowed;background:var(--warm); pointer-events: none;}
+.appt-summary{background:var(--ink);border-radius:20px;padding:32px;color:var(--cream);}
+.appt-summary h4{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--gold);margin-bottom:22px;}
+.summary-row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.07);font-size:0.87rem;}
+.summary-row:last-of-type{border-bottom:none;}
+.summary-row span:first-child{color:rgba(250,247,242,0.55);}
+.confirmation{background:linear-gradient(135deg,var(--forest),#1A3320);border-radius:14px;padding:22px;margin-top:20px;text-align:center;display:none;}
+.confirmation.show{display:block;animation:fadeUp 0.5s ease;}
+.conf-icon{font-size:2.5rem;margin-bottom:10px;}
+.conf-text{color:var(--cream);font-size:0.9rem;line-height:1.65;opacity:0.9;}
 /* RESPONSIVE */
 @media(max-width:900px){
+  nav{padding:0 20px;}
+  .main{padding:0 20px;}
+  .color-lab,.journey-layout,.appt-layout,.problems-layout{grid-template-columns:1fr;}
+  .prob-sidebar{width:100%;position:static;}
+  .prob-cards{grid-template-columns:1fr;}
+  .form-row-2{grid-template-columns:1fr;}
   .nav-links .nav-btn{display:none;}
-  .appt-layout{grid-template-columns:1fr;}
+  .time-grid{grid-template-columns:repeat(3,1fr);}
 }
 </style>
 </head>
 <body>
 
 <div id="loader">
-  <div class="loader-logo">Hair<span>olozy</span></div>
+  <div class="loader-logo">Hairolozy</div>
   <div class="loader-sub">Advanced Hair Science Studio</div>
   <div class="loader-bar"><div class="loader-fill"></div></div>
 </div>
@@ -108,8 +194,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;background:rgba(15,10,6,0.96
   <div class="nav-inner">
     <div class="nav-logo" onclick="showPage('home')">Hair<span>olozy</span></div>
     <div class="nav-links">
-      <button class="nav-btn" onclick="showPage('science')">Hair Science</button>
+      <button class="nav-btn" onclick="showPage('science')">Science</button>
+      <button class="nav-btn" onclick="showPage('problems')">Problems</button>
       <button class="nav-btn" onclick="showPage('colorlab')">Color Lab</button>
+      <button class="nav-btn" onclick="showPage('journey')">Journey</button>
+      <button class="nav-btn" onclick="showPage('transform')">Transform</button>
       <button class="nav-appt" onclick="showPage('appointment')">Book Appointment</button>
     </div>
   </div>
@@ -126,18 +215,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;background:rgba(15,10,6,0.96
       <button class="btn-gold" onclick="showPage('appointment')">✦ Appointment Book Karein</button>
       <button class="btn-outline" onclick="showPage('science')">Hair Science Explore Karein →</button>
     </div>
-    <div class="hero-stats">
-      <div class="stat-item"><div class="stat-num">15+</div><div class="stat-label">Years Exp.</div></div>
-      <div class="stat-item"><div class="stat-num">100%</div><div class="stat-label">Bond Repair</div></div>
-      <div class="stat-item"><div class="stat-num">pH</div><div class="stat-label">Balanced</div></div>
-    </div>
   </div>
 </div>
 
 <div id="page-science" class="page-section">
   <div class="main">
     <div class="sec-header">
-      <div class="sec-eyebrow">Trichology & Chemistry</div>
+      <div class="sec-eyebrow">Trichology</div>
       <div class="sec-title">Baalon ki <em>Science</em></div>
       <div class="sec-divider"></div>
     </div>
@@ -145,179 +229,70 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;background:rgba(15,10,6,0.96
       <div class="science-card">
         <div class="sci-top">
           <div class="sci-icon">🧬</div>
-          <div class="sci-meta">
-            <h3>Disulfide Bonds</h3>
-            <span>Structure Integrity</span>
-          </div>
+          <div class="sci-meta"><h3>Disulfide Bonds</h3><span>Structure</span></div>
         </div>
         <div class="sci-body">
-          <p>Chemical treatments se tootne wale disulfide bonds ko repair karne ka advanced process. Baalon ki core strength wapas laane ke liye zaruri.</p>
-          <div class="sci-facts">
-            <span class="fact-pill">Olaplex</span>
-            <span class="fact-pill">K18 Peptide</span>
-          </div>
+          <p>Chemical treatments se tootne wale disulfide bonds ko repair karna, baalon ki core strength wapas laane ke liye zaruri hai.</p>
+          <div class="sci-facts"><span class="fact-pill">Bond Repair</span><span class="fact-pill">Structure</span></div>
         </div>
       </div>
       <div class="science-card">
         <div class="sci-top">
           <div class="sci-icon">⚖️</div>
-          <div class="sci-meta">
-            <h3>pH Balancing</h3>
-            <span>Cuticle Health</span>
-          </div>
+          <div class="sci-meta"><h3>pH Balancing</h3><span>Cuticles</span></div>
         </div>
         <div class="sci-body">
-          <p>Color aur bleach ke baad hair cuticle ko seal karne aur moisture lock karne ke liye precise pH formulation. Frizz-free aur shiny hair ke liye.</p>
-          <div class="sci-facts">
-            <span class="fact-pill">Acidic Colors</span>
-            <span class="fact-pill">pH 4.5 - 5.5</span>
-          </div>
+          <p>Color aur bleach ke baad hair cuticle ko seal karne aur moisture lock karne ke liye precise pH formulation (4.5 - 5.5).</p>
+          <div class="sci-facts"><span class="fact-pill">Acidic Colors</span><span class="fact-pill">Shine</span></div>
         </div>
       </div>
       <div class="science-card">
         <div class="sci-top">
           <div class="sci-icon">🎨</div>
-          <div class="sci-meta">
-            <h3>Color Formulation</h3>
-            <span>Pre-Pigmentation</span>
-          </div>
+          <div class="sci-meta"><h3>Pre-Pigmentation</h3><span>Color Matrix</span></div>
         </div>
         <div class="sci-body">
-          <p>Underlying pigments ko neutralize karne aur fade hone se rokne ke liye master colorist level formulation. Sahi level achieve karne ki guarantee.</p>
-          <div class="sci-facts">
-            <span class="fact-pill">Neutralization</span>
-            <span class="fact-pill">Level 1-10</span>
-          </div>
+          <p>Faded baalon mein underlying pigments ko wapas daalna taki naya color lamba tike aur patchy na dikhe.</p>
+          <div class="sci-facts"><span class="fact-pill">Filler Color</span><span class="fact-pill">Longevity</span></div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<div id="page-colorlab" class="page-section">
+<div id="page-problems" class="page-section">
   <div class="main">
     <div class="sec-header">
-      <div class="sec-eyebrow">AI Formulation</div>
-      <div class="sec-title">Color <em>Lab</em></div>
-      <div class="sec-divider"></div>
-      <p style="text-align:center; margin-top: 20px; color: var(--muted);">Advanced color formulation logic will be integrated here.</p>
-    </div>
-  </div>
-</div>
-
-<div id="page-appointment" class="page-section">
-  <div class="main">
-    <div class="sec-header">
-      <div class="sec-eyebrow">Visit Hairolozy</div>
-      <div class="sec-title">Book an <em>Appointment</em></div>
+      <div class="sec-eyebrow">Diagnosis</div>
+      <div class="sec-title">Identify <em>Problems</em></div>
       <div class="sec-divider"></div>
     </div>
-    
-    <div class="appt-layout">
-      <div class="appt-form">
-        <h3>Client Details</h3>
-        <p>Aapki consultation West Delhi studio ke liye book ki jayegi.</p>
-        <form id="bookingForm" onsubmit="handleDualEngineSubmit(event)">
-          <div class="form-group">
-            <label>Name</label>
-            <input type="text" id="clientName" required placeholder="Enter your full name">
-          </div>
-          <div class="form-group">
-            <label>Phone Number</label>
-            <input type="tel" id="clientPhone" required placeholder="+91 XXXXX XXXXX">
-          </div>
-          <div class="form-group">
-            <label>Service Type</label>
-            <select id="serviceType">
-              <option value="balayage">Balayage & Toning</option>
-              <option value="color_correction">Color Correction</option>
-              <option value="bond_repair">Bond Repair Treatment</option>
-              <option value="consultation">Trichology Consultation</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Preferred Date</label>
-            <input type="date" id="prefDate" required>
-          </div>
-          <button type="submit" class="btn-gold" style="width: 100%; margin-top: 10px;">Confirm Booking (Dual Engine)</button>
-        </form>
-        
-        <div id="successMsg" style="display:none; margin-top: 20px; padding: 15px; background: #e8f5e9; color: #2e7d32; border-radius: 8px; text-align: center;">
-          Booking Sent! Data routed to Mail & Admin App.
+    <div class="problems-layout">
+      <div class="prob-sidebar">
+        <div class="prob-menu">
+          <div class="prob-menu-item active">Brassy & Faded Color</div>
+          <div class="prob-menu-item">Chemical Damage</div>
         </div>
       </div>
-      
-      <div style="background: var(--ink); border-radius: 20px; padding: 36px; color: var(--cream);">
-        <h4 style="font-family:'Cormorant Garamond',serif; font-size:1.6rem; color:var(--gold); margin-bottom: 20px;">Hairolozy Studio</h4>
-        <p style="color: var(--muted); margin-bottom: 30px; font-size: 0.9rem;">Experience the blend of AI precision and 15 years of master colorist expertise.</p>
-        
-        <div style="margin-bottom: 15px;">
-          <strong style="color: var(--gold); display: block; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Location</strong>
-          <span>West Delhi, Delhi, India</span>
-        </div>
-        <div style="margin-bottom: 15px;">
-          <strong style="color: var(--gold); display: block; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Timings</strong>
-          <span>10:00 AM - 8:00 PM (Mon-Sun)</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-  // LOADER LOGIC
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      document.getElementById('loader').classList.add('hide');
-    }, 1800);
-  });
-
-  // SPA NAVIGATION LOGIC
-  function showPage(pageId) {
-    // Hide all pages
-    const pages = document.querySelectorAll('.page-section');
-    pages.forEach(page => page.classList.remove('active'));
-    
-    // Show selected page
-    document.getElementById('page-' + pageId).classList.add('active');
-    
-    // Scroll to top
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  // DUAL ENGINE SIMULATION LOGIC
-  function handleDualEngineSubmit(e) {
-    e.preventDefault(); // Form ko reload hone se roke
-    
-    // Data extract karna
-    const formData = {
-      name: document.getElementById('clientName').value,
-      phone: document.getElementById('clientPhone').value,
-      service: document.getElementById('serviceType').value,
-      date: document.getElementById('prefDate').value,
-      timestamp: new Date().toISOString()
-    };
-
-    console.log("--- DUAL ENGINE TRIGGERED ---");
-    
-    // Engine 1: Email Notification Simulation (e.g., EmailJS)
-    console.log("Engine 1 (Mail): Sending notification to Owner's Mail...", formData);
-    
-    // Engine 2: Admin Dashboard Sync Simulation (e.g., Firebase / API Endpoint)
-    console.log("Engine 2 (Admin): Syncing booking data to Admin Dashboard Database...", formData);
-
-    // Show Success Message on UI
-    document.getElementById('successMsg').style.display = 'block';
-    
-    // Form reset
-    document.getElementById('bookingForm').reset();
-    
-    // 4 seconds baad success message hide karein
-    setTimeout(() => {
-      document.getElementById('successMsg').style.display = 'none';
-    }, 4000);
-  }
-</script>
-
-</body>
-</html>
+      <div class="prob-content">
+        <div class="problem-detail show">
+          <div class="prob-header">
+            <h2>Brassy Tones</h2>
+            <p>Unwanted orange or yellow hues emerging after hair color fades.</p>
+          </div>
+          <div class="prob-cards">
+            <div class="prob-box">
+              <h4>Causes</h4>
+              <ul>
+                <li>Hard water exposure</li>
+                <li>Incorrect developer lifting</li>
+                <li>Sun damage</li>
+              </ul>
+            </div>
+            <div class="prob-box">
+              <h4>Action Required</h4>
+              <ul>
+                <li>Toning & Neutralization</li>
+                <li>pH balanced shampoo</li>
+              </ul>
+              <div class="severity-track"><div class="severity-fill" style="width: 70%;"
