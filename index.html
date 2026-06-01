@@ -68,75 +68,6 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; background: rgba
 .page-section { display: none; padding-top: 88px; padding-bottom: 80px; }
 .page-section.active { display: block; animation: fadeUp 0.4s ease; }
 
-/* HAIR SCIENCE */
-.science-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
-.science-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 18px; overflow: hidden; transition: all 0.3s; cursor: pointer; }
-.science-card:hover { transform: translateY(-5px); box-shadow: 0 20px 50px var(--shadow); border-color: var(--gold); }
-.sci-top { padding: 28px 28px 20px; display: flex; gap: 16px; align-items: flex-start; }
-.sci-icon { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; flex-shrink: 0; }
-.sci-meta h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; color: var(--ink); margin-bottom: 4px; }
-.sci-meta span { font-size: 0.72rem; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; }
-.sci-body { padding: 0 28px 24px; }
-.sci-body p { font-size: 0.87rem; color: var(--muted); line-height: 1.75; }
-.sci-facts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
-.fact-pill { padding: 5px 12px; border-radius: 20px; font-size: 0.73rem; font-weight: 500; background: var(--warm); color: var(--rust); }
-
-/* PROBLEMS */
-.problems-layout { display: flex; gap: 28px; align-items: flex-start; }
-.prob-sidebar { width: 260px; flex-shrink: 0; position: sticky; top: 100px; }
-.prob-menu { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
-.prob-menu-item { padding: 14px 20px; cursor: pointer; font-size: 0.88rem; border-bottom: 1px solid var(--border); transition: all 0.2s; display: flex; align-items: center; gap: 10px; }
-.prob-menu-item:last-child { border-bottom: none; }
-.prob-menu-item:hover, .prob-menu-item.active { background: var(--gold); color: var(--ink); font-weight: 600; }
-.prob-content { flex: 1; }
-.problem-detail { display: none; animation: fadeUp 0.4s ease; }
-.problem-detail.show { display: block; }
-.prob-header { background: linear-gradient(135deg, var(--ink), var(--slate)); border-radius: 18px; padding: 36px; color: var(--cream); margin-bottom: 24px; }
-.prob-header h2 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: var(--gold); margin-bottom: 10px; }
-.prob-header p { opacity: 0.8; font-size: 0.92rem; line-height: 1.75; }
-.prob-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.prob-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 22px; }
-.prob-box h4 { font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
-.prob-box ul { padding-left: 16px; }
-.prob-box ul li { font-size: 0.86rem; color: var(--muted); margin-bottom: 6px; line-height: 1.6; }
-.severity-track { margin-top: 10px; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
-.severity-fill { height: 100%; border-radius: 3px; background: var(--rust); width: 80%; }
-
-/* COLOR LAB */
-.color-lab { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
-.lab-panel { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 32px; }
-.lab-panel h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; margin-bottom: 24px; color: var(--ink); }
-.color-result { background: linear-gradient(135deg, var(--ink) 0%, var(--slate) 100%); border-radius: 16px; padding: 28px; margin-top: 20px; display: block; }
-.color-result h4 { font-family: 'Cormorant Garamond', serif; color: var(--gold); font-size: 1.3rem; margin-bottom: 18px; }
-.res-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.07); font-size: 0.87rem; }
-.res-row:last-child { border-bottom: none; }
-.res-row span:first-child { color: rgba(250,247,242,0.6); }
-.res-row span:last-child { color: var(--blush); font-weight: 500; }
-.swatch-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
-.cswatch { width: 40px; height: 40px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.2); box-shadow: 0 3px 10px rgba(0,0,0,0.3); cursor: pointer; transition: transform 0.2s; }
-.cswatch:hover { transform: scale(1.2); }
-
-/* HAIR JOURNEY */
-.journey-layout { display: grid; grid-template-columns: 400px 1fr; gap: 32px; align-items: start; }
-.journey-form { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 32px; }
-.journey-form h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; margin-bottom: 8px; }
-.journey-form p { font-size: 0.84rem; color: var(--muted); margin-bottom: 24px; }
-.timeline-panel { flex: 1; }
-.timeline-item { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin-bottom: 16px; display: flex; gap: 18px; animation: fadeUp 0.4s ease; position: relative; }
-.tl-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; border: 3px solid var(--cream); box-shadow: 0 0 0 3px var(--gold); }
-.tl-body h4 { font-size: 0.95rem; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
-.tl-body p { font-size: 0.83rem; color: var(--muted); line-height: 1.6; }
-.tl-date { font-size: 0.72rem; color: var(--gold); margin-top: 6px; letter-spacing: 1px; }
-
-/* TRANSFORMATION */
-.transform-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
-.desire-card { border: 2px solid var(--border); border-radius: 16px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.25s; background: var(--card-bg); }
-.desire-card:hover { border-color: var(--gold-light); }
-.desire-card.selected { border-color: var(--gold); background: #FDF9F0; box-shadow: 0 0 0 4px rgba(184,151,58,0.1); }
-.desire-icon { font-size: 2rem; margin-bottom: 10px; }
-.desire-name { font-size: 0.88rem; font-weight: 600; color: var(--ink); }
-.desire-desc { font-size: 0.78rem; color: var(--muted); margin-top: 5px; line-height: 1.5; }
-
 /* APPOINTMENT */
 .appt-layout { display: grid; grid-template-columns: 1fr 420px; gap: 32px; align-items: start; }
 .appt-form { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 36px; }
@@ -147,13 +78,6 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; background: rgba
 .form-group label { display: block; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; font-weight: 500; }
 .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 16px; border: 1.5px solid var(--border); border-radius: 10px; font-family: 'Outfit', sans-serif; font-size: 0.9rem; color: var(--ink); background: var(--cream); outline: none; transition: border-color 0.2s; }
 .form-group input:focus, .form-group textarea:focus { border-color: var(--gold); }
-.step-indicator { display: flex; gap: 10px; margin-bottom: 30px; }
-.step { display: flex; align-items: center; gap: 8px; }
-.step-num { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600; border: 2px solid var(--border); color: var(--muted); transition: all 0.3s; }
-.step-num.done { background: var(--gold); border-color: var(--gold); color: var(--ink); }
-.step-num.active { border-color: var(--gold); color: var(--gold); }
-.step-label { font-size: 0.75rem; color: var(--muted); }
-.step-connector { width: 24px; height: 2px; background: var(--border); margin-top: 1px; }
 .service-picker { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 8px 0 20px; }
 .svc-opt { border: 2px solid var(--border); border-radius: 10px; padding: 12px 14px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 10px; font-size: 0.85rem; }
 .svc-opt:hover { border-color: var(--gold-light); }
@@ -169,18 +93,21 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; background: rgba
 .summary-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.07); font-size: 0.87rem; }
 .summary-row:last-of-type { border-bottom: none; }
 .summary-row span:first-child { color: rgba(250,247,242,0.55); }
-.confirmation { background: linear-gradient(135deg, var(--forest), #1A3320); border-radius: 14px; padding: 22px; margin-top: 20px; text-align: center; display: none; }
-.confirmation.show { display: block; animation: fadeUp 0.5s ease; }
-.conf-icon { font-size: 2.5rem; margin-bottom: 10px; }
-.conf-text { color: var(--cream); font-size: 0.9rem; line-height: 1.65; opacity: 0.9; }
+
+/* --- PROPER MODAL POPUP CSS --- */
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15,10,6,0.8); z-index: 9999; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: all 0.3s ease; backdrop-filter: blur(5px); }
+.modal-overlay.show { opacity: 1; pointer-events: auto; }
+.modal-box { background: var(--card-bg); border-radius: 20px; padding: 40px; text-align: center; max-width: 420px; width: 90%; transform: translateY(30px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: 2px solid var(--gold); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+.modal-overlay.show .modal-box { transform: translateY(0); }
+.modal-icon { font-size: 3.5rem; margin-bottom: 16px; }
+.modal-box h3 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: var(--ink); margin-bottom: 12px; }
+.modal-box p { color: var(--muted); font-size: 0.95rem; margin-bottom: 24px; line-height: 1.6; }
 
 /* RESPONSIVE */
 @media(max-width:900px) {
   nav { padding: 0 20px; }
   .main { padding: 0 20px; }
-  .color-lab, .journey-layout, .appt-layout, .problems-layout { grid-template-columns: 1fr; }
-  .prob-sidebar { width: 100%; position: static; }
-  .prob-cards { grid-template-columns: 1fr; }
+  .appt-layout { grid-template-columns: 1fr; }
   .form-row-2 { grid-template-columns: 1fr; }
   .nav-links .nav-btn { display: none; }
   .time-grid { grid-template-columns: repeat(3, 1fr); }
@@ -189,221 +116,39 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; background: rgba
 </head>
 <body>
 
+<!-- LOADER -->
 <div id="loader">
   <div class="loader-logo">Hairolozy</div>
   <div class="loader-sub">Advanced Hair Science Studio</div>
   <div class="loader-bar"><div class="loader-fill"></div></div>
 </div>
 
+<!-- NAV -->
 <nav>
   <div class="nav-inner">
     <div class="nav-logo" onclick="showPage('home')">Hair<span>olozy</span></div>
     <div class="nav-links">
       <button class="nav-btn" onclick="showPage('science')">Science</button>
-      <button class="nav-btn" onclick="showPage('problems')">Problems</button>
-      <button class="nav-btn" onclick="showPage('colorlab')">Color Lab</button>
-      <button class="nav-btn" onclick="showPage('journey')">Journey</button>
-      <button class="nav-btn" onclick="showPage('transform')">Transform</button>
       <button class="nav-appt" onclick="showPage('appointment')">Book Appointment</button>
     </div>
   </div>
 </nav>
 
+<!-- HOME -->
 <div id="page-home" class="page-section active" style="padding-top:0;">
   <div class="hero">
     <div class="hero-orb orb1"></div>
     <div class="hero-orb orb2"></div>
     <div class="hero-eyebrow">Premium Hair Science Studio</div>
     <h1>Baalon ka <em>Complete</em><br>Science & Care</h1>
-    <p class="hero-sub">Hair science, color formulation, problem diagnosis, 2-year history tracking aur future transformation planning — sab ek jagah.</p>
+    <p class="hero-sub">Hair science, color formulation, problem diagnosis, aur future transformation planning — sab ek jagah.</p>
     <div class="hero-actions">
       <button class="btn-gold" onclick="showPage('appointment')">✦ Appointment Book Karein</button>
-      <button class="btn-outline" onclick="showPage('science')">Hair Science Explore Karein →</button>
     </div>
   </div>
 </div>
 
-<div id="page-science" class="page-section">
-  <div class="main">
-    <div class="sec-header">
-      <div class="sec-eyebrow">Trichology</div>
-      <div class="sec-title">Baalon ki <em>Science</em></div>
-      <div class="sec-divider"></div>
-    </div>
-    <div class="science-grid">
-      <div class="science-card">
-        <div class="sci-top">
-          <div class="sci-icon">🧬</div>
-          <div class="sci-meta"><h3>Disulfide Bonds</h3><span>Structure</span></div>
-        </div>
-        <div class="sci-body">
-          <p>Chemical treatments se tootne wale disulfide bonds ko repair karna, baalon ki core strength wapas laane ke liye zaruri hai.</p>
-          <div class="sci-facts"><span class="fact-pill">Bond Repair</span><span class="fact-pill">Structure</span></div>
-        </div>
-      </div>
-      <div class="science-card">
-        <div class="sci-top">
-          <div class="sci-icon">⚖️</div>
-          <div class="sci-meta"><h3>pH Balancing</h3><span>Cuticles</span></div>
-        </div>
-        <div class="sci-body">
-          <p>Color aur bleach ke baad hair cuticle ko seal karne aur moisture lock karne ke liye precise pH formulation (4.5 - 5.5).</p>
-          <div class="sci-facts"><span class="fact-pill">Acidic Colors</span><span class="fact-pill">Shine</span></div>
-        </div>
-      </div>
-      <div class="science-card">
-        <div class="sci-top">
-          <div class="sci-icon">🎨</div>
-          <div class="sci-meta"><h3>Pre-Pigmentation</h3><span>Color Matrix</span></div>
-        </div>
-        <div class="sci-body">
-          <p>Faded baalon mein underlying pigments ko wapas daalna taki naya color lamba tike aur patchy na dikhe.</p>
-          <div class="sci-facts"><span class="fact-pill">Filler Color</span><span class="fact-pill">Longevity</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="page-problems" class="page-section">
-  <div class="main">
-    <div class="sec-header">
-      <div class="sec-eyebrow">Diagnosis</div>
-      <div class="sec-title">Identify <em>Problems</em></div>
-      <div class="sec-divider"></div>
-    </div>
-    <div class="problems-layout">
-      <div class="prob-sidebar">
-        <div class="prob-menu">
-          <div class="prob-menu-item active">Brassy & Faded Color</div>
-          <div class="prob-menu-item">Chemical Damage</div>
-        </div>
-      </div>
-      <div class="prob-content">
-        <div class="problem-detail show">
-          <div class="prob-header">
-            <h2>Brassy Tones</h2>
-            <p>Unwanted orange or yellow hues emerging after hair color fades.</p>
-          </div>
-          <div class="prob-cards">
-            <div class="prob-box">
-              <h4>Causes</h4>
-              <ul>
-                <li>Hard water exposure</li>
-                <li>Incorrect developer lifting</li>
-                <li>Sun damage</li>
-              </ul>
-            </div>
-            <div class="prob-box">
-              <h4>Action Required</h4>
-              <ul>
-                <li>Toning & Neutralization</li>
-                <li>pH balanced shampoo</li>
-              </ul>
-              <div class="severity-track"><div class="severity-fill" style="width: 70%;"></div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="page-colorlab" class="page-section">
-  <div class="main">
-    <div class="sec-header">
-      <div class="sec-eyebrow">Formulation</div>
-      <div class="sec-title">Color <em>Lab</em></div>
-      <div class="sec-divider"></div>
-    </div>
-    <div class="color-lab">
-      <div class="lab-panel">
-        <h3>Input Matrix</h3>
-        <div class="form-group">
-          <label>Target Level</label>
-          <input type="text" placeholder="e.g., 5.35">
-        </div>
-        <div class="form-group">
-          <label>Current Undertone</label>
-          <input type="text" placeholder="e.g., Orange/Yellow">
-        </div>
-      </div>
-      <div class="color-result">
-        <h4>AI Recommended Formula</h4>
-        <div class="res-row"><span>Base Color</span><span>Level 5 (60g)</span></div>
-        <div class="res-row"><span>Reflect</span><span>.35 (Mahogany Gold)</span></div>
-        <div class="res-row"><span>Developer</span><span>20 Vol (1:1.5)</span></div>
-        <div class="swatch-row">
-          <div class="cswatch" style="background:#4A2B22;"></div>
-          <div class="cswatch" style="background:#6B3E31;"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="page-journey" class="page-section">
-  <div class="main">
-    <div class="sec-header">
-      <div class="sec-eyebrow">History</div>
-      <div class="sec-title">Hair <em>Journey</em></div>
-      <div class="sec-divider"></div>
-    </div>
-    <div class="journey-layout">
-      <div class="journey-form">
-        <h3>Client Records</h3>
-        <p>Aapke pichle 2 saal ke chemical treatments yahan track hote hain.</p>
-        <button class="btn-outline" style="width:100%; border-color:var(--gold); color:var(--ink);">+ Add New Record</button>
-      </div>
-      <div class="timeline-panel">
-        <div class="timeline-item">
-          <div class="tl-dot"></div>
-          <div class="tl-body">
-            <h4>Global Color (Level 5.35)</h4>
-            <p>Olaplex bond repair ke sath ammonia-free global color.</p>
-            <div class="tl-date">May 2026</div>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="tl-dot"></div>
-          <div class="tl-body">
-            <h4>Keratin Treatment</h4>
-            <p>Frizz control and smoothening treatment.</p>
-            <div class="tl-date">Dec 2025</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="page-transform" class="page-section">
-  <div class="main">
-    <div class="sec-header">
-      <div class="sec-eyebrow">Desire</div>
-      <div class="sec-title"><em>Transformation</em> Goal</div>
-      <div class="sec-divider"></div>
-    </div>
-    <div class="transform-grid">
-      <div class="desire-card">
-        <div class="desire-icon">✨</div>
-        <div class="desire-name">Blonde Balayage</div>
-        <div class="desire-desc">Seamless multi-dimensional lift</div>
-      </div>
-      <div class="desire-card">
-        <div class="desire-icon">🤎</div>
-        <div class="desire-name">Rich Brunette</div>
-        <div class="desire-desc">Deep, shiny and healthy looking</div>
-      </div>
-      <div class="desire-card">
-        <div class="desire-icon">🚑</div>
-        <div class="desire-name">Damage Rescue</div>
-        <div class="desire-desc">Ultimate bond & moisture repair</div>
-      </div>
-    </div>
-  </div>
-</div>
-
+<!-- APPOINTMENT -->
 <div id="page-appointment" class="page-section">
   <div class="main">
     <div class="sec-header">
@@ -413,13 +158,8 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; background: rgba
     </div>
     
     <div class="appt-layout">
+      <!-- MAIN BOOKING FORM -->
       <div class="appt-form">
-        <div class="step-indicator">
-          <div class="step"><div class="step-num done">1</div><div class="step-label">Details</div></div><div class="step-connector"></div>
-          <div class="step"><div class="step-num active">2</div><div class="step-label">Service</div></div><div class="step-connector"></div>
-          <div class="step"><div class="step-num">3</div><div class="step-label">Time</div></div>
-        </div>
-
         <form id="bookingForm">
           <div class="form-row-2">
             <div class="form-group"><label>Name</label><input type="text" id="b_name" required placeholder="Full Name"></div>
@@ -427,20 +167,12 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; background: rgba
           </div>
 
           <div class="form-group">
-            <label>Select Service (12+ Options)</label>
+            <label>Select Service</label>
             <div class="service-picker" id="svcPicker">
               <div class="svc-opt" data-val="Balayage"><span class="svc-opt-icon">🎨</span> Balayage & Toning</div>
               <div class="svc-opt" data-val="Global Color"><span class="svc-opt-icon">🖌️</span> Global Color</div>
-              <div class="svc-opt" data-val="Color Correction"><span class="svc-opt-icon">⚙️</span> Color Correction</div>
-              <div class="svc-opt" data-val="Bond Repair"><span class="svc-opt-icon">🧬</span> Bond Repair (Olaplex/K18)</div>
-              <div class="svc-opt" data-val="pH Balance"><span class="svc-opt-icon">⚖️</span> pH Balancing Treatment</div>
-              <div class="svc-opt" data-val="Pre-pigmentation"><span class="svc-opt-icon">💉</span> Pre-Pigmentation</div>
-              <div class="svc-opt" data-val="Root Touchup"><span class="svc-opt-icon">🎯</span> Root Touch-up</div>
-              <div class="svc-opt" data-val="Highlights"><span class="svc-opt-icon">✨</span> Creative Highlights</div>
-              <div class="svc-opt" data-val="Scalp Detox"><span class="svc-opt-icon">🌿</span> Scalp Detox</div>
-              <div class="svc-opt" data-val="Keratin"><span class="svc-opt-icon">🛡️</span> Keratin / Botox</div>
-              <div class="svc-opt" data-val="Glossing"><span class="svc-opt-icon">💎</span> Glossing & Glazing</div>
-              <div class="svc-opt" data-val="Consultation"><span class="svc-opt-icon">🩺</span> Trichology Consultation</div>
+              <div class="svc-opt" data-val="Bond Repair"><span class="svc-opt-icon">🧬</span> Bond Repair</div>
+              <div class="svc-opt" data-val="Consultation"><span class="svc-opt-icon">🩺</span> Consultation</div>
             </div>
           </div>
 
@@ -450,36 +182,36 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; background: rgba
             <div class="time-grid" id="timeGrid">
               <div class="time-slot" data-val="10:00 AM">10:00 AM</div>
               <div class="time-slot" data-val="11:00 AM">11:00 AM</div>
-              <div class="time-slot" data-val="12:00 PM">12:00 PM</div>
-              <div class="time-slot taken">01:00 PM</div>
-              <div class="time-slot" data-val="02:00 PM">02:00 PM</div>
-              <div class="time-slot" data-val="03:00 PM">03:00 PM</div>
-              <div class="time-slot" data-val="04:00 PM">04:00 PM</div>
-              <div class="time-slot taken">05:00 PM</div>
-              <div class="time-slot" data-val="06:00 PM">06:00 PM</div>
-              <div class="time-slot" data-val="07:00 PM">07:00 PM</div>
+              <div class="time-slot taken">12:00 PM</div>
+              <div class="time-slot" data-val="01:00 PM">01:00 PM</div>
             </div>
           </div>
 
+          <!-- SUBMIT BUTTON -->
           <button type="button" class="btn-gold" style="width: 100%; margin-top: 10px;" onclick="processDualEngineBooking()">Confirm Booking (Dual Engine)</button>
         </form>
       </div>
       
+      <!-- STUDIO INFO -->
       <div>
         <div class="appt-summary">
           <h4>Studio Info</h4>
           <div class="summary-row"><span>Master Colorist</span><span>Arman</span></div>
           <div class="summary-row"><span>Experience</span><span>15 Years</span></div>
           <div class="summary-row"><span>Location</span><span>West Delhi</span></div>
-          <div class="summary-row"><span>Specialty</span><span>Hair Chemistry</span></div>
-        </div>
-        
-        <div class="confirmation" id="successMsg">
-          <div class="conf-icon">✓</div>
-          <div class="conf-text">Booking Confirmed!<br>Dual Engine Activated:<br>Data sent to Owner's Mail & Admin App.</div>
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- ACTUAL MODAL POPUP -->
+<div class="modal-overlay" id="successModal">
+  <div class="modal-box">
+    <div class="modal-icon">✅</div>
+    <h3>Booking Confirmed!</h3>
+    <p>Aapki request successfully submit ho gayi hai. Details aapke mail aur admin app par bhej di jayengi.</p>
+    <button class="btn-gold" onclick="closeModal()">Close & Continue</button>
   </div>
 </div>
 
@@ -533,23 +265,23 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; background: rgba
       return;
     }
 
-    const payload = {
-      client: name, phone: phone, date: date, time: selectedTime, service: selectedService
-    };
+    const payload = { client: name, phone: phone, date: date, time: selectedTime, service: selectedService };
 
-    console.log("=== DUAL ENGINE TRIGGERED ===");
-    console.log("🚀 Engine 1 -> Triggering Email Notification to Mail...", payload);
-    console.log("🚀 Engine 2 -> Saving directly to Admin Dashboard App Database...", payload);
-
-    document.getElementById('successMsg').classList.add('show');
+    // --- YAHAN ACTUAL BACKEND CODE AAYEGA ---
+    // Example: fetch('YOUR_ADMIN_WEBHOOK_URL', { method: 'POST', body: JSON.stringify(payload) })
     
-    setTimeout(() => {
-      document.getElementById('successMsg').classList.remove('show');
-      document.getElementById('bookingForm').reset();
-      serviceCards.forEach(c => c.classList.remove('selected'));
-      timeSlots.forEach(s => s.classList.remove('selected'));
-      selectedService = ''; selectedTime = '';
-    }, 5000);
+    // UI Pop-up dikhana
+    document.getElementById('successModal').classList.add('show');
+  }
+
+  // 5. MODAL CLOSE KAREIN AUR FORM RESET KAREIN
+  function closeModal() {
+    document.getElementById('successModal').classList.remove('show');
+    document.getElementById('bookingForm').reset();
+    serviceCards.forEach(c => c.classList.remove('selected'));
+    timeSlots.forEach(s => s.classList.remove('selected'));
+    selectedService = ''; 
+    selectedTime = '';
   }
 </script>
 
