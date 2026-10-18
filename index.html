@@ -11,11 +11,6 @@
     <header>
         <h1>Hairolozy v1</h1>
         <p>Hair Science & Client Records</p>
-        
-        <!-- System Notification Enable Karne Ka Button -->
-        <button id="noti-btn" onclick="requestNotificationPermission()" style="margin-top: 10px; padding: 10px 16px; background: #d4af37; color: #000; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
-            🔔 WhatsApp Jaisi Notification On Karein
-        </button>
     </header>
 
     <main>
@@ -43,33 +38,8 @@
         </section>
     </main>
 
-    <!-- Firebase Scripts -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    
-    <!-- Tumhari Main JS File -->
     <script src="js/app.js"></script>
-
-    <!-- Browser System Notification Permission Logic -->
-    <script>
-        function requestNotificationPermission() {
-            if (!("Notification" in window)) {
-                alert("Yeh browser notifications support nahi karta.");
-                return;
-            }
-
-            Notification.requestPermission().then(function(permission) {
-                if (permission === "granted") {
-                    alert("Success! Ab aapko WhatsApp jaisi system notifications milengi.");
-                    let btn = document.getElementById('noti-btn');
-                    btn.innerText = "✅ Notifications Active";
-                    btn.style.background = "#27ae60";
-                    btn.style.color = "#fff";
-                } else {
-                    alert("Aapne notification permission deny kar di hai.");
-                }
-            });
-        }
-    </script>
 </body>
 </html>
