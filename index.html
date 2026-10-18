@@ -111,27 +111,37 @@
             margin-bottom: 2px;
         }
 
+        /* 12 Services Box - Grid style (Upar se niche alignment) */
         .services-box {
-            height: 120px;
-            overflow-y: scroll;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            max-height: 160px;
+            overflow-y: auto;
             border: 1px solid #444;
             background: #2a2a2a;
             padding: 10px;
             border-radius: 5px;
             margin-bottom: 12px;
-            color: #fff;
         }
 
         .services-box label {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 14px;
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+            color: #ddd;
             cursor: pointer;
+            background: #1e1e1e;
+            padding: 6px 8px;
+            border-radius: 4px;
+            border: 1px solid #333;
         }
 
         .services-box input[type="checkbox"] {
             width: auto;
             margin-right: 8px;
+            margin-bottom: 0;
+            accent-color: #d4af37;
         }
     </style>
 </head>
@@ -151,16 +161,7 @@
             </div>
         </section>
 
-        <!-- 2. New Client Record Form -->
-        <section id="client-form">
-            <h2>New Client Record</h2>
-            <input type="text" id="client-name" placeholder="Client ka Naam">
-            <input type="tel" id="client-phone" placeholder="Phone Number">
-            <textarea id="color-formula" placeholder="Hair Color Formula (e.g., Base 5 + 20vol)"></textarea>
-            <button id="save-btn">Record Save Karein</button>
-        </section>
-
-        <!-- 3. Nayi Booking / Session Booking Section (Services Checkbox + Date/Time + Specs) -->
+        <!-- 2. Nayi Booking / Session Booking Section (Services 2-column Grid + Date/Time + Specs) -->
         <section id="booking-create">
             <h2>Book Your Hair Session</h2>
             <form id="bookingForm">
@@ -196,6 +197,7 @@
                     <label><input type="checkbox" name="service" value="Root Touch"> Root Touch-up</label>
                     <label><input type="checkbox" name="service" value="Highlights"> Highlights</label>
                     <label><input type="checkbox" name="service" value="Texture"> Hair Texture</label>
+                    <label><input type="checkbox" name="service" value="Smoothening"> Smoothening</label>
                 </div>
 
                 <textarea id="book-specs" placeholder="Client Specifications"></textarea>
@@ -203,7 +205,7 @@
             </form>
         </section>
 
-        <!-- 4. Client History & Formulas Section -->
+        <!-- 3. Client History & Formulas Section -->
         <section id="client-history">
             <h2>Client History & Formulas</h2>
             <div id="history-list">
